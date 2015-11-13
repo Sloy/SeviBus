@@ -1,22 +1,25 @@
 package com.sloy.sevibus.resources.datasource;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.sloy.sevibus.model.Llegada;
 import com.sloy.sevibus.resources.TiemposHandler;
 import com.sloy.sevibus.resources.exceptions.ServerErrorException;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import rx.Observable;
+import rx.functions.Func0;
 
 public class TussamLlegadaDataSource implements LlegadaDataSource {
 
@@ -24,7 +27,17 @@ public class TussamLlegadaDataSource implements LlegadaDataSource {
     private static final String BODY_SOAP_TIEMPOS = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><GetPasoParada xmlns=\"http://tempuri.org/\"><linea>%1s</linea><parada>%2s</parada><status>1</status></GetPasoParada></soap:Body></soap:Envelope>"; // 2.parada
 
     @Override
-    public Observable<Llegada> getLlegada(String linea, Integer parada) throws ServerErrorException {
+    public Observable<Llegada> getLlegada(final String linea, final Integer parada) throws ServerErrorException {
+        return Observable.defer(new Func0<Observable<Llegada>>() {
+            @Override
+            public Observable<Llegada> call() {
+                return Observable.just(getLlegadaFromTussam(linea, parada));
+            }
+        });
+    }
+
+    @NonNull
+    private Llegada getLlegadaFromTussam(String linea, Integer parada) {
         Llegada res;
         try {
             res = new Llegada(linea);
@@ -43,32 +56,23 @@ public class TussamLlegadaDataSource implements LlegadaDataSource {
             Log.e("sevibus", "Error desconocido", e);
             throw new ServerErrorException(e);
         }
-        return Observable.just(res);
+        return res;
     }
 
-    private InputStream getTiemposInputStream(String linea, String parada) {
-        InputStream res = null;
-        try {
-            URL url = new URL(URL_SOAP_DINAMICA);
-            HttpURLConnection c = (HttpURLConnection) url.openConnection();
-            c.setRequestMethod("POST");
-            c.setReadTimeout(15 * 1000);
-            c.setDoOutput(true);
-            c.setUseCaches(false);
-            c.setRequestProperty("Content-Type", "text/xml");
-            c.connect();
+    private InputStream getTiemposInputStream(String lineName, String stopNumber) throws IOException {
+        OkHttpClient client = new OkHttpClient();
 
-            OutputStreamWriter wr = new OutputStreamWriter(c.getOutputStream());
-            String data = String.format(BODY_SOAP_TIEMPOS, linea, parada);
-            wr.write(data);
-            wr.flush();
+        MediaType mediaType = MediaType.parse("text/xml");
+        RequestBody body = RequestBody.create(mediaType, String.format(BODY_SOAP_TIEMPOS, lineName, stopNumber));
+        Request request = new Request.Builder()
+                .url(URL_SOAP_DINAMICA)
+                .post(body)
+                .addHeader("content-type", "text/xml")
+                .addHeader("cache-control", "no-cache")
+                .build();
 
-            res = c.getInputStream();
-        } catch (IOException e) {
-            Log.e("sevibus", "Error al obtener la fuente de los tiempos", e);
-        }
-        return res;
-
+        Response response = client.newCall(request).execute();
+        return response.body().byteStream();
     }
 
 }
