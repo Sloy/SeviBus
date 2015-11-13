@@ -16,13 +16,15 @@ import java.net.URL;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import rx.Observable;
+
 public class TussamLlegadaDataSource implements LlegadaDataSource {
 
     private static final String URL_SOAP_DINAMICA = "http://www.infobustussam.com:9001/services/dinamica.asmx";
     private static final String BODY_SOAP_TIEMPOS = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><GetPasoParada xmlns=\"http://tempuri.org/\"><linea>%1s</linea><parada>%2s</parada><status>1</status></GetPasoParada></soap:Body></soap:Envelope>"; // 2.parada
 
     @Override
-    public Llegada getLlegada(String linea, Integer parada) throws ServerErrorException {
+    public Observable<Llegada> getLlegada(String linea, Integer parada) throws ServerErrorException {
         Llegada res;
         try {
             res = new Llegada(linea);
@@ -41,7 +43,7 @@ public class TussamLlegadaDataSource implements LlegadaDataSource {
             Log.e("sevibus", "Error desconocido", e);
             throw new ServerErrorException(e);
         }
-        return res;
+        return Observable.just(res);
     }
 
     private InputStream getTiemposInputStream(String linea, String parada) {

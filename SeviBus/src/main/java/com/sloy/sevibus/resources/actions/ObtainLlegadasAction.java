@@ -3,6 +3,9 @@ package com.sloy.sevibus.resources.actions;
 import com.sloy.sevibus.model.Llegada;
 import com.sloy.sevibus.resources.datasource.LlegadaDataSource;
 
+import rx.Observable;
+import rx.functions.Func0;
+
 public class ObtainLlegadasAction {
 
     private final LlegadaDataSource llegadaDataSource;
@@ -11,7 +14,12 @@ public class ObtainLlegadasAction {
         this.llegadaDataSource = llegadaDataSource;
     }
 
-    public Llegada getLlegada(String linea, Integer parada) {
-        return llegadaDataSource.getLlegada(linea, parada);
+    public Observable<Llegada> getLlegada(final String linea, final Integer parada) {
+        return Observable.defer(new Func0<Observable<Llegada>>() {
+            @Override
+            public Observable<Llegada> call() {
+                return llegadaDataSource.getLlegada(linea, parada);
+            }
+        });
     }
 }

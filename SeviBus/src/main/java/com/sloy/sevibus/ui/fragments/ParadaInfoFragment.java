@@ -10,9 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseArray;
@@ -39,14 +36,14 @@ import com.sloy.sevibus.resources.AlertasManager;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
-import com.sloy.sevibus.resources.datasource.ApiLlegadaDataSource;
-import com.sloy.sevibus.resources.datasource.SevibusApi;
-import com.sloy.sevibus.resources.datasource.TussamLlegadaDataSource;
-import com.sloy.sevibus.resources.exceptions.ServerErrorException;
 import com.sloy.sevibus.ui.activities.BaseActivity;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 import com.sloy.sevibus.ui.widgets.LlegadasList;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,13 +52,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.Map;
 
-import retrofit.RestAdapter;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
 
-public class ParadaInfoFragment extends BaseDBFragment implements LoaderManager.LoaderCallbacks<Llegada>, EditarFavoritaDialogFragment.OnGuardarFavoritaListener {
+public class ParadaInfoFragment extends BaseDBFragment implements EditarFavoritaDialogFragment.OnGuardarFavoritaListener {
 
     public static final String LOADER_EXTRA_LINEA = "linea";
     public static final String LOADER_EXTRA_PARADA = "parada";
@@ -83,7 +81,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements LoaderManager.
     private Parada mParada;
     private List<Linea> mLineas;
 
-    private SparseArray<Llegada> mLlegadas;
+    private Map<String, Llegada> mLlegadas;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -105,7 +103,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements LoaderManager.
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mLlegadas = new SparseArray<>();
+        mLlegadas = new HashMap<>();
 
         if (!isNetworkAvailable()) {
             Snackbar.make(getView(), "No hay conexión a Internet, y es necesaria", Snackbar.LENGTH_LONG).show();
@@ -133,7 +131,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements LoaderManager.
 
     private void onCrearFavoritaClick() {
         EditarFavoritaDialogFragment.getInstanceNewFavorita(this, mParada).show(
-            getFragmentManager(), EditarFavoritaDialogFragment.TAG);
+                getFragmentManager(), EditarFavoritaDialogFragment.TAG);
     }
 
     private void onEliminarFavoritaClick() {
@@ -347,35 +345,29 @@ public class ParadaInfoFragment extends BaseDBFragment implements LoaderManager.
 
     //TODO indicar última comprobación, y actualizar automáticamente cuando... te parezca xD
     private void updateLlegadas() {
-        LoaderManager loaderManager = getLoaderManager();
-        for (Linea l : mLineas) {
-            Bundle info = new Bundle();
-            info.putString(LOADER_EXTRA_LINEA, l.getNumero());
-            info.putInt(LOADER_EXTRA_PARADA, mParada.getNumero());
-            Loader<Object> loader = loaderManager.getLoader(l.getId());
-            if (loader == null) {
-                loaderManager.initLoader(l.getId(), info, this);
-            } else {
-                loaderManager.restartLoader(l.getId(), info, this);
-            }
+        for (final Linea l : mLineas) {
+            mViewLlegadas.setLlegadaCargando(l.getNumero());
+            obtainLlegadasAction.getLlegada(l.getNumero(), mParada.getNumero())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<Llegada>() {
+                        @Override
+                        public void onNext(Llegada llegada) {
+                            mLlegadas.put(llegada.getLineaNumero(), llegada);
+                            mViewLlegadas.setLlegadaInfo(llegada.getLineaNumero(), llegada);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            mViewLlegadas.setLlegadaInfo(l.getNumero(), null);
+                            Snackbar.make(getView(), "Se produjo un error :(", Snackbar.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onCompleted() {
+
+                        }
+                    });
         }
-    }
-
-    @Override
-    public Loader<Llegada> onCreateLoader(int id, Bundle bundle) {
-        mViewLlegadas.setLlegadaCargando(id);
-        return new LlegadaLoader(getActivity(), bundle.getString(LOADER_EXTRA_LINEA), bundle.getInt(LOADER_EXTRA_PARADA), obtainLlegadasAction);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Llegada> llegadaLoader, Llegada llegada) {
-        mLlegadas.append(llegadaLoader.getId(), llegada);
-        mViewLlegadas.setLlegadaInfo(llegadaLoader.getId(), llegada);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Llegada> llegadaLoader) {
-
     }
 
     @Override
@@ -410,146 +402,4 @@ public class ParadaInfoFragment extends BaseDBFragment implements LoaderManager.
         }
     }
 
-    public static class LlegadaLoader extends AsyncTaskLoader<Llegada> {
-
-        private Llegada mData;
-
-        private String linea;
-        private Integer parada;
-        private ObtainLlegadasAction obtainLlegadasAction;
-
-        public LlegadaLoader(Context context, String linea, Integer parada, ObtainLlegadasAction obtainLlegadasAction) {
-            // Loaders may be used across multiple Activitys (assuming they aren't
-            // bound to the LoaderManager), so NEVER hold a reference to the context
-            // directly. Doing so will cause you to leak an entire Activity's context.
-            // The superclass constructor will store a reference to the Application
-            // Context instead, and can be retrieved with a call to getContext().
-            super(context);
-
-            this.linea = linea;
-            this.parada = parada;
-            this.obtainLlegadasAction = obtainLlegadasAction;
-        }
-
-
-        /****************************************************/
-        /** (1) A task that performs the asynchronous load **/
-        /**
-         * ************************************************
-         */
-        @Override
-        public Llegada loadInBackground() {
-            // This method is called on a background thread and should generate a
-            // new set of data to be delivered back to the client.
-            try {
-                return obtainLlegadasAction.getLlegada(linea, parada);
-            } catch (ServerErrorException e) {
-                return null;
-            }
-        }
-
-        /********************************************************/
-        /** (2) Deliver the results to the registered listener **/
-        /**
-         * ****************************************************
-         */
-
-        @Override
-        public void deliverResult(Llegada data) {
-            if (isReset()) {
-                // The Loader has been reset; ignore the result and invalidate the data.
-                releaseResources(data);
-                return;
-            }
-
-            // Hold a reference to the old data so it doesn't get garbage collected.
-            // We must protect it until the new data has been delivered.
-            Llegada oldData = mData;
-            mData = data;
-
-            if (isStarted()) {
-                // If the Loader is in a started state, deliver the results to the
-                // client. The superclass method does this for us.
-                super.deliverResult(data);
-            }
-
-            // Invalidate the old data as we don't need it any more.
-            if (oldData != null && oldData != data) {
-                releaseResources(oldData);
-            }
-        }
-
-        /*********************************************************/
-        /** (3) Implement the Loader’s state-dependent behavior **/
-        /**
-         * *****************************************************
-         */
-
-        @Override
-        protected void onStartLoading() {
-            if (mData != null) {
-                // Deliver any previously loaded data immediately.
-                deliverResult(mData);
-            }
-
-            // Begin monitoring the underlying data source.
-            /*if (mObserver == null) {
-                mObserver = new SampleObserver();
-                // TODO: register the observer
-            }*/
-
-            if (takeContentChanged() || mData == null) {
-                // When the observer detects a change, it should call onContentChanged()
-                // on the Loader, which will cause the next call to takeContentChanged()
-                // to return true. If this is ever the case (or if the current data is
-                // null), we force a new load.
-                forceLoad();
-            }
-        }
-
-        @Override
-        protected void onStopLoading() {
-            // The Loader is in a stopped state, so we should attempt to cancel the
-            // current load (if there is one).
-            cancelLoad();
-
-            // Note that we leave the observer as is. Loaders in a stopped state
-            // should still monitor the data source for changes so that the Loader
-            // will know to force a new load if it is ever started again.
-        }
-
-        @Override
-        protected void onReset() {
-            // Ensure the loader has been stopped.
-            onStopLoading();
-
-            // At this point we can release the resources associated with 'mData'.
-            if (mData != null) {
-                releaseResources(mData);
-                mData = null;
-            }
-
-            // The Loader is being reset, so we should stop monitoring for changes.
-            /*if (mObserver != null) {
-                // TODO: unregister the observer
-                mObserver = null;
-            }*/
-        }
-
-        @Override
-        public void onCanceled(Llegada data) {
-            // Attempt to cancel the current asynchronous load.
-            super.onCanceled(data);
-
-            // The load has been canceled, so we should release the resources
-            // associated with 'data'.
-            releaseResources(data);
-        }
-
-        private void releaseResources(Llegada data) {
-            // For a simple List, there is nothing to do. For something like a Cursor, we
-            // would close it in this method. All resources associated with the Loader
-            // should be released here.
-        }
-    }
 }

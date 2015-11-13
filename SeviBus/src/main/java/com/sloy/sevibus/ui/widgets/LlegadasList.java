@@ -29,11 +29,13 @@ import com.sloy.sevibus.ui.activities.HomeActivity;
 import com.sloy.sevibus.ui.adapters.TwitterAdapter;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LlegadasList extends LinearLayout {
 
-    private SparseArray<View> mLlegadasMap;
+    private Map<String, View> mLlegadasMap;
 
     LayoutInflater mInflater;
     private OnClickListener mWarningListener;
@@ -99,7 +101,7 @@ public class LlegadasList extends LinearLayout {
     public void setLineas(List<Linea> lineas) {
         removeAllViews();
         View vistaLlegada;
-        mLlegadasMap = new SparseArray<>();
+        mLlegadasMap = new HashMap<>();
 
         for (Linea l : lineas) {
             // Crea la vista de la llegada y el separador
@@ -113,12 +115,12 @@ public class LlegadasList extends LinearLayout {
             this.addView(vistaLlegada);
 
             // Y la guarda en el mapa para actualizar los datos posteriormente
-            mLlegadasMap.append(l.getId(), vistaLlegada);
+            mLlegadasMap.put(l.getNumero(), vistaLlegada);
         }
     }
 
-    public void setLlegadaInfo(int id, Llegada llegada) {
-        View vistaLlegada = mLlegadasMap.get(id);
+    public void setLlegadaInfo(String lineaNumero, Llegada llegada) {
+        View vistaLlegada = mLlegadasMap.get(lineaNumero);
 
         //TODO mejorar el caso cuando no hay información disponible
         //TODO contemplar todos los casos, como se hacía antes en el getDisplayText de la llegada
@@ -182,8 +184,8 @@ public class LlegadasList extends LinearLayout {
 
     }
 
-    public void setLlegadaCargando(int id) {
-        View vistaLlegada = mLlegadasMap.get(id);
+    public void setLlegadaCargando(String linea) {
+        View vistaLlegada = mLlegadasMap.get(linea);
         View progress = vistaLlegada.findViewById(R.id.item_llegada_progress);
         View container = vistaLlegada.findViewById(R.id.item_llegada_container);
 
