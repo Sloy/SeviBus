@@ -355,6 +355,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                 error -> {
                     mViewLlegadas.setLlegadaInfo(l.getNumero(), null);
                     Snackbar.make(getView(), "Se produjo un error", Snackbar.LENGTH_LONG)
+                      .setAction("Reintentar", (view) -> updateLlegadas())
                       .show();
                 });
         }
