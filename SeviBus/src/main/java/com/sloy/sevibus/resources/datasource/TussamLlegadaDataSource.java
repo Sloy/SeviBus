@@ -28,12 +28,7 @@ public class TussamLlegadaDataSource implements LlegadaDataSource {
 
     @Override
     public Observable<Llegada> getLlegada(final String linea, final Integer parada) throws ServerErrorException {
-        return Observable.defer(new Func0<Observable<Llegada>>() {
-            @Override
-            public Observable<Llegada> call() {
-                return Observable.just(getLlegadaFromTussam(linea, parada));
-            }
-        });
+        return Observable.defer(() -> Observable.just(getLlegadaFromTussam(linea, parada)));
     }
 
     @NonNull

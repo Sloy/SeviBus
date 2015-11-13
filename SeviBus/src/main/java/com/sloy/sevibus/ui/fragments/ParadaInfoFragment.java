@@ -56,7 +56,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class ParadaInfoFragment extends BaseDBFragment implements EditarFavoritaDialogFragment.OnGuardarFavoritaListener {
@@ -348,25 +347,16 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         for (final Linea l : mLineas) {
             mViewLlegadas.setLlegadaCargando(l.getNumero());
             obtainLlegadasAction.getLlegada(l.getNumero(), mParada.getNumero())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<Llegada>() {
-                        @Override
-                        public void onNext(Llegada llegada) {
-                            mLlegadas.put(llegada.getLineaNumero(), llegada);
-                            mViewLlegadas.setLlegadaInfo(llegada.getLineaNumero(), llegada);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            mViewLlegadas.setLlegadaInfo(l.getNumero(), null);
-                            Snackbar.make(getView(), "Se produjo un error :(", Snackbar.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onCompleted() {
-
-                        }
-                    });
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(llegada -> {
+                    mLlegadas.put(llegada.getLineaNumero(), llegada);
+                    mViewLlegadas.setLlegadaInfo(llegada.getLineaNumero(), llegada);
+                },
+                error -> {
+                    mViewLlegadas.setLlegadaInfo(l.getNumero(), null);
+                    Snackbar.make(getView(), "Se produjo un error", Snackbar.LENGTH_LONG)
+                      .show();
+                });
         }
     }
 

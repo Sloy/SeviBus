@@ -15,11 +15,6 @@ public class ObtainLlegadasAction {
     }
 
     public Observable<Llegada> getLlegada(final String linea, final Integer parada) {
-        return Observable.defer(new Func0<Observable<Llegada>>() {
-            @Override
-            public Observable<Llegada> call() {
-                return llegadaDataSource.getLlegada(linea, parada);
-            }
-        });
+        return Observable.defer(() -> llegadaDataSource.getLlegada(linea, parada));
     }
 }
