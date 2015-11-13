@@ -9,19 +9,27 @@ import rx.functions.Func1;
 public class ApiLlegadaDataSource implements LlegadaDataSource {
 
     private final SevibusApi sevibusApi;
+    private final LlegadaDataSource fallbackDataSource;
 
-    public ApiLlegadaDataSource(SevibusApi sevibusApi) {
+    public ApiLlegadaDataSource(SevibusApi sevibusApi, LlegadaDataSource fallbackDataSource) {
         this.sevibusApi = sevibusApi;
+        this.fallbackDataSource = fallbackDataSource;
     }
 
     @Override
-    public Observable<Llegada> getLlegada(String linea, Integer parada) throws ServerErrorException {
+    public Observable<Llegada> getLlegada(final String linea, final Integer parada) throws ServerErrorException {
         return sevibusApi.getArrival(parada, linea)
                 .retry(1)
                 .map(new Func1<ArrivalTimesApiModel, Llegada>() {
                     @Override
                     public Llegada call(ArrivalTimesApiModel arrival) {
                         return arrivalToLLegada(arrival);
+                    }
+                })
+                .onErrorResumeNext(new Func1<Throwable, Observable<? extends Llegada>>() {
+                    @Override
+                    public Observable<? extends Llegada> call(Throwable throwable) {
+                        return fallbackDataSource.getLlegada(linea, parada);
                     }
                 });
     }

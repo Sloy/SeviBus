@@ -5,6 +5,7 @@ import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.ApiLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.LlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.SevibusApi;
+import com.sloy.sevibus.resources.datasource.TussamLlegadaDataSource;
 
 import retrofit.RestAdapter;
 
@@ -18,7 +19,11 @@ public class StuffProvider {
     }
 
     private static LlegadaDataSource getLlegadaDataSource() {
-        return new ApiLlegadaDataSource(getSevibusApi());
+        return new ApiLlegadaDataSource(getSevibusApi(), getLegacyLlegadaDataSource());
+    }
+
+    private static LlegadaDataSource getLegacyLlegadaDataSource() {
+        return new TussamLlegadaDataSource();
     }
 
     private static SevibusApi getSevibusApi() {
