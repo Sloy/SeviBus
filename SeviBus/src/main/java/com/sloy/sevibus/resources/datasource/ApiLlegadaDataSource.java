@@ -4,7 +4,9 @@ import com.sloy.sevibus.model.Llegada;
 import com.sloy.sevibus.resources.exceptions.ServerErrorException;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class ApiLlegadaDataSource implements LlegadaDataSource {
 
@@ -29,9 +31,13 @@ public class ApiLlegadaDataSource implements LlegadaDataSource {
                 .onErrorResumeNext(new Func1<Throwable, Observable<? extends Llegada>>() {
                     @Override
                     public Observable<? extends Llegada> call(Throwable throwable) {
-                        return fallbackDataSource.getLlegada(linea, parada);
+                        return getFallbackLlegada(linea, parada);
                     }
                 });
+    }
+
+    private Observable<Llegada> getFallbackLlegada(String linea, Integer parada) {
+        return fallbackDataSource.getLlegada(linea, parada).subscribeOn(Schedulers.io());
     }
 
     private Llegada arrivalToLLegada(ArrivalTimesApiModel arrival) {
