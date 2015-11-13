@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Sevibus" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+
+        <item name="android:textColorPrimary">@color/primary_text</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
+
+        <item name="toolbar">@style/ToolBar</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="searchViewStyle">@style/MySearchViewStyle</item>
+
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
+
+    <style name="Theme.Sevibus.V">
+        <item name="colorPrimary">@color/primaryV</item>
+        <item name="colorPrimaryDark">@color/primary_darkV</item>
+        <item name="colorAccent">@color/accentV</item>
+        <item name="android:textColorPrimary">@color/primary_textV</item>
+        <item name="android:textColorSecondary">@color/secondary_textV</item>
+    </style>
+
+    <style name="ToolBar">
+        <item name="android:background">?colorPrimary</item>
+        <item name="theme">@style/ActionBarThemeOverlay</item>
+        <item name="popupTheme">@style/Theme.AppCompat.Light</item>
+        <item name="titleTextAppearance">@style/ActionBar.TitleText</item>
+    </style>
+
+    <style name="SevibusTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabTextAppearance">@style/TabTextAppearance</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+    </style>
+
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textColor">@color/white_alpha</item>
+    </style>
+
+    <style name="MySearchViewStyle" parent="Widget.AppCompat.Light.SearchView">
+        <item name="queryBackground">@color/primary</item>
+        <item name="android:textColorHint">@color/white</item>
+    </style>
+
+    <style name="ActionBarThemeOverlay" parent="">
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="colorControlNormal">#fff</item>
+        <item name="colorControlHighlight">#3fff</item>
+    </style>
+
+    <style name="ActionBar.TitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ProgressHorizontal" parent="Widget.AppCompat.ProgressBar.Horizontal" />
+
+    <!-- Menú drawer -->
+
+    <style name="MenuDrawer"/>
+
+    <style name="MenuDrawer.Widget"/>
+
+    <style name="MenuDrawer.Widget.Category">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MenuDrawer.Widget.Title">
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingRight">32dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="MenuDrawer.Widget.TitleText">
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <!-- Propios -->
+    <style name="Lineas.Header" parent="MenuDrawer.Widget.Category">
+        <item name="android:textColor">?colorPrimary</item>
+    </style>
+
+    <style name="Card"></style>
+
+    <style name="Card.Header">
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:layout_marginLeft">21dp</item>
+        <item name="android:layout_marginTop">21dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-medium</item>
+    </style>
+
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/menu_mapa_abrir"
+        android:icon="@drawable/ic_action_settings"
+        android:title="Mostrar opciones"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/menu_search"
+          android:icon="@drawable/ic_action_search"
+          android:title="Buscar paradas"
+          app:showAsAction="always" />
+</menu>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    >
+
+    <TextView
+        android:id="@+id/item_parada_numero_staticText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Parada nº"
+        android:textColor="@color/rojo_sevibus"
+        android:textSize="19sp" />
+
+    <TextView
+        android:id="@+id/item_parada_numero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/item_parada_numero_staticText"
+        android:layout_marginLeft="6dip"
+        android:layout_toRightOf="@+id/item_parada_numero_staticText"
+        android:text="50"
+        android:textColor="@color/rojo_sevibus"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/item_parada_nombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_parada_numero_staticText"
+        android:layout_marginTop="2dp"
+        android:text="Avenida de la Cruz Roja (Clínica)"
+        android:textSize="17sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/item_parada_lineas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_parada_nombre"
+        android:gravity="left"
+        android:text="01  06  11  A1"
+        android:textColor="#666"
+        android:textSize="15dip" />
+
+</RelativeLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dip"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp">
+
+    <ImageView
+        android:id="@+id/item_alerta_dialog_avatar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="4dp"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/item_alerta_dialog_fecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/item_alerta_dialog_avatar"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/item_alerta_dialog_avatar"
+        android:drawablePadding="5dip"
+        android:gravity="center_vertical"
+        android:text="20 mar 22:05"
+        android:textColor="#ff6b6b6b"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/item_alerta_dialog_texto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/item_alerta_dialog_avatar"
+        android:layout_marginBottom="5dip"
+        android:text="Línea 11 desviada de c/ Valdearco por corte de tráfico."
+        android:textColor="#ff3c3c3c"
+        android:textSize="16sp" />
+
+</RelativeLayout>

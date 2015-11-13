@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog>
+    <release version="3.5" versioncode="68">
+        <change>Nuevo: ¡Material Design! Más de un año, por fin SeviBus se actualiza con un diseño moderno y más limpio.</change>
+        <change>Nuevo: Colores de líneas. Ahora los números de las líneas aparecerán con el color de las marquesinas. También al dibujarlas en el mapa.</change>
+        <change>Extra: Adiós anuncios. A partir de ahora ya no saldrán más anuncios molestos y engañosos. SeviBus es ahora Ad-Free.</change>
+    </release>
+    <release version="3.4" versioncode="66">
+        <change>Nuevo: Sección de alertas. Muestra los tweets de @SeviBus y @Ayto_Sevilla relacionados con el servicio de autobuses.</change>
+        <change>Nuevo: Alertas recientes identificadas sobre líneas en la pantalla de parada.</change>
+        <change>Correcciones menores</change>
+    </release>
+    <release version="3.3" versioncode="64">
+        <change>¡Bonobuses! Accede a través del menú lateral.</change>
+        <change>Añade bonobuses con el número de tarjeta y consulta su estado.</change>
+        <change>De momento soporta bono normal con y sin saldo, tarjeta joven y bono mensual.</change>
+        <change>Correcciones menores</change>
+    </release>
+    <release version="3.2" versioncode="62">
+        <change>Nuevo: Modo Ligero para aumentar el rendimiento en teléfonos con menos prestaciones. Se activa desde ajustes.</change>
+        <change>Nuevo: Permite instalación en la SD para teléfonos con memoria externa.</change>
+        <change>Nuevo: Reporte automático de estadísticas anónimas.</change>
+        <change>Actualizado: Mejorado el control de la publicidad.</change>
+        <change>Actualizado: Eliminadas librerías innecesarias.</change>
+        <change>Corregidos algunos fallos varios.</change>
+    </release>
+    <release version="3.1" versioncode="60">
+        <change>Nuevo: Mostrar en el mapa la posición de autobuses e imágenes de satélite.</change>
+        <change>Nuevo: Muestra opcionalmente los últimos cambios en la pantalla principal al actualizar a una nueva versión.</change>
+        <change>Actualizado: Paradas cercanas ordenadas por posición aproximada. Muestran la distancia calculada bajo el número</change>
+        <change>Actualizado: Funcionamiento interno del mapa. Mejora el rendimiento.</change>
+        <change>Cambios y arreglos menores.</change>
+    </release>
+    <release version="3.0.2" versioncode="59">
+        <change>Corregidos errores varios, entre ellos el que impedía abrir la aplicación en teléfonos con Android 2.2.</change>
+    </release>
+    <release version="3.0.1" versioncode="58">
+        <change>Añadida compatibilidad con versiones de Android 2.2 y 2.3, con funciones limitadas.</change>
+        <change>Corregido error en el formulario de contacto por el que el texto escrito no se enviaba correctamente.</change>
+        <change>Corregidos varios errores graves que provocaban el fallo de la aplicación.</change>
+    </release>
+    <release version="3.0" versioncode="57" >
+        <change>Aplicación totalmente rediseñada y desarrollada desde cero.</change>
+        <change>Actualización automática de líneas y paradas: Cada vez que Tussam cambie un recorrido no será necesario actualizar la aplicación en el Play Store, los cambios se aplicarán automáticamente en cuestión de unas horas.</change>
+        <change>Pantalla principal con acceso rápido y dinámico al mapa, paradas favoritas, y paradas y líneas cercanas.</change>
+        <change>Información de llegada a la parada de los dos próximos autobuses.</change>
+        <change>Nuevo mapa más práctico y visual, con posibilidad de mostrar a la vez varias líneas con sus recorridos, paradas cercanas y favoritas.</change>
+        <change>Paradas de líneas separadas por trayectos y ordenadas según el recorrido.</change>
+        <change>Líneas ordenadas por secciones de la ciudad, con el horario estimado de cada una.</change>
+        <change>Favoritas personalizables, con nombre, color y orden en la lista. Aparecen en la pantalla principal para acceso más rápido.</change>
+        <change>Menú lateral para acceder a las secciones principales de la aplicación.</change>
+        <change>Reporte automático de errores en la aplicación para facilitar su mejora.</change>
+        <change>Nuevo icono y logo.</change>
+        <change>Muchas pero que muchas novedades que llegarán a partir de ahora :)</change>
+    </release>
+</changelog>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="main_separators">#ccc</color>
+
+    <color name="window_background">#e8e3dc</color>
+    <color name="soft_black">#FF363636</color>
+
+    <color name="rojo_sevibus">#aa0000</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="white_alpha">#aaffffff</color>
+</resources>

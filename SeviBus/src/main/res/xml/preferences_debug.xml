@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="pref_debug_cat"
+        android:title="Debug"
+        >
+        <CheckBoxPreference
+            android:key="pref_ubicacion_falsa"
+            android:title="Forzar ubicación falsa"
+            />
+        <CheckBoxPreference
+            android:key="pref_reports"
+            android:title="Activar reportes y estadísticas"
+            android:summary="Para evitar enviar datos inservibles"
+            />
+        <Preference
+            android:key="pref_salir_debug"
+            android:title="Salir del modo debug"
+            android:summary="Si quieres volver, ya sabes dónde estoy ;)"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>

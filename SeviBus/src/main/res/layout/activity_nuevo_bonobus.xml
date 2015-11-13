@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Número de tarjeta:"
+            android:layout_marginRight="16dp"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/nuevo_bonobus_numero"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:maxLength="16"
+            android:hint="####  ####  ####" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="El número de 12 cifras que aparece en el reverso del bono."
+        android:fontFamily="sans-serif-light"
+        android:textSize="12sp"
+        android:textColor="#AAA"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <LinearLayout
+            android:id="@+id/nuevo_bonobus_ayuda"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bonobus_back"
+                android:visibility="visible"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nuevo_bonobus_info"
+                android:textColor="#666"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-light"
+                />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/nuevo_bonobus_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:textColor="#666"
+            android:textSize="16sp"
+            android:text="Aparentemente el número introducido es incorrecto. Compruébalo para asegurarte de que no lo has escrito mal. Si crees que está bien inténtalo de nuevo pasados unos minutos, podría ser un problema de Tussam. Si sigue fallando, consúltame a contacto@sevibus.com y veremos qué ocurre."
+            android:fontFamily="sans-serif-light"
+            android:visibility="invisible"
+            />
+
+        <ProgressBar
+            android:id="@+id/nuevo_bonobus_cargando"
+            style="@style/ProgressHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_gravity="left|center_vertical"
+            android:indeterminate="true"
+            android:visibility="invisible"/>
+
+        <EditText
+            android:id="@+id/nuevo_bonobus_nombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre propio (opcional)"
+            android:layout_marginTop="16dp"
+            android:singleLine="true"
+            android:layout_below="@+id/nuevo_bonobus_resultado"
+            android:visibility="invisible"
+            />
+
+        <com.sloy.sevibus.ui.widgets.BonobusView
+            android:id="@+id/nuevo_bonobus_resultado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/nuevo_bonobus_guardar"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_gravity="bottom"
+        android:background="?selectableItemBackground"
+        android:text="Guardar tarjeta"
+        android:textSize="17sp"
+        android:textColor="?colorPrimary"
+        android:visibility="invisible"/>
+
+</LinearLayout>

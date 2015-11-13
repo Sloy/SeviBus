@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="8dp">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/box_background_normal"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/item_bonobus_nombre"
+            android:layout_width="match_parent"
+            android:layout_toLeftOf="@+id/item_bonobus_imagen"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="Nombre propio del Bonobús"
+            android:textColor="@color/rojo_sevibus"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_bonobus_numero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_bonobus_nombre"
+            android:layout_marginTop="-3dp"
+            android:text="XXXX XXXX XXXX"
+            android:textColor="#666"
+            android:textSize="17sp"
+            android:fontFamily="sans-serif-light" />
+
+        <TextView
+            android:id="@+id/item_bonobus_descripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_bonobus_numero"
+            android:layout_toLeftOf="@id/item_bonobus_imagen"
+            android:text="Saldo: 7'50€"
+            android:textSize="19sp" />
+
+        <ProgressBar
+            android:id="@+id/item_bonobus_cargando"
+            style="@style/ProgressHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_bonobus_numero"
+            android:layout_marginRight="32dp"
+            android:layout_toLeftOf="@id/item_bonobus_imagen"
+            android:layout_gravity="left|center_vertical"
+            android:indeterminate="true" />
+
+        <ImageView
+            android:id="@+id/item_bonobus_imagen"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/bonobus_default" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/item_bonobus_opciones_panel"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:background="@drawable/box_background_normal"
+        android:layout_marginTop="-3dp"
+        android:visibility="gone"
+        >
+
+        <FrameLayout
+            android:id="@+id/item_bonobus_opciones_eliminar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:foreground="?selectableItemBackground"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Eliminar"
+                android:textSize="16sp"
+                android:textColor="?colorPrimary" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/main_separators" />
+
+        <FrameLayout
+            android:id="@+id/item_bonobus_opciones_tarifas"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:foreground="?selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Ver tarifas"
+                android:textSize="16sp"
+                android:textColor="?colorPrimary" />
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

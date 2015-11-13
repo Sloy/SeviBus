@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_version">3.4</string>
+
+    <!-- Info de Parada -->
+    <string name="parada_info_titulo">Parada %d</string>
+    <string name="title_activity_paradas_de_linea">Paradas</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+    <string name="initial_info">Será sólo un momento</string>
+    <string name="initial_info_error">oops</string>
+    <string name="titulo_inicial">Iniciando...</string>
+    <string name="paradas_cercanas_empty">No encontramos paradas cercanas a tu posición. ¿Estás fuera de Sevilla?
+    </string>
+    <string name="ubicacion_error">No pudimos obtener tu ubicación. No podrás aprovechar todas las funciones de SeviBus.
+    </string>
+    <string name="paradas_cercanas_cargando">Buscando paradas cercanas a tu posición...</string>
+    <string name="lineas_cercanas_cargando">Buscando líneas cercanas a tu posición...</string>
+    <string name="lineas_cercanas_empty">No encontramos líneas cercanas a tu posición. ¿Estás fuera de Sevilla?</string>
+    <string name="favoritas_main_empty">Guarda tus paradas favoritas y aparecerán aquí</string>
+    <string name="favoritas_main_cargando">Cargando paradas favoritas...</string>
+    <string name="search_hint">Nº o nombre</string>
+    <string name="acerca_disclaimer">SeviBus es una aplicación independiente de la empresa Tussam, no tengo ninguna relación con ellos. La información se extrae de la web de Tussam.
+    </string>
+    <string name="contacto_aviso">Este formulario es para contactar con el autor de la aplicación. Si no lo sabes, SeviBus es totalmente independiente de Tussam por lo que si tu motivo de contacto es referente a algo de la empresa (horarios, precios, rutas, quejas, etc) no te podré ayudar y tu mensaje será seguramente ignorado.
+        \n\nPor otro lado, para cualquier comentario, duda, pregunta o sugerencia sobre la aplicación en sí siéntete libre de usar el formulario a continuación y decirme lo que quieras, no muerdo.
+        \n\nAun así, antes de escribirme te recomiendo que leas las preguntas frecuentes que puedes ver desde el menú de la pantalla anterior, quizá tu duda ya esté resuelta ahí.
+        \n\nY antes de enviar tu mensaje debes saber que este formulario por sí solo no envía el mensaje, sino que sirve como acceso a tu aplicación de correo electrónico, que se abrirá cuando pulses el botón enviar con mi dirección como destinatario y algunos datos rellenos para facilitar nuestra comunicación, sólo tendrás que pulsar enviar y listo. Tras enviar el correo volverás a esta pantalla, NO vuelvas a enviar el mensaje, aunque la aplicación no lo sepa está ya enviado y no hace falta repetir.
+    </string>
+    <string name="email_address">sevibus@sloydev.com</string>
+    <string name="email_subject">Contacto SeviBus</string>
+    <string name="email_intent_chooser">Enviar vía email...</string>
+    <string name="url_perfil">http://sloydev.com</string>
+    <string name="url_faq">http://sevibus.sloydev.com/faq</string>
+    <string name="version_text">Versión %s</string>
+    <string name="version_db_text">Base de datos versión %d</string>
+    <string name="mapa_opciones_add_linea">Añadir línea al mapa</string>
+    <string name="mapa_opciones_aviso_buses">La posición de los autobuses se obtiene del servicio web de Tussam.
+    \n\nLa posición es aproximada y no se da en tiempo real. Puede no siempre estar disponible para todos los autobuses.
+    \n\nLa aplicación no tiene influencia sobre los resultados.</string>
+    <string name="nuevo_bonobus_info">Tipos de tajeta soportados actualmente:\n- Bonobús saldo sin transbordo\n- Bonobús saldo con transbordo\n- Tarjeta joven\n- Tarjeta 30 días</string>
+</resources>

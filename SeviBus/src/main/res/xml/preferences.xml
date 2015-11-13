@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Interfaz"
+        >
+        <CheckBoxPreference
+            android:key="pref_lite_mode"
+            android:title="Modo ligero"
+            android:summary="Menos funciones pero más rápido en teléfonos de recursos bajos"
+            android:defaultValue="false"
+            />
+        <CheckBoxPreference
+            android:key="pref_alertas"
+            android:title="Mostrar alertas"
+            android:summary="Muestra alertas en las líneas identificadas a partir de los tweets de @Ayto_Sevilla"
+            android:defaultValue="true"
+            />
+
+        </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Datos de paradas y líneas"
+        >
+
+        <CheckBoxPreference
+            android:key="pref_update_auto"
+            android:title="Actualizar automáticamente"
+            android:summary="Mantiene los datos al día"
+            android:defaultValue="true"
+            />
+
+        <Preference
+            android:key="pref_update_manual"
+            android:title="Actualización manual"
+            />
+    </PreferenceCategory>
+
+    <!--<PreferenceCategory
+        android:title="Ajustes personales"
+        >
+        <CheckBoxPreference
+            android:title="Sincronizar favoritas"
+            android:summary="Sincroniza las paradas favoritas entre dispositivos con Google Drive"
+            />
+        <Preference
+            android:title="Cambiar cuenta"
+            android:summary="Actual: rafagames92@gmail.com"
+            />
+
+    </PreferenceCategory>-->
+
+    <PreferenceCategory
+        android:title="Información"
+        >
+        <Preference
+            android:key="pref_faq"
+            android:title="Preguntas frecuentes"
+            android:summary="Información general de SeviBus"
+            />
+        <Preference
+            android:key="pref_contacto"
+            android:title="Contacto"
+            />
+        <Preference
+            android:key="pref_acerca"
+            android:title="Acerca de"
+            />
+
+    </PreferenceCategory>
+</PreferenceScreen>

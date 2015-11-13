@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/menu_preguntas_frecuentes"
+        android:title="Preguntas frecuentes"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_perfil"
+        android:title="Perfil del desarrollador"
+        app:showAsAction="never"/>
+
+
+</menu>

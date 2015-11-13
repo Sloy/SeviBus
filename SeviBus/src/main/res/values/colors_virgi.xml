@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="primaryV">#E91E63</color>
+    <color name="primary_darkV">#C2185B</color>
+    <color name="accentV">#E040FB</color>
+    <color name="primary_textV">#300a33</color>
+    <color name="secondary_textV">#b38f9b</color>
+
+</resources>

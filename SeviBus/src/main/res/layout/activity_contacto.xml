@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/reporte_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            android:background="@drawable/box_background_normal">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="¡IMPORTANTE! Leer antes:"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-light"
+                />
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/contacto_aviso"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            android:background="@drawable/box_background_normal">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Marca las casillas si has entendido"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-light"
+                />
+
+            <CheckBox
+                android:id="@+id/contacto_check_true1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Entiendo que SeviBus NO es de Tussam."
+                />
+
+
+            <CheckBox
+                android:id="@+id/contacto_check_true2"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Prometo que he leído las preguntas frecuentes de la pantalla anterior."
+                />
+
+            <CheckBox
+                android:id="@+id/contacto_check_false1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Entiendo que dos más dos son cinco."
+                />
+
+            <CheckBox
+                android:id="@+id/contacto_check_true3"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Entiendo que no debo preguntar a qué hora sale tal o cual bus."
+                />
+
+
+            <CheckBox
+                android:id="@+id/contacto_check_true4"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Sé que no debo preguntar cómo puedo llegar a determinado sitio."
+                />
+
+            <CheckBox
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Palabrita del niño Jesús."
+                />
+
+            <CheckBox
+                android:id="@+id/contacto_check_true5"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Comprendo que cualquier consulta no relacionada con la aplicación será ignorada."
+                />
+
+            <CheckBox
+                android:id="@+id/contacto_check_false2"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Si marco esta casilla es porque no me he leído nada de lo anterior."
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            android:background="@drawable/box_background_normal">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Ahora sí, dime lo que quieras"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-light"
+                />
+
+            <EditText
+                android:id="@+id/contacto_texto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Escribe aquí tu mensaje"
+                android:inputType="textMultiLine"
+                android:minLines="4">
+            </EditText>
+
+            <CheckBox
+                android:id="@+id/contacto_device_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Incluir información anónima sobre el teléfono para ayudar a resolver mi duda"/>
+
+            <Button
+                android:id="@+id/contacto_enviar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:text="Enviar por correo"
+                android:enabled="false"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

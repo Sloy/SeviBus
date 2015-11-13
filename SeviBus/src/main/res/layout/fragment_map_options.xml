@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_alpha"
+            android:padding="8dp"
+    >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="Paradas cercanas"
+            android:textSize="17sp"
+            android:id="@+id/mapa_opciones_cercanas"
+            android:layout_gravity="left|center_vertical"
+            android:checked="false"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="Favoritas"
+            android:textSize="17sp"
+            android:id="@+id/mapa_opciones_favoritas"
+            android:layout_gravity="left|center_vertical"
+            android:checked="false"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Líneas"
+            android:id="@+id/textView"
+            style="@style/MenuDrawer.Widget.Category"/>
+
+        <LinearLayout
+            android:id="@+id/mapa_opciones_lineas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/mapa_opciones_lineas_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:minHeight="48dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:background="?selectableItemBackground"
+            android:text="@string/mapa_opciones_add_linea"
+            android:gravity="center_vertical"
+            android:textColor="?android:textColorPrimary"
+            android:drawableLeft="@drawable/ic_action_add_dim"
+            android:fontFamily="sans-serif-light"
+            android:textSize="17sp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Opciones"
+            style="@style/MenuDrawer.Widget.Category"/>
+
+        <CheckBox
+            android:id="@+id/mapa_opciones_buses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="Mostrar buses de líneas"
+            android:textSize="17sp"
+            android:layout_gravity="left|center_vertical"
+            android:checked="false"/>
+
+        <CheckBox
+            android:id="@+id/mapa_opciones_satelite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="Imagen de satélite"
+            android:textSize="17sp"
+            android:layout_gravity="left|center_vertical"
+            android:checked="false"/>
+
+
+
+
+    </LinearLayout>
+
+</ScrollView>
