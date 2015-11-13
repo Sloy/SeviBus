@@ -11,7 +11,7 @@ import retrofit.RestAdapter;
 public class StuffProvider {
 
 
-    public static final String API_ENDPOING = "http://sevibus.herokuapp.com";
+    public static final String API_ENDPOING = "http://api.sevibus.sloydev.com";
 
     public static ObtainLlegadasAction getObtainLlegadaAction() {
         return new ObtainLlegadasAction(getLlegadaDataSource());
