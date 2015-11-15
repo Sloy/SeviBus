@@ -20,8 +20,8 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'crashlytics'
 
 
-def myVersionCode = 69
-def myVersionName = "3.5.1"
+def myVersionCode = 70
+def myVersionName = "3.5.2-beta"
 
 android {
     signingConfigs {
