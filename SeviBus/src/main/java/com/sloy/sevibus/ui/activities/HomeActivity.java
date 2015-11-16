@@ -70,8 +70,6 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         }
 
         SyncUtils.createSyncAccount(this);
-
-        Debug.disableAnalyticsOnDebug(this);
     }
 
     @Override

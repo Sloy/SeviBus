@@ -21,7 +21,9 @@ import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.Reciente;
+import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.ui.ThemeSelector;
 import com.sloy.sevibus.ui.adapters.ParadasAdapter;
 import java.sql.SQLException;
@@ -39,6 +41,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
     private TextView mEmptyView;
     private View mIndicadorRecientes;
     private String mCurrentQuery;
+    private AnalyticsTracker analyticsTracker;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BusquedaActivity.class);
@@ -49,6 +52,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_busqueda);
 
+        analyticsTracker = StuffProvider.getAnalyticsTracker(this);
         mListView = (ListView) findViewById(R.id.busqueda_lista);
         mEmptyView = (TextView) findViewById(R.id.busqueda_texto_vacio);
         mIndicadorRecientes = findViewById(R.id.busqueda_indicador_recientes);
@@ -56,6 +60,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                analyticsTracker.searchPerformed(mCurrentQuery);
                 startActivity(ParadaInfoActivity.getIntent(BusquedaActivity.this, mAdapter.getItem(position).getNumero()));
             }
         });

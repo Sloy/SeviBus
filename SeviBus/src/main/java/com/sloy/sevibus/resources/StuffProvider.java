@@ -1,5 +1,8 @@
 package com.sloy.sevibus.resources;
 
+import android.content.Context;
+
+import com.crashlytics.android.answers.Answers;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.ApiLlegadaDataSource;
@@ -13,6 +16,14 @@ public class StuffProvider {
 
 
     public static final String API_ENDPOING = "http://api.sevibus.sloydev.com";
+
+    public static AnalyticsTracker getAnalyticsTracker(Context context) {
+        if (Debug.isReportsEnabled(context)) {
+            return new AnswersAnalyticsTracker(Answers.getInstance());
+        } else {
+            return new EmptyAnalyticsTracker();
+        }
+    }
 
     public static ObtainLlegadasAction getObtainLlegadaAction() {
         return new ObtainLlegadasAction(getLlegadaDataSource());

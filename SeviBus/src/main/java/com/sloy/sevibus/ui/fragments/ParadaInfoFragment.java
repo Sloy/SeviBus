@@ -33,8 +33,10 @@ import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.Reciente;
 import com.sloy.sevibus.resources.AlertasManager;
+import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.TimeTracker;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
 import com.sloy.sevibus.ui.activities.BaseActivity;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
@@ -81,6 +83,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     private List<Linea> mLineas;
 
     private Map<String, Llegada> mLlegadas;
+    private AnalyticsTracker analyticsTracker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -109,6 +112,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         }
 
         obtainLlegadasAction = StuffProvider.getObtainLlegadaAction();
+        analyticsTracker = StuffProvider.getAnalyticsTracker(getActivity());
     }
 
     @Override
@@ -188,6 +192,8 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
             if (parada_numero < 1) {
                 Log.e("SeviBus", "No se recibió parada");
             }
+
+            analyticsTracker.paradaViewed(parada_numero);
 
             mParada = DBQueries.getParadaById(getDBHelper(), parada_numero);
             try {
@@ -346,11 +352,14 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     private void updateLlegadas() {
         for (final Linea l : mLineas) {
             mViewLlegadas.setLlegadaCargando(l.getNumero());
+            TimeTracker timeTracker = analyticsTracker.trackTiempoRecibido(mParada.getNumero(), l.getNumero());
+
             obtainLlegadasAction.getLlegada(l.getNumero(), mParada.getNumero())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(llegada -> {
                     mLlegadas.put(llegada.getLineaNumero(), llegada);
                     mViewLlegadas.setLlegadaInfo(llegada.getLineaNumero(), llegada);
+                    timeTracker.end();
                 },
                 error -> {
                     mViewLlegadas.setLlegadaInfo(l.getNumero(), null);

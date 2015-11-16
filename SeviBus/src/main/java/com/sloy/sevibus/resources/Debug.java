@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
 import com.sloy.sevibus.BuildConfig;
@@ -38,18 +39,20 @@ public class Debug {
     }
 
     public static void activateReports(Context context) {
-        boolean doReports = context.getSharedPreferences("debug", Context.MODE_MULTI_PROCESS).getBoolean(REPORTS_KEY, false);
-        boolean isDebug = isDebugEnabled(context);
-        if (!isDebug || (isDebug && doReports)) {
-            Fabric.with(context, new Crashlytics());
+        boolean reportsEnabled = isReportsEnabled(context);
+        if (reportsEnabled) {
+            Fabric.with(context, new Crashlytics(), new Answers());
         } else {
             Log.d("Sevibus debug", "Evitando reporte de errores");
         }
     }
 
-    public static void disableAnalyticsOnDebug(Context context) {
-        boolean doReports = context.getSharedPreferences("debug", Context.MODE_MULTI_PROCESS).getBoolean(REPORTS_KEY, false);
-        boolean isDebug = isDebugEnabled(context);
+    public static boolean isReportsEnabled(Context context) {
+        return !isDebugEnabled(context) || isReportsForceEnabled(context);
+    }
+
+    private static boolean isReportsForceEnabled(Context context) {
+        return context.getSharedPreferences("debug", Context.MODE_MULTI_PROCESS).getBoolean(REPORTS_KEY, false);
     }
 
     public static void useFakeLocation(Context context, Location location) {
