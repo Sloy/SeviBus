@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -21,10 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sloy.sevibus.R;
+import com.sloy.sevibus.model.ArrivalTime;
 import com.sloy.sevibus.model.LineaWarning;
-import com.sloy.sevibus.model.Llegada;
 import com.sloy.sevibus.model.TweetHolder;
 import com.sloy.sevibus.model.tussam.Linea;
+import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.ui.activities.HomeActivity;
 import com.sloy.sevibus.ui.adapters.TwitterAdapter;
 import com.squareup.picasso.Picasso;
@@ -119,7 +121,7 @@ public class LlegadasList extends LinearLayout {
         }
     }
 
-    public void setLlegadaInfo(String lineaNumero, Llegada llegada) {
+    public void setLlegadaInfo(String lineaNumero, ArrivalTime llegada) {
         View vistaLlegada = mLlegadasMap.get(lineaNumero);
 
         //TODO mejorar el caso cuando no hay información disponible
@@ -133,16 +135,16 @@ public class LlegadasList extends LinearLayout {
         View container = vistaLlegada.findViewById(R.id.item_llegada_container);
 
 
-        if (llegada == null) {
+        if (llegada==null) {
+            //TODO whut?
             tiempo1Text.setText("Error");
             tiempo2Text.setText("Sin conexión a Internet o servidor no disponible");
             distancia1Text.setText("");
             distancia2Text.setText("");
         } else {
-            // Primera llegada
-            if (llegada.getBus1() != null) {
-                int tiempo1 = llegada.getBus1().getTiempo();
-                int distancia1 = llegada.getBus1().getDistancia();
+            if (llegada.getNextBus().getStatus() == ArrivalTime.Status.ESTIMATE) {
+                int tiempo1 = llegada.getNextBus().getTimeInMinutes();
+                int distancia1 = llegada.getNextBus().getDistanceInMeters();
                 if (tiempo1 > 0) {
                     tiempo1Text.setText(String.format("%d minutos", tiempo1));
                     distancia1Text.setText(String.format("%d metros", distancia1));
@@ -159,9 +161,9 @@ public class LlegadasList extends LinearLayout {
             }
 
             // Segunda llegada
-            if (llegada.getBus2() != null) {
-                int tiempo2 = llegada.getBus2().getTiempo();
-                int distancia2 = llegada.getBus2().getDistancia();
+            if (llegada.getSecondBus().getStatus() == ArrivalTime.Status.ESTIMATE) {
+                int tiempo2 = llegada.getSecondBus().getTimeInMinutes();
+                int distancia2 = llegada.getSecondBus().getDistanceInMeters();
                 if (tiempo2 > 0) {
                     tiempo2Text.setText(String.format("%d minutos", tiempo2));
                     distancia2Text.setText(String.format("%d metros", distancia2));
@@ -182,6 +184,9 @@ public class LlegadasList extends LinearLayout {
         progress.setVisibility(View.GONE);
         container.setVisibility(VISIBLE);
 
+        if (Debug.isDebugEnabled(getContext())) {
+            distancia2Text.setText(llegada.getDataSource());
+        }
     }
 
     public void setLlegadaCargando(String linea) {
@@ -256,5 +261,4 @@ public class LlegadasList extends LinearLayout {
             return view;
         }
     }
-
 }

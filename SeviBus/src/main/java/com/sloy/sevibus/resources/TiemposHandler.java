@@ -1,7 +1,7 @@
 package com.sloy.sevibus.resources;
 
-import com.sloy.sevibus.model.Llegada;
-import com.sloy.sevibus.model.Llegada.Bus;
+import com.sloy.sevibus.model.ArrivalTime;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -9,16 +9,15 @@ import org.xml.sax.helpers.DefaultHandler;
 public class TiemposHandler extends DefaultHandler {
 
 	Bus tmpBus, bus1, bus2;
-	StringBuilder sb = new StringBuilder();
 	Builder build = Builder.NO;
 
 	private enum Builder {
 		NO, TIEMPO, DISTANCIA, RUTA;
 	}
 
-	public Llegada configurarLlegada(Llegada empty) {
-		empty.setBus1(bus1);
-		empty.setBus2(bus2);
+	public ArrivalTime configurarLlegada(ArrivalTime empty) {
+		empty.setNextBus(busArrivalFromBus(bus1));
+		empty.setSecondBus(busArrivalFromBus(bus2));
 		return empty;
 	}
 
@@ -29,10 +28,10 @@ public class TiemposHandler extends DefaultHandler {
 			sb.append(ch, start, length);
 			switch (build){
 				case TIEMPO:
-					tmpBus.setTiempo(Integer.parseInt(sb.toString()));
+					tmpBus.time = (Integer.parseInt(sb.toString()));
 					break;
 				case DISTANCIA:
-					tmpBus.setDistancia(Integer.parseInt(sb.toString()));
+					tmpBus.distance = (Integer.parseInt(sb.toString()));
 					break;
 				default:
 					break;
@@ -65,6 +64,35 @@ public class TiemposHandler extends DefaultHandler {
 		}else if(localName.equals("minutos") || localName.equals("metros")){
 			build = Builder.NO;
 		}
+	}
+
+	private ArrivalTime.BusArrival busArrivalFromBus(Bus bus) {
+		ArrivalTime.Status status = statusForBus(bus);
+		ArrivalTime.BusArrival busArrival = new ArrivalTime.BusArrival(status);
+		if (bus != null) {
+			busArrival.setTimeInMinutes(bus.time);
+			busArrival.setDistanceInMeters(bus.distance);
+		}
+		return busArrival;
+	}
+
+	private ArrivalTime.Status statusForBus(Bus bus) {
+		if (bus == null) {
+			return ArrivalTime.Status.NOT_AVAILABLE;
+		} else {
+			if (bus.time > 0) {
+				return ArrivalTime.Status.ESTIMATE;
+			} else if (bus.time == 0) {
+				return ArrivalTime.Status.IMMINENT;
+			} else {
+				return ArrivalTime.Status.NO_ESTIMATION;
+			}
+		}
+	}
+
+	class Bus {
+		int time;
+		int distance;
 	}
 
 }

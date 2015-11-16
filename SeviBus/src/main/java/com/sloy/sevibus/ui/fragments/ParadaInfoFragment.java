@@ -23,10 +23,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
+import com.sloy.sevibus.model.ArrivalTime;
 import com.sloy.sevibus.model.LineaWarning;
-import com.sloy.sevibus.model.Llegada;
 import com.sloy.sevibus.model.MiAnuncio;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Linea;
@@ -82,7 +83,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     private Parada mParada;
     private List<Linea> mLineas;
 
-    private Map<String, Llegada> mLlegadas;
+    private Map<String, ArrivalTime> mLlegadas;
     private AnalyticsTracker analyticsTracker;
 
     @Override
@@ -357,8 +358,8 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
             obtainLlegadasAction.getLlegada(l.getNumero(), mParada.getNumero())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(llegada -> {
-                    mLlegadas.put(llegada.getLineaNumero(), llegada);
-                    mViewLlegadas.setLlegadaInfo(llegada.getLineaNumero(), llegada);
+                    mLlegadas.put(llegada.getBusLineName(), llegada);
+                    mViewLlegadas.setLlegadaInfo(llegada.getBusLineName(), llegada);
                     timeTracker.end();
                 },
                 error -> {
@@ -366,6 +367,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                     Snackbar.make(getView(), "Se produjo un error", Snackbar.LENGTH_LONG)
                       .setAction("Reintentar", (view) -> updateLlegadas())
                       .show();
+                    Crashlytics.logException(error);
                 });
         }
     }
@@ -381,7 +383,6 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     }
 
     public void cargaAnuncio(final MiAnuncio miAnuncio) {
-        Log.d("SeviBus", "cargaAnuncio()");
         final FragmentActivity activity = getActivity();
         if (mAnuncioContainer == null || activity == null)
             return; // Por si la activity se fue al carajo o algo

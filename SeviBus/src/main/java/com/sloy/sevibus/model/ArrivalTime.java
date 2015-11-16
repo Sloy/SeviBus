@@ -1,6 +1,6 @@
-package com.sloy.sevibus.resources.datasource;
+package com.sloy.sevibus.model;
 
-public class ArrivalTimesApiModel {
+public class ArrivalTime {
 
     private String busLineName;
     private Integer busStopNumber;

@@ -3,7 +3,7 @@ package com.sloy.sevibus.resources.datasource;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.sloy.sevibus.model.Llegada;
+import com.sloy.sevibus.model.ArrivalTime;
 import com.sloy.sevibus.resources.TiemposHandler;
 import com.sloy.sevibus.resources.exceptions.ServerErrorException;
 import com.squareup.okhttp.MediaType;
@@ -19,7 +19,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import rx.Observable;
-import rx.functions.Func0;
+import rx.schedulers.Schedulers;
 
 public class TussamLlegadaDataSource implements LlegadaDataSource {
 
@@ -27,15 +27,14 @@ public class TussamLlegadaDataSource implements LlegadaDataSource {
     private static final String BODY_SOAP_TIEMPOS = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><GetPasoParada xmlns=\"http://tempuri.org/\"><linea>%1s</linea><parada>%2s</parada><status>1</status></GetPasoParada></soap:Body></soap:Envelope>"; // 2.parada
 
     @Override
-    public Observable<Llegada> getLlegada(final String linea, final Integer parada) throws ServerErrorException {
-        return Observable.defer(() -> Observable.just(getLlegadaFromTussam(linea, parada)));
+    public Observable<ArrivalTime> getLlegada(final String linea, final Integer parada) throws ServerErrorException {
+        return Observable.defer(() -> Observable.just(getLlegadaFromTussam(linea, parada))).subscribeOn(Schedulers.io());
     }
 
     @NonNull
-    private Llegada getLlegadaFromTussam(String linea, Integer parada) {
-        Llegada res;
+    private ArrivalTime getLlegadaFromTussam(String linea, Integer parada) {
+        ArrivalTime res = createEmptyArrival(parada, linea);
         try {
-            res = new Llegada(linea);
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser parser = factory.newSAXParser();
             TiemposHandler handler = new TiemposHandler();
@@ -68,6 +67,14 @@ public class TussamLlegadaDataSource implements LlegadaDataSource {
 
         Response response = client.newCall(request).execute();
         return response.body().byteStream();
+    }
+
+    private ArrivalTime createEmptyArrival(Integer busStopNumber, String lineName) {
+        ArrivalTime arrivalTimes = new ArrivalTime();
+        arrivalTimes.setBusStopNumber(busStopNumber);
+        arrivalTimes.setBusLineName(lineName);
+        arrivalTimes.setDataSource("fallback");
+        return arrivalTimes;
     }
 
 }
