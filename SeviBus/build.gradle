@@ -20,8 +20,8 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 
 
-def myVersionCode = 70
-def myVersionName = "3.5.2-beta"
+def myVersionCode = 71
+def myVersionName = "3.5.2-beta2"
 
 android {
     signingConfigs {
