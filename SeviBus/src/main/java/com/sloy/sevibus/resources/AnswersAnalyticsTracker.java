@@ -28,13 +28,12 @@ public class AnswersAnalyticsTracker implements AnalyticsTracker {
     }
 
     @Override
-    public TimeTracker trackTiempoRecibido(Integer paradaNumber, String lineName) {
-        return new TimeTracker(interval -> {
-            answers.logCustom(new CustomEvent("Tiempo recibido")
-              .putCustomAttribute("Parada", String.valueOf(paradaNumber))
-              .putCustomAttribute("Linea", lineName)
-              .putCustomAttribute("Tiempo de respuesta ms", interval));
-        });
+    public void trackTiempoRecibido(Integer paradaNumber, String lineName, Long responseTime, String dataSource) {
+        answers.logCustom(new CustomEvent("Tiempo recibido")
+          .putCustomAttribute("Parada", String.valueOf(paradaNumber))
+          .putCustomAttribute("Linea", lineName)
+          .putCustomAttribute("Fuente de datos", dataSource)
+          .putCustomAttribute("Tiempo de respuesta ms", responseTime));
     }
 
 }

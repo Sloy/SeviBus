@@ -12,7 +12,8 @@ public class EmptyAnalyticsTracker implements AnalyticsTracker {
     }
 
     @Override
-    public TimeTracker trackTiempoRecibido(Integer paradaNumber, String lineName) {
-        return TimeTracker.NULL;
+    public void trackTiempoRecibido(Integer paradaNumber, String lineName, Long responseTime, String dataSource) {
+        /* no-op */
     }
+
 }

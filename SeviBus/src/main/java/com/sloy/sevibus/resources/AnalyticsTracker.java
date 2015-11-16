@@ -7,6 +7,6 @@ public interface AnalyticsTracker {
 
     void searchPerformed(String searchQuery);
 
-    TimeTracker trackTiempoRecibido(Integer paradaNumber, String lineName);
+    void trackTiempoRecibido(Integer paradaNumber, String lineName, Long responseTime, String dataSource);
 
 }

@@ -353,14 +353,15 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     private void updateLlegadas() {
         for (final Linea l : mLineas) {
             mViewLlegadas.setLlegadaCargando(l.getNumero());
-            TimeTracker timeTracker = analyticsTracker.trackTiempoRecibido(mParada.getNumero(), l.getNumero());
+            TimeTracker timeTracker = new TimeTracker();
 
             obtainLlegadasAction.getLlegada(l.getNumero(), mParada.getNumero())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(llegada -> {
                     mLlegadas.put(llegada.getBusLineName(), llegada);
                     mViewLlegadas.setLlegadaInfo(llegada.getBusLineName(), llegada);
-                    timeTracker.end();
+                    long responseTime = timeTracker.calculateInterval();
+                    analyticsTracker.trackTiempoRecibido(mParada.getNumero(), l.getNumero(), responseTime, llegada.getDataSource());
                 },
                 error -> {
                     mViewLlegadas.setLlegadaInfo(l.getNumero(), null);
