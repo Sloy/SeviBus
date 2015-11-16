@@ -12,6 +12,8 @@ import com.sloy.sevibus.BuildConfig;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+import io.fabric.sdk.android.Fabric;
+
 /**
  * Created by rafa on 02/09/13.
  */
@@ -39,7 +41,7 @@ public class Debug {
         boolean doReports = context.getSharedPreferences("debug", Context.MODE_MULTI_PROCESS).getBoolean(REPORTS_KEY, false);
         boolean isDebug = isDebugEnabled(context);
         if (!isDebug || (isDebug && doReports)) {
-            Crashlytics.start(context);
+            Fabric.with(context, new Crashlytics());
         } else {
             Log.d("Sevibus debug", "Evitando reporte de errores");
         }

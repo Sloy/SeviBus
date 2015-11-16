@@ -17,7 +17,6 @@ public class BaseActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         ThemeSelector.selectTheme(this);
         super.onCreate(savedInstanceState);
-        Debug.activateReports(this);
     }
 
     protected DBHelper getDBHelper() {
