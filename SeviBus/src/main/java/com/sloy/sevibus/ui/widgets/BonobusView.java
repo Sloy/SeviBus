@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Bonobus;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by rafa on 06/02/14.
@@ -104,24 +103,24 @@ public class BonobusView extends FrameLayout {
             switch (bonobus.getTipo()) {
                 case SALDO:
                     descripcion.setText(Html.fromHtml(String.format("Saldo: <b>%s</b>", bonobus.getSaldo())));
-                    Picasso.with(getContext()).load(R.drawable.bonobus_normal).into(imagen);
+                    imagen.setImageResource(R.drawable.bonobus_normal);
                     break;
                 case SALDO_TRANSBORDO:
                     descripcion.setText(Html.fromHtml(String.format("Saldo: <b>%s</b>", bonobus.getSaldo())));
-                    Picasso.with(getContext()).load(R.drawable.bonobus_transbordo).into(imagen);
+                    imagen.setImageResource(R.drawable.bonobus_transbordo);
                     break;
                 case JOVEN:
                     descripcion.setText(Html.fromHtml(String.format("Caducidad: <b>%s</b>", bonobus.getCaducidad())));
-                    Picasso.with(getContext()).load(R.drawable.bonobus_joven).into(imagen);
+                    imagen.setImageResource(R.drawable.bonobus_joven);
                     break;
                 case MENSUAL:
                     descripcion.setText(Html.fromHtml(String.format("Fecha fin: <b>%s</b>", bonobus.getCaducidad())));
-                    Picasso.with(getContext()).load(R.drawable.bonobus_mensual).into(imagen);
+                    imagen.setImageResource(R.drawable.bonobus_mensual);
                     break;
                 //TODO añadir más tipos de bonobus
                 default:
                     descripcion.setText("Tipo de tarjeta no reconocido aún");
-                    Picasso.with(getContext()).load(R.drawable.bonobus_unknown).into(imagen);
+                    imagen.setImageResource(R.drawable.bonobus_unknown);
                     break;
             }
         }
@@ -129,7 +128,7 @@ public class BonobusView extends FrameLayout {
 
     public void setError(String mensaje) {
         descripcion.setText(mensaje);
-        Picasso.with(getContext()).load(R.drawable.bonobus_unknown).into(imagen);
+        imagen.setImageResource(R.drawable.bonobus_unknown);
     }
 
     public void mostrarOpciones(boolean mostrar) {
