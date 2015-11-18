@@ -14,6 +14,7 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -27,7 +28,12 @@ public class TussamLlegadaDataSource implements LlegadaDataSource {
     private static final String BODY_SOAP_TIEMPOS = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><GetPasoParada xmlns=\"http://tempuri.org/\"><linea>%1s</linea><parada>%2s</parada><status>1</status></GetPasoParada></soap:Body></soap:Envelope>"; // 2.parada
 
     @Override
-    public Observable<ArrivalTime> getLlegada(final String linea, final Integer parada) throws ServerErrorException {
+    public Observable<ArrivalTime> getLlegadas(Integer parada, List<String> lineas) throws ServerErrorException {
+        return Observable.from(lineas)
+          .flatMap(linea -> getLlegada(linea, parada));
+    }
+
+    private Observable<ArrivalTime> getLlegada(final String linea, final Integer parada) throws ServerErrorException {
         return Observable.defer(() -> Observable.just(getLlegadaFromTussam(linea, parada))).subscribeOn(Schedulers.io());
     }
 

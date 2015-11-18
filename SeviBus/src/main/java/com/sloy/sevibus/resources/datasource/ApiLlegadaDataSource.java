@@ -3,6 +3,8 @@ package com.sloy.sevibus.resources.datasource;
 import com.sloy.sevibus.model.ArrivalTime;
 import com.sloy.sevibus.resources.exceptions.ServerErrorException;
 
+import java.util.List;
+
 import rx.Observable;
 
 public class ApiLlegadaDataSource implements LlegadaDataSource {
@@ -16,13 +18,10 @@ public class ApiLlegadaDataSource implements LlegadaDataSource {
     }
 
     @Override
-    public Observable<ArrivalTime> getLlegada(final String linea, final Integer parada) throws ServerErrorException {
-        return sevibusApi.getArrival(parada, linea)
-                .retry(1)
-                .onErrorResumeNext(e -> getFallbackLlegada(linea, parada));
-    }
-
-    private Observable<ArrivalTime> getFallbackLlegada(String linea, Integer parada) {
-        return fallbackDataSource.getLlegada(linea, parada);
+    public Observable<ArrivalTime> getLlegadas(Integer parada, List<String> lineas) throws ServerErrorException {
+        return sevibusApi.getArrivals(parada, lineas)
+          .retry(1)
+          .flatMap(Observable::from)
+          .onErrorResumeNext(e -> fallbackDataSource.getLlegadas(parada, lineas));
     }
 }

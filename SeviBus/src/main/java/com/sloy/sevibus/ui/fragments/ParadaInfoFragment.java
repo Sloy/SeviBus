@@ -23,7 +23,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.ArrivalTime;
@@ -59,6 +58,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class ParadaInfoFragment extends BaseDBFragment implements EditarFavoritaDialogFragment.OnGuardarFavoritaListener {
@@ -351,26 +351,29 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
     //TODO indicar última comprobación, y actualizar automáticamente cuando... te parezca xD
     private void updateLlegadas() {
-        for (final Linea l : mLineas) {
-            mViewLlegadas.setLlegadaCargando(l.getNumero());
-            TimeTracker timeTracker = new TimeTracker();
+        TimeTracker timeTracker = new TimeTracker();
 
-            obtainLlegadasAction.getLlegada(l.getNumero(), mParada.getNumero())
-              .observeOn(AndroidSchedulers.mainThread())
-              .subscribe(llegada -> {
-                    mLlegadas.put(llegada.getBusLineName(), llegada);
-                    mViewLlegadas.setLlegadaInfo(llegada.getBusLineName(), llegada);
-                    long responseTime = timeTracker.calculateInterval();
-                    analyticsTracker.trackTiempoRecibido(mParada.getNumero(), l.getNumero(), responseTime, llegada.getDataSource());
-                },
-                error -> {
+        Observable.from(mLineas)
+          .map(Linea::getNumero)
+          .doOnNext(mViewLlegadas::setLlegadaCargando)
+          .toList()
+          .flatMap(lineas -> obtainLlegadasAction.getLlegadas(mParada.getNumero(), lineas))
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(llegada -> {
+                mLlegadas.put(llegada.getBusLineName(), llegada);
+                mViewLlegadas.setLlegadaInfo(llegada.getBusLineName(), llegada);
+                long responseTime = timeTracker.calculateInterval();
+                analyticsTracker.trackTiempoRecibido(llegada.getBusStopNumber(), llegada.getBusLineName(), responseTime, llegada.getDataSource());
+            },
+            error -> {
+                Debug.registerHandledException(getActivity(), error);
+                Snackbar.make(getView(), "Se produjo un error", Snackbar.LENGTH_LONG)
+                  .setAction("Reintentar", (view) -> updateLlegadas())
+                  .show();
+                for (final Linea l : mLineas) {
                     mViewLlegadas.setLlegadaInfo(l.getNumero(), null);
-                    Snackbar.make(getView(), "Se produjo un error", Snackbar.LENGTH_LONG)
-                      .setAction("Reintentar", (view) -> updateLlegadas())
-                      .show();
-                    Crashlytics.logException(error);
-                });
-        }
+                }
+            });
     }
 
     @Override
