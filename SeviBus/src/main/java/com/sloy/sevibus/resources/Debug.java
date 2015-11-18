@@ -71,9 +71,12 @@ public class Debug {
         }
     }
 
-    public static void registerHandledException(Context context, Exception e){
+    public static void registerHandledException(Context context, Throwable e) {
         // Crashlytics
-        Crashlytics.logException(e);
+        if (isReportsEnabled(context)) {
+            Crashlytics.logException(e);
+        }
+        Log.e("Debug", "Handled Exception", e);
     }
 
     public static class FakeLocationSource implements LocationSource{
