@@ -178,15 +178,15 @@ public class LlegadasList extends LinearLayout {
                 tiempo2Text.setText("No disponible");
                 distancia2Text.setText("");
             }
+
+            if (Debug.isDebugEnabled(getContext())) {
+                distancia2Text.setText(llegada.getDataSource());
+            }
         }
 
         //TODO una animación o algo..
         progress.setVisibility(View.GONE);
         container.setVisibility(VISIBLE);
-
-        if (Debug.isDebugEnabled(getContext())) {
-            distancia2Text.setText(llegada.getDataSource());
-        }
     }
 
     public void setLlegadaCargando(String linea) {
