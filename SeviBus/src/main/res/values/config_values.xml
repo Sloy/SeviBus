@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SeviBus</string>
-    <string name="authority">com.sloy.sevibus.provider</string>
 </resources>

@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <permission
         android:name="com.sloy.sevibus.permission.MAPS_RECEIVE"
@@ -106,31 +107,14 @@
         </receiver>
 
         <service
-            android:name=".resources.syncadapter.AuthenticatorService">
+            android:name=".resources.sync.UpdateDatabaseService"
+            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE"
+            android:exported="true" >
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY"/>
             </intent-filter>
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator"/>
         </service>
 
-        <service
-            android:name=".resources.syncadapter.SyncService"
-            android:exported="true"
-            android:process=":sync">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
-            </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter"
-                       android:resource="@xml/syncadapter" />
-        </service>
-
-        <provider
-            android:name=".resources.syncadapter.StubProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:syncable="true"/>
 
     </application>
 

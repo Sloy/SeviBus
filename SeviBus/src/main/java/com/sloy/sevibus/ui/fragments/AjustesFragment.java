@@ -13,11 +13,13 @@ import android.preference.PreferenceFragment;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.Debug;
-import com.sloy.sevibus.resources.syncadapter.SyncUtils;
+import com.sloy.sevibus.resources.sync.UpdateDatabaseService;
 import com.sloy.sevibus.ui.activities.AcercaDeActivity;
 import com.sloy.sevibus.ui.activities.ContactoActivity;
+
 import java.text.DateFormat;
 
 public class AjustesFragment extends PreferenceFragment {
@@ -84,7 +86,7 @@ public class AjustesFragment extends PreferenceFragment {
             .edit()
             .putBoolean("pref_update_auto", updateAuto)
             .commit();
-        SyncUtils.setSyncAutomatically(updateAuto);
+        //TODO enable/disable sync
         return true;
       }
     });
@@ -95,7 +97,7 @@ public class AjustesFragment extends PreferenceFragment {
       @Override public boolean onPreferenceClick(Preference preference) {
         Toast.makeText(getActivity(), "Vale vale, ahora ya yo actualizo", Toast.LENGTH_SHORT)
             .show();
-        SyncUtils.triggerRefresh();
+        // TODO force update
         return true;
       }
     });
@@ -189,7 +191,7 @@ public class AjustesFragment extends PreferenceFragment {
 
   @Override public void onResume() {
     super.onResume();
-    getActivity().registerReceiver(mUpdateFinishReceiver, new IntentFilter(SyncUtils.ACTION_UPDATE_FINISH));
+    getActivity().registerReceiver(mUpdateFinishReceiver, new IntentFilter(UpdateDatabaseService.ACTION_UPDATE_FINISH));
   }
 
   @Override public void onPause() {

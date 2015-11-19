@@ -21,9 +21,7 @@ import android.view.MenuItem;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Linea;
-import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.syncadapter.IntentFactory;
-import com.sloy.sevibus.resources.syncadapter.SyncUtils;
 import com.sloy.sevibus.ui.fragments.AlertasFragment;
 import com.sloy.sevibus.ui.fragments.BonobusListaFragment;
 import com.sloy.sevibus.ui.fragments.FavoritasListFragment;
@@ -68,8 +66,6 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         } else {
             arrancaPrimeraVez();
         }
-
-        SyncUtils.createSyncAccount(this);
     }
 
     @Override

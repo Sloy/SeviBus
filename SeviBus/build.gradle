@@ -40,19 +40,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    final PROVIDER_RELEASE = "\"com.sloy.sevibus.provider\""
-    final PROVIDER_DEBUG = "\"com.sloy.sevibus.debug.provider\""
 
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix ".debug"
-            buildConfigField "String", "PROVIDER_AUTHORITY", PROVIDER_DEBUG
         }
 
         release {
             minifyEnabled false
-            buildConfigField "String", "PROVIDER_AUTHORITY", PROVIDER_RELEASE
         }
     }
     packagingOptions {
@@ -71,6 +67,7 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-location:8.1.0'
     compile 'com.google.android.gms:play-services-maps:8.1.0'
+    compile 'com.google.android.gms:play-services-gcm:8.1.0'
 
     compile 'io.reactivex:rxjava:1.0.16'
     compile 'io.reactivex:rxandroid:1.0.1'
@@ -86,7 +83,7 @@ dependencies {
         exclude group: 'com.google.android', module: 'support-v4'
     }
     compile 'de.cketti.library.changelog:ckchangelog:1.2.0'
-    compile 'com.google.guava:guava:16.0.1'
+    compile 'com.google.guava:guava:18.0'
     compile 'com.facebook.stetho:stetho:1.2.0'
     compile project(':libraries:PullToRefresh')
     compile fileTree(include: ['*.jar'], dir: 'libs')
