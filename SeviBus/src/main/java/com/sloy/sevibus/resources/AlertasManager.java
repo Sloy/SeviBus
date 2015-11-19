@@ -3,14 +3,18 @@ package com.sloy.sevibus.resources;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.LineaWarning;
 import com.sloy.sevibus.model.TweetHolder;
 import com.sloy.sevibus.model.tussam.Linea;
-import com.sloy.sevibus.resources.syncadapter.SyncUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,9 +22,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import static com.sloy.sevibus.bbdd.DBQueries.getTodasLineas;
 
@@ -143,7 +144,7 @@ public class AlertasManager {
         List<TweetHolder> result = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
         dateFormat.setLenient(true);
-        String rawResult = SyncUtils.streamToString(SyncUtils.downloadUrl(new URL(url)));
+        String rawResult = StuffProvider.getStringDownloader().download(url);
         JSONArray resultArray = new JSONArray(rawResult);
         for (int i = 0; i < resultArray.length(); i++) {
             JSONObject t = resultArray.getJSONObject(i);

@@ -1,21 +1,22 @@
 package com.sloy.sevibus.resources;
 
 import android.text.TextUtils;
+
 import com.sloy.sevibus.model.tussam.Bonobus;
-import com.sloy.sevibus.resources.syncadapter.SyncUtils;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.DomSerializer;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 import org.w3c.dom.Document;
+
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 public class BonobusInfoReader {
 
@@ -123,10 +124,7 @@ public class BonobusInfoReader {
     }
 
     private static Document getDocument(String urlTussam) throws IOException, ParserConfigurationException {
-        URL url = new URL(urlTussam);
-
-        InputStream stream = SyncUtils.downloadUrl(url);
-        String html = SyncUtils.streamToString(stream);
+        String html = StuffProvider.getStringDownloader().download(urlTussam);
 
         HtmlCleaner cleaner = new HtmlCleaner();
         CleanerProperties props = cleaner.getProperties();
