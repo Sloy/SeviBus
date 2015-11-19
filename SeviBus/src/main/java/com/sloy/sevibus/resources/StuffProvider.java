@@ -14,7 +14,6 @@ import retrofit.RestAdapter;
 
 public class StuffProvider {
 
-
     public static final String API_ENDPOING = "http://api.sevibus.sloydev.com";
 
     public static AnalyticsTracker getAnalyticsTracker(Context context) {

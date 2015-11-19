@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.text.Html;
@@ -19,9 +18,6 @@ import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Bonobus;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 
-/**
- * Created by rafa on 06/02/14.
- */
 public class BonobusView extends FrameLayout {
 
     TextView nombrePropio;
@@ -65,7 +61,6 @@ public class BonobusView extends FrameLayout {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void setCargando(boolean carga) {
         isCargando = carga;
         if (useAnimations && !carga) { // Sólo animo la transición a NO cargando
@@ -117,7 +112,6 @@ public class BonobusView extends FrameLayout {
                     descripcion.setText(Html.fromHtml(String.format("Fecha fin: <b>%s</b>", bonobus.getCaducidad())));
                     imagen.setImageResource(R.drawable.bonobus_mensual);
                     break;
-                //TODO añadir más tipos de bonobus
                 default:
                     descripcion.setText("Tipo de tarjeta no reconocido aún");
                     imagen.setImageResource(R.drawable.bonobus_unknown);
@@ -152,12 +146,10 @@ public class BonobusView extends FrameLayout {
     }
 
     private void expandirOpcionesAnimacion() {
-       //TODO hacer la animación de expandir, a ver cómo
         panelOpciones.setVisibility(VISIBLE);
     }
 
     private void contraerOpcionesAnimacion() {
-        //TODO hacer la animación de contraer, a ver cómo
         panelOpciones.setVisibility(GONE);
     }
 }

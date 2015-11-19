@@ -60,13 +60,11 @@ public class ParadasAdapter extends BaseAdapter {
         numeroText.setText(Html.fromHtml(String.format("Parada nº <b>%d</b>", item.getNumero())));
         nombre.setText(item.getDescripcion());
 
-        // TODO mostrar pequeños iconos
         //TODO WTF!! Quita la llamada a la BBDD de aquí, pedazo de loco!!!
         List<Linea> lineasList = null;
         try {
             lineasList = DBQueries.getLineasDeParada(dbHelper, item.getNumero());
         } catch (SQLException e) {
-            // TODO hacer algo más
             e.printStackTrace();
             Log.e("sevibus", "Error cargando las l√≠neas de la parada " + item.getNumero(), e);
         }
@@ -80,7 +78,6 @@ public class ParadasAdapter extends BaseAdapter {
             sbLineas.setLength(sbLineas.length() - 2);
             lineas.setText(sbLineas.toString());
         } else {
-            //wtf?
             Log.wtf("SeviBus", "¿Una parada sin líneas? ¿Cómo va a ser eso? No puede ser!! :S");
             Debug.registerHandledException(mContext, new IllegalStateException("La parada " + item.getNumero() + " no parece tener líneas."));
         }

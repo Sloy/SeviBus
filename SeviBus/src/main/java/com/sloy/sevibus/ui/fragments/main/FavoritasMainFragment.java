@@ -16,12 +16,8 @@ import com.sloy.sevibus.ui.fragments.BaseDBFragment;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Created by rafa on 17/07/13.
- */
 public class FavoritasMainFragment extends BaseDBFragment {
 
-    private static final String SCREEN_NAME = "Favoritas main";
     private TextView mMensaje;
     private View mContenido;
 
@@ -36,7 +32,6 @@ public class FavoritasMainFragment extends BaseDBFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main_favoritas, container, false);
 
-        // Vistas para ocultar/mostrar
         mMensaje = (TextView) v.findViewById(R.id.main_favoritas_mensaje);
         mContenido = v.findViewById(R.id.main_favoritas_contenido);
 
@@ -75,7 +70,6 @@ public class FavoritasMainFragment extends BaseDBFragment {
 
             @Override
             protected List<Favorita> doInBackground(Void... params) {
-                // cargo las paradas favoritas. Si no hay ninguna... muestro algo en su lugar. ¡O no muestro nada!
                 List<Favorita> paradasFavoritas = null;
                 try {
                     paradasFavoritas = DBQueries.getParadasFavoritas(getDBHelper());
@@ -140,9 +134,6 @@ public class FavoritasMainFragment extends BaseDBFragment {
             TextView text = (TextView) v.findViewById(R.id.favoritas_main_numero);
             View color = v.findViewById(R.id.favoritas_main_color);
             text.setText(numero.toString());
-            if (numero / 100 > 0) { // así para medir 2 ó 3 cifras?
-                //TODO text.setTextSize();
-            }
             color.setBackgroundColor(fav.getColor());
             v.setTag(numero);
             v.setVisibility(View.VISIBLE);

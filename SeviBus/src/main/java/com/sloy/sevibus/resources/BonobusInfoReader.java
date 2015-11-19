@@ -17,9 +17,6 @@ import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 import org.w3c.dom.Document;
 
-/**
- * Created by rafa on 03/02/14.
- */
 public class BonobusInfoReader {
 
     private static final String URL_CONSULTA = "http://recargas.tussam.es/TPW/Common/cardStatus.do?swNumber=%d";
@@ -32,7 +29,6 @@ public class BonobusInfoReader {
 
 
     public static Bonobus populateBonobusInfo(Bonobus bonobus) throws IOException, ParserConfigurationException, XPathExpressionException, NumberFormatException {
-        //TODO es posible que los hilos se líen con el objeto bonobus compartido? Sirve de algo usar syncronized?
         Document document = getDocument(String.format(URL_CONSULTA, bonobus.getNumero()));
 
         String numero = getNumero(document);
@@ -44,13 +40,11 @@ public class BonobusInfoReader {
         String titulo = getTitulo(document);
         if (titulo != null && !TextUtils.isEmpty(titulo)) {
             bonobus.setTipoTexto(titulo);
-            //TODO hacer alguna comprobación o comparación con el tipo "permanente" establecido en el bonobús
         } else {
             bonobus.setError(true);
             return bonobus;
         }
 
-        // Parsea el tipo, a ver si tienes huevos
         if (titulo.contains("saldo sin transbordo")) {
             bonobus.setTipo(Bonobus.TIPO.SALDO);
         }else if (titulo.contains("saldo con transbordo")) {
@@ -62,7 +56,6 @@ public class BonobusInfoReader {
         } else {
             bonobus.setTipo(Bonobus.TIPO.UNKNOWN);
         }
-        //TODO elseif....
 
         switch (bonobus.getTipo()) {
             case SALDO:

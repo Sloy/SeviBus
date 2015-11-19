@@ -43,10 +43,8 @@ public class ParadasDeLineaActivity extends BaseToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paradas_de_linea);
 
-        // Set up the action bar.
         mActionBar = getSupportActionBar();
 
-        // Obtengo el id de la línea pasada como parámetro
         int lineaID = 0;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -58,7 +56,6 @@ public class ParadasDeLineaActivity extends BaseToolbarActivity {
             finish();
         }
 
-        // Y por supuesto, saco la línea con sus secciones de la base de datos
         List<SeccionParadasPair> secciones = new ArrayList<SeccionParadasPair>();
         try {
             mLinea = DBQueries.getLineaById(getDBHelper(), lineaID);
@@ -70,10 +67,8 @@ public class ParadasDeLineaActivity extends BaseToolbarActivity {
             e.printStackTrace();
         }
 
-        // Pon la línea actual en el subtítulo, ar favó
-        mActionBar.setTitle(String.format("Línea %s", mLinea.getNumero())); // TODO localizar stringgggg
+        mActionBar.setTitle(String.format("Línea %s", mLinea.getNumero()));
 
-        // Ya podemos crear y mostrar los fragments
         setupFragments(secciones);
     }
 
@@ -81,7 +76,6 @@ public class ParadasDeLineaActivity extends BaseToolbarActivity {
     private void setupFragments(List<SeccionParadasPair> secciones) {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), secciones);
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -104,10 +98,6 @@ public class ParadasDeLineaActivity extends BaseToolbarActivity {
         }
     }
 
-    /**
-     * A {@link android.support.v4.app.FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         private List<SeccionParadasPair> mSecciones;
@@ -116,9 +106,6 @@ public class ParadasDeLineaActivity extends BaseToolbarActivity {
         public SectionsPagerAdapter(FragmentManager fm, List<SeccionParadasPair> secciones) {
             super(fm);
             mSecciones = secciones;
-            // Crea un array del tamaño de las secciones.
-            // Lo hago mediante un array y no una lista para controlar más fácilmente la posición en la que está cada fragment.
-            // (Que sí, que una listatambién vale, pero así me resulta más cómodo, cohone)
             mFragments = new ParadasFragment[getCount()];
         }
 
@@ -145,12 +132,6 @@ public class ParadasDeLineaActivity extends BaseToolbarActivity {
 
     private DBHelper dbHelper;
 
-    /**
-     * Método que uso en el BaseDBFragment para acceder a la base de datos.
-     * Como esto es una Activity en vez de un Fragment, lo tengo que copiar (cagunlamá...)
-     *
-     * @return
-     */
     protected DBHelper getDBHelper() {
         if (dbHelper == null) {
             dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);

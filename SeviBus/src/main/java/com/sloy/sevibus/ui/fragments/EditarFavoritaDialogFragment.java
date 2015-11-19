@@ -14,10 +14,6 @@ import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Parada;
 
-/**
- * Created by rafa on 19/07/13.
- * Basado en ColorPickerDialog
- */
 public class EditarFavoritaDialogFragment extends DialogFragment implements ColorPickerSwatch.OnColorSelectedListener {
 
     public static final String TAG = "edit_fav";

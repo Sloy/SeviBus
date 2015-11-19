@@ -15,9 +15,6 @@ import java.io.RandomAccessFile;
 
 import io.fabric.sdk.android.Fabric;
 
-/**
- * Created by rafa on 02/09/13.
- */
 public class Debug {
 
     private static final double FAKE_LATITUDE = 37.401994d;

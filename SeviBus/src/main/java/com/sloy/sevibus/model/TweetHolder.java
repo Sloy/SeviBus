@@ -25,7 +25,6 @@ public class TweetHolder {
     @DatabaseField
     private Date fecha;
 
-    // No se guarda en la bbdd
     private boolean nuevo = false;
 
     public TweetHolder() {

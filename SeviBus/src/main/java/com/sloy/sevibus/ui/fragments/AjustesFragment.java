@@ -101,10 +101,6 @@ public class AjustesFragment extends PreferenceFragment {
     });
     actualizaInterfaz();
 
-    //TODO Categoría de ajustes personales
-    //Sincronizar favoritas
-    //Cambiar cuenta
-
     // Información
     Preference preguntasFrecuentes = findPreference("pref_faq");
     assert preguntasFrecuentes != null;

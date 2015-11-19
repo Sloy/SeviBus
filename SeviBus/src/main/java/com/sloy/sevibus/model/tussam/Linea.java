@@ -65,13 +65,6 @@ public class Linea implements Comparable<Linea>{
         return trayectos;
     }
 
-    public void addSeccion(Seccion s) {
-        if (trayectos == null) {
-            trayectos = new ArrayList<Seccion>();
-        }
-        trayectos.add(s);
-    }
-
     public TipoLinea getTipo() {
         return tipo;
     }

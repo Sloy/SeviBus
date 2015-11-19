@@ -9,7 +9,6 @@ import org.xml.sax.helpers.DefaultHandler;
 public class BusesHandler extends DefaultHandler {
 
 	BusLocation tmpBus;
-	StringBuilder sb = new StringBuilder();
 	Builder build = Builder.NO;
 	List<BusLocation> buses = new ArrayList<BusLocation>();
 

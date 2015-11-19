@@ -2,18 +2,18 @@ package com.sloy.sevibus.resources.maputils;
 
 import android.graphics.Bitmap;
 import android.view.View;
+
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.sloy.sevibus.resources.BusLocation;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import uk.me.jstott.jcoord.UTMRef;
 
-/**
- * Created by rafa on 08/11/13.
- */
 public class BusesLayer extends Layer {
 
     private List<BusLocation> mItems;
@@ -97,9 +97,7 @@ public class BusesLayer extends Layer {
         UTMRef utm = new UTMRef(item.xcoord, item.ycoord, 'N', 30);
         uk.me.jstott.jcoord.LatLng latlng = utm.toLatLng();
 
-        //LatLng posCalibrada = new LatLng(latlng.getLat() - 200 * 10, latlng.getLng() - 130 * 10);
         LatLng posCalibrada = new LatLng(latlng.getLat() - 0.002, latlng.getLng() - 0.0013);
-        //TODO quillo, que esto no está bien calibrado....
         return posCalibrada;
     }
 

@@ -15,14 +15,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
 import com.sloy.sevibus.R;
 
-/**
- * Created by rafa on 24/09/13.
- */
 public class ContactoActivity extends BaseToolbarActivity {
 
-    private static final String SCREEN_NAME = "Contacto";
     private Button mEnviar;
     private EditText mMensaje;
     private CheckBox[] mChecksTrue, mChecksFalse;
@@ -34,7 +31,7 @@ public class ContactoActivity extends BaseToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacto);
 
-        getSupportActionBar().setTitle("Contacto vía email"); //TODO automático?
+        getSupportActionBar().setTitle("Contacto vía email");
 
         mEnviar = (Button) findViewById(R.id.contacto_enviar);
         mMensaje = (EditText) findViewById(R.id.contacto_texto);
@@ -116,7 +113,6 @@ public class ContactoActivity extends BaseToolbarActivity {
 
     private void enviar() {
         StringBuilder texto = new StringBuilder(mMensaje.getText().toString().trim());
-        // Información extra?
         texto.append("\n\n=====================");
         texto.append("\n Versión: " + getString(R.string.app_version));
         texto.append("\n Base de datos: " + getSharedPreferences("datos", Context.MODE_MULTI_PROCESS).getInt("data_version", 0));

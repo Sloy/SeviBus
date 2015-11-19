@@ -4,20 +4,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.ui.activities.ParadaInfoActivity;
 import com.sloy.sevibus.ui.adapters.ParadasAdapter;
+
 import java.util.List;
 
 public class ParadasFragment extends BaseDBFragment {
 
-    private static final String SCREEN_NAME = "ParadasFragment";
     private ListView mList;
     private ParadasAdapter mAdapter;
     private List<Parada> mParadas;
@@ -27,7 +27,6 @@ public class ParadasFragment extends BaseDBFragment {
         mParadas = paradas;
     }
 
-    // Constructor público obligatorio en los fragments para recuperación y tal.
     public ParadasFragment() {
     }
 
@@ -43,8 +42,6 @@ public class ParadasFragment extends BaseDBFragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Si la lista tiene headers, la posición que recibe onItemClick es contando con los headers también, por lo que no se puede usar para sacar el objeto del Adapter sin más.
-                // El método getItemAtPosition() tiene  en cuenta los headers y devuelve el objeto de verdad en la posición de la lista.
                 Object itemAtPosition = mList.getItemAtPosition(position);
                 if (itemAtPosition != null) {
                     Integer numero = ((Parada) itemAtPosition).getNumero();
@@ -61,7 +58,7 @@ public class ParadasFragment extends BaseDBFragment {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
         mAdapter = new ParadasAdapter(getActivity(), mParadas, getDBHelper());
-        mAdapter.setTrayecto(true); // TODO realmente necesito tener este método? :S
+        mAdapter.setTrayecto(true);
         if (mAdapter.isTrayecto()) {
             View header = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_parada_inicio_trayecto, mList, false);
             View footer = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_parada_fin_trayecto, mList, false);
@@ -82,16 +79,4 @@ public class ParadasFragment extends BaseDBFragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.paradas_de_linea, menu);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
 }

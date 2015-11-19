@@ -8,9 +8,6 @@ import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.model.tussam.Parada;
 import java.util.List;
 
-/**
- * Created by rafa on 09/11/13.
- */
 public class FavoritasLayer extends ParadasLayer {
 
     private BitmapDescriptor mIcon;

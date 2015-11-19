@@ -17,11 +17,6 @@ public class BusLocation {
     public int xcoord;
     public int ycoord;
 
-    public BusLocation(int x, int y) {
-        xcoord = x;
-        ycoord = y;
-    }
-
     public BusLocation() {
     }
 
@@ -30,23 +25,19 @@ public class BusLocation {
     private static final String BODY_SOAP_BUSES = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><GetVehiculos xmlns=\"http://tempuri.org/\"><linea>%1s</linea></GetVehiculos></soap:Body></soap:Envelope>";
 
     public static List<BusLocation> getBuses(String linea) throws ServerErrorException {
-        List<BusLocation> res = null;
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             SAXParser parser = factory.newSAXParser();
             BusesHandler handler = new BusesHandler();
             InputStream is = getBusesInputStream(linea);
             parser.parse(is, handler);
-            res = handler.getBuses();
+            return handler.getBuses();
         } catch (IllegalArgumentException e) {
             Log.e("sevibus", "Error con el InputStream", e);
             throw new ServerErrorException();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        return res;
-
     }
 
     private static InputStream getBusesInputStream(String linea) {
@@ -57,7 +48,6 @@ public class BusLocation {
             c.setRequestMethod("POST");
             c.setReadTimeout(15 * 1000);
             c.setDoOutput(true);
-            // c.setFixedLengthStreamingMode(contentLength)
             c.setUseCaches(false);
             c.setRequestProperty("Content-Type", "text/xml");
             c.connect();

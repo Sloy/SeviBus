@@ -103,14 +103,11 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
     }
 
     private void arrancaPrimeraVez() {
-        // Desactiva el Navigation Drawer, para no liarla
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        // Desactiva el "arriba" del Action Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        // Muestra el Fragment inicial
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.main_container, new InitialFragment());
         transaction.commit();

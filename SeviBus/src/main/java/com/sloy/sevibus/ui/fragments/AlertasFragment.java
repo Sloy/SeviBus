@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class AlertasFragment extends BaseDBFragment {
-    private static final String SCREEN_NAME = "AlertasFragment";
     private ListView mList;
     private View mError;
     private View mProgress;

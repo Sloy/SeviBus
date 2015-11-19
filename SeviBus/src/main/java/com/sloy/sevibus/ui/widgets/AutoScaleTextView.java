@@ -10,10 +10,10 @@ import com.sloy.sevibus.R;
 
 /**
  * A custom Text View that lowers the text size when the text is to big for the TextView. Modified version of one found on stackoverflow
- * 
+ *
  * @author Andreas Krings - www.ankri.de
  * @version 1.0
- * 
+ *
  */
 public class AutoScaleTextView extends TextView
 {
@@ -29,11 +29,6 @@ public class AutoScaleTextView extends TextView
     
     public AutoScaleTextView(Context context, AttributeSet attrs)
     {
-        // this(context, attrs, R.attr.autoScaleTextViewStyle);
-        
-        // Use this constructor, if you do not want use the default style
-//        super(context, attrs);
-        
         this(context, attrs, 0);
     }
     

@@ -19,9 +19,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by rafa on 08/11/13.
- */
 public abstract class ParadasLayer extends Layer {
 
     private List<Parada> mItems;
@@ -38,9 +35,6 @@ public abstract class ParadasLayer extends Layer {
     }
 
     @Override
-    /**
-     * Devuelve el Item para el Marker pasado. Si no se encuentra devuelve null.
-     */
     public Object getItemFromMarker(Marker marker) {
         if (mMarkers != null && !mMarkers.isEmpty()) {
             int i = mMarkers.indexOf(marker);
@@ -108,8 +102,6 @@ public abstract class ParadasLayer extends Layer {
             mBalloonView = content;
         }
 
-
-        //TODO viewholder thing
         TextView numero = (TextView) mBalloonView.findViewById(R.id.item_parada_numero);
         TextView nombre = (TextView) mBalloonView.findViewById(R.id.item_parada_nombre);
         TextView lineas = (TextView) mBalloonView.findViewById(R.id.item_parada_lineas);
@@ -117,7 +109,6 @@ public abstract class ParadasLayer extends Layer {
         numero.setText(String.valueOf(p.getNumero()));
         nombre.setText(p.getDescripcion());
 
-        // TODO mostrar pequeños iconos
         //TODO WTF!! Quita la llamada a la BBDD de aquí, pedazo de loco!!!
         List<Linea> lineasList = null;
         try {

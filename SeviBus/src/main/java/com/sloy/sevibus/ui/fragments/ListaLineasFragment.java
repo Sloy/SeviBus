@@ -3,32 +3,32 @@ package com.sloy.sevibus.ui.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.TipoLinea;
 import com.sloy.sevibus.ui.adapters.LineasAdapter;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
 public class ListaLineasFragment extends BaseDBFragment {
-    private static final String SCREEN_NAME = "Líneas";
     private ListView mList;
     private LineasAdapter mAdapter;
     private View mProgressBar;
     private TreeMap<TipoLinea, List<Linea>> mLineasOrganizadas;
 
     public interface LineaSelectedListener {
-        public void onLineaSelecteded(Linea linea);
+        void onLineaSelecteded(Linea linea);
     }
 
     @Override
@@ -53,7 +53,6 @@ public class ListaLineasFragment extends BaseDBFragment {
     @Override
     public void onStart() {
         super.onStart();
-        // TODO usar Loaders
         mAdapter = new LineasAdapter(getActivity());
         AsyncTask<Void, Void, Boolean> descargaLineas = new AsyncTask<Void, Void, Boolean>() {
 
@@ -62,8 +61,7 @@ public class ListaLineasFragment extends BaseDBFragment {
                 Boolean res = false;
                 try {
                     TreeMap<TipoLinea, List<Linea>> lineasOrganizadas = new TreeMap<TipoLinea, List<Linea>>();
-                    // Primero obtengo todas las líneas, y luego las ordeno en
-                    // un mapa según su tipo
+                    // Primero obtengo todas las líneas, y luego las ordeno en un mapa según su tipo
                     List<Linea> todasLineas = DBQueries.getTodasLineas(getDBHelper());
                     for (Linea l : todasLineas) {
                         TipoLinea tipo = l.getTipo();
@@ -78,7 +76,6 @@ public class ListaLineasFragment extends BaseDBFragment {
                     mLineasOrganizadas = lineasOrganizadas;
                     res = true;
                 } catch (SQLException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 return res;
@@ -88,24 +85,15 @@ public class ListaLineasFragment extends BaseDBFragment {
             protected void onPostExecute(Boolean result) {
                 super.onPostExecute(result);
                 if (result) {
-
                     onLineasCargadas();
-                } else {
-                    // TODO mostrar aviso de error
                 }
             }
         };
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            descargaLineas.execute();
-        } else {
-            descargaLineas.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-
+        descargaLineas.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void selectTodasLineas() {
-        // Creo una lista ordenada de objects conteniendo el tipo como cabecera
-        // acompañado por sus líneas
+        // Creo una lista ordenada de objects conteniendo el tipo como cabecera  acompañado por sus líneas
         List<Object> listaConEncabezados = new ArrayList<Object>();
         for (TipoLinea tipo : mLineasOrganizadas.keySet()) {
             listaConEncabezados.add(tipo);
@@ -116,12 +104,7 @@ public class ListaLineasFragment extends BaseDBFragment {
         mAdapter.setItems(listaConEncabezados);
     }
 
-    private void selectTipoLinea(TipoLinea tipo) {
-
-    }
-
     private void onLineasCargadas() {
-        // TODO montar la navegación en el actionbar para elegir tipo y tal
         selectTodasLineas();
 
         mList.setAdapter(mAdapter);

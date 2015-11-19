@@ -5,11 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -106,26 +102,19 @@ public class LlegadasList extends LinearLayout {
         mLlegadasMap = new HashMap<>();
 
         for (Linea l : lineas) {
-            // Crea la vista de la llegada y el separador
             vistaLlegada = mInflater.inflate(R.layout.list_item_llegada, this, false);
 
-            // Pone la información básica de la línea en la vista (el número, vaya)
             LineaBadge numero = (LineaBadge) vistaLlegada.findViewById(R.id.item_llegada_linea);
             numero.setLinea(l);
 
-            // Añade la vista de llegada y el separador a la lista
             this.addView(vistaLlegada);
 
-            // Y la guarda en el mapa para actualizar los datos posteriormente
             mLlegadasMap.put(l.getNumero(), vistaLlegada);
         }
     }
 
     public void setLlegadaInfo(String lineaNumero, ArrivalTime llegada) {
         View vistaLlegada = mLlegadasMap.get(lineaNumero);
-
-        //TODO mejorar el caso cuando no hay información disponible
-        //TODO contemplar todos los casos, como se hacía antes en el getDisplayText de la llegada
 
         TextView tiempo1Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_tiempo_1);
         TextView tiempo2Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_tiempo_2);
@@ -136,7 +125,6 @@ public class LlegadasList extends LinearLayout {
 
 
         if (llegada==null) {
-            //TODO whut?
             tiempo1Text.setText("Error");
             tiempo2Text.setText("Sin conexión a Internet o servidor no disponible");
             distancia1Text.setText("");
@@ -184,7 +172,6 @@ public class LlegadasList extends LinearLayout {
             }
         }
 
-        //TODO una animación o algo..
         progress.setVisibility(View.GONE);
         container.setVisibility(VISIBLE);
     }

@@ -10,9 +10,6 @@ import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.model.tussam.Parada;
 import java.util.List;
 
-/**
- * Created by rafa on 08/11/13.
- */
 public class LineaLayer extends ParadasLayer implements IPolyLineLayer {
 
     private int mColor;

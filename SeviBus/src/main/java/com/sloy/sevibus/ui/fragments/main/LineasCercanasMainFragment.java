@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Linea;
@@ -18,19 +19,15 @@ import com.sloy.sevibus.ui.widgets.LineaBadge;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Created by rafa on 17/07/13.
- */
 public class LineasCercanasMainFragment extends BaseDBFragment implements ILocationSensitiveFragment{
 
-    private static final String SCREEN_NAME = "Líneas cercanas";
     private TextView mMensaje;
     private View mContenido;
 
-    public static interface LineasCercanasMainClickListener {
-        public void onLineaCercanaClick(int idParada);
+    public interface LineasCercanasMainClickListener {
+        void onLineaCercanaClick(int idParada);
 
-        public void onLineaCercanaMas();
+        void onLineaCercanaMas();
     }
 
     public static LineasCercanasMainFragment getInstance() {
@@ -45,7 +42,6 @@ public class LineasCercanasMainFragment extends BaseDBFragment implements ILocat
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main_lineas_cercanas, container, false);
 
-        // Vistas para ocultar/mostrar
         mMensaje = (TextView) v.findViewById(R.id.main_lineas_cercanas_mensaje);
         mContenido = v.findViewById(R.id.main_lineas_cercanas_contenido);
 
@@ -99,14 +95,12 @@ public class LineasCercanasMainFragment extends BaseDBFragment implements ILocat
     }
 
     private void muestraNoDatos() {
-        //FIXME si ya hay paradas cercanas cargadas, las deja y ya está
         mMensaje.setText(R.string.lineas_cercanas_empty);
         mMensaje.setVisibility(View.VISIBLE);
         mContenido.setVisibility(View.GONE);
     }
 
     private void muestraError() {
-        //FIXME si ya hay paradas cercanas cargadas, las deja y ya está
         mMensaje.setText(R.string.ubicacion_error);
         mMensaje.setVisibility(View.VISIBLE);
         mContenido.setVisibility(View.GONE);
@@ -116,7 +110,6 @@ public class LineasCercanasMainFragment extends BaseDBFragment implements ILocat
         mMensaje.setVisibility(View.GONE);
         mContenido.setVisibility(View.VISIBLE);
 
-        //TODO crea las vistas y las añade dinámicamente
         Linea l1 = null, l2 = null, l3 = null, l4 = null;
         int count = lineas.size();
         if (count > 0) {

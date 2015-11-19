@@ -13,19 +13,8 @@ import com.sloy.sevibus.model.tussam.Bonobus;
 import com.sloy.sevibus.ui.widgets.BonobusView;
 import java.util.List;
 
-/**
- * Created by rafa on 03/02/14.
- */
 public class BonobusAdapter extends BaseAdapter {
 
-
-    public class Holder {
-        TextView nombrePropio;
-        TextView numero;
-        TextView descripcion;
-        ProgressBar cargando;
-        ImageView imagen;
-    }
 
     private List<Bonobus> mListaBonobuses;
     private LayoutInflater mLayoutInflater;
@@ -61,7 +50,6 @@ public class BonobusAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        // Tipo 1 sólo si es el último elemento
         return position == getCount() - 1 ? 1 : 0;
     }
 

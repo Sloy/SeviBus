@@ -1,13 +1,11 @@
 package com.sloy.sevibus.ui.fragments;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBHelper;
@@ -23,9 +20,7 @@ import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
-import com.sloy.sevibus.resources.AbstractBackupHelper.BackupException;
 import com.sloy.sevibus.resources.Debug;
-import com.sloy.sevibus.resources.FavoritasLocalBackupHelper;
 import com.sloy.sevibus.ui.activities.ParadaInfoActivity;
 
 import java.sql.SQLException;
@@ -74,7 +69,6 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
                 listView.setVisibility(View.VISIBLE);
             }
 
-            // Me gustaría reciclar el adapter cambiándole los items, pero por algún puto motivo si lo hago no me muestra nada...
             mAdapter = new FavoritasAdapter(getActivity(), favoritas, getDBHelper());
             listView.setAdapter(mAdapter);
         } catch (Exception e) {
@@ -94,40 +88,6 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
     private void editarFavoritaSeleccionada() {
         Favorita fav = mAdapter.getItem(mCurrentlySelectedItem);
         EditarFavoritaDialogFragment.getInstanceEditFavorita(this, fav).show(getFragmentManager(), EditarFavoritaDialogFragment.TAG);
-    }
-
-    private void exportar() {
-        new AsyncTask<Void, Void, BackupException>() {
-
-            @Override
-            protected BackupException doInBackground(Void... params) {
-                try {
-                    new FavoritasLocalBackupHelper(getDBHelper()).exportar();
-                } catch (BackupException e) {
-                    return e;
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(BackupException result) {
-                super.onPostExecute(result);
-                getActivity().setProgressBarIndeterminateVisibility(false);
-                if (result == null) {
-                    Toast.makeText(getActivity(), "Copia creada con éxito", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), result.getMessage(), Toast.LENGTH_LONG).show();
-                    // TODO probar esto, anda...
-                }
-            }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                getActivity().setProgressBarIndeterminateVisibility(true);
-            }
-
-        }.execute();
     }
 
     @Override
@@ -188,8 +148,7 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
             // El nombre en sí de la parada siempre es fijo
             nombre.setText(parada.getDescripcion());
 
-            // Según si tiene un nombre personalizado o no, pongo el título de
-            // una forma u otra
+            // Según si tiene un nombre personalizado o no, pongo el título de una forma u otra
             String numeroTextStyled;
             if (item.getNombrePropio() != null && !TextUtils.isEmpty(item.getNombrePropio())) {
                 // Tiene un nombre especial
@@ -199,13 +158,11 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
             }
             numeroText.setText(Html.fromHtml(numeroTextStyled));
 
-            // TODO mostrar pequeños iconos
             // TODO WTF!! Quita la llamada a la BBDD de aquí, pedazo de loco!!!
             List<Linea> lineasList = null;
             try {
                 lineasList = DBQueries.getLineasDeParada(dbHelper, parada.getNumero());
             } catch (SQLException e) {
-                // TODO hacer algo más
                 e.printStackTrace();
                 Log.e("sevibus", "Error cargando las l√≠neas de la parada " + parada.getNumero(), e);
             }

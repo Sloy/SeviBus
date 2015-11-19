@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.MiAnuncio;
@@ -34,6 +35,10 @@ import com.sloy.sevibus.ui.activities.NuevoBonobusActivity;
 import com.sloy.sevibus.ui.adapters.BonobusAdapter;
 import com.sloy.sevibus.ui.widgets.BonobusView;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,14 +46,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class BonobusListaFragment extends BaseDBFragment implements LoaderManager.LoaderCallbacks<Bonobus> {
 
-    private static final String SCREEN_NAME = "Lista Bonobus";
     private static final String PREF_SHOW_BONOBUS_WARNING = "pref_bono_warning";
     public static final String URL_ANUNCIO_PROPIO = "http://sevibus.sloydev.com/ads/getad.php?s=%s";
 
@@ -59,8 +62,6 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
 
     private FrameLayout mAnuncioContainer;
 
-    // Listeners para los botones del panel del item de cada bonobús. Los creo así para que compartan todos el mismo objeto, y no estar creando objetos tó el rato.
-
     private class EliminarClickListener implements View.OnClickListener {
         Bonobus bonobusAsociado;
 
@@ -68,7 +69,7 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
         public void onClick(View v) {
             if (bonobusAsociado != null) {
                 DBQueries.deleteBonobus(getDBHelper(), bonobusAsociado);
-                cargarBonobuses(); //TODO hacer la eliminación "suave", reduciendo la fila del bonobús o algo ;)
+                cargarBonobuses();
             }
         }
     }
@@ -121,7 +122,6 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
                         if (mBonoExpandidoActual != null) {
                             mBonoExpandidoActual.mostrarOpciones(false);
                         }
-                        // Pone los listeners en orden y muestra el panel
                         Bonobus bonoItem = mAdapter.getItem(position);
                         mEliminarClickListener.bonobusAsociado = bonoItem;
                         bonobusView.setEliminarListener(mEliminarClickListener);
@@ -142,9 +142,10 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
         super.onStart();
         setHasOptionsMenu(true);
         cargarBonobuses();
+        cargaAnuncio();
+    }
 
-        // Carga anuncio
-        //TODO es código copiado de ParadaInfoFragment. Hazlo bien y sácalo a un sitio común
+    private void cargaAnuncio() {
         new AsyncTask<Void, Void, MiAnuncio>() {
 
             @Override
@@ -231,7 +232,6 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
     private void actualizarBonobuses() {
         LoaderManager loaderManager = getLoaderManager();
         for (int i = 0; i < mListaBonobuses.size(); i++) {
-            //Bonobus bonobus = mListaBonobuses.get(i);
             Loader<Object> loader = loaderManager.getLoader(i);
             if (loader == null) {
                 loaderManager.initLoader(i, new Bundle(), this);
@@ -246,7 +246,7 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
         Log.d("SeviBus", "cargaAnuncio()");
         final FragmentActivity activity = getActivity();
         if (mAnuncioContainer == null || activity == null)
-            return; // Por si la activity se fue al carajo o algo
+            return;
 
         if (miAnuncio != null) {
             ImageView anuncioImagen = (ImageView) mAnuncioContainer.findViewById(R.id.anuncio_imagen);
@@ -271,11 +271,8 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
 
     @Override
     public void onLoadFinished(Loader<Bonobus> loader, Bonobus data) {
-        // Notifico al adapter de que se han cambiado los datos. No tengo que pasarle nada,
-        // porque el objeto recibido como resultado es el mismo que ya está en el propio adapter. //TODO... verdad?
         if (data == null) {
             Snackbar.make(getView(), "Ocurrió un error cargando los datos del bonobús.", Snackbar.LENGTH_LONG).show();
-            //TODO enviar reporte and shit
         }
         mAdapter.notifyDataSetChanged();
     }
@@ -290,24 +287,12 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
         private Bonobus mBonobus;
 
         public BonobusLoader(Context context, Bonobus bonobus) {
-            // Loaders may be used across multiple Activitys (assuming they aren't
-            // bound to the LoaderManager), so NEVER hold a reference to the context
-            // directly. Doing so will cause you to leak an entire Activity's context.
-            // The superclass constructor will store a reference to the Application
-            // Context instead, and can be retrieved with a call to getContext().
             super(context);
 
             this.mBonobus = bonobus;
         }
-        /****************************************************/
-        /** (1) A task that performs the asynchronous load **/
-        /**
-         * ************************************************
-         */
         @Override
         public Bonobus loadInBackground() {
-            // This method is called on a background thread and should generate a
-            // new set of data to be delivered back to the client.
             try {
                 return BonobusInfoReader.populateBonobusInfo(mBonobus);
             } catch (ParserConfigurationException | XPathExpressionException | IOException | RuntimeException e) {
@@ -325,13 +310,7 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
 
         @Override
         protected void onStopLoading() {
-            // The Loader is in a stopped state, so we should attempt to cancel the
-            // current load (if there is one).
             cancelLoad();
-
-            // Note that we leave the observer as is. Loaders in a stopped state
-            // should still monitor the data source for changes so that the Loader
-            // will know to force a new load if it is ever started again.
         }
     }
 }

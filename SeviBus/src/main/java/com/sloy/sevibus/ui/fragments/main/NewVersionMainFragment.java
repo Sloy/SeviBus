@@ -11,9 +11,6 @@ import com.sloy.sevibus.ui.fragments.MainPageFragment;
 import de.cketti.library.changelog.ChangeLog;
 import java.util.List;
 
-/**
- * Created by rafa on 17/07/13.
- */
 public class NewVersionMainFragment extends BaseDBFragment {
 
 

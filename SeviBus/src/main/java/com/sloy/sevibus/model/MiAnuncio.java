@@ -1,8 +1,5 @@
 package com.sloy.sevibus.model;
 
-/**
- * Created by rafa on 15/01/14.
- */
 public class MiAnuncio {
 
     private String enlace;

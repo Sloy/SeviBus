@@ -1,6 +1,7 @@
 package com.sloy.sevibus.bbdd;
 
 import android.util.Log;
+
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -16,6 +17,7 @@ import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.ParadaSeccion;
 import com.sloy.sevibus.model.tussam.Reciente;
 import com.sloy.sevibus.model.tussam.Seccion;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,44 +29,36 @@ import java.util.concurrent.Callable;
 
 public class DBQueries {
 
-    /* -- L√≠neas -- */
+    /* -- Líneas -- */
 
     public static Linea getLineaById(DBHelper dbHelper, int id) {
-        Linea res = dbHelper.getDaoLinea().queryForId(id);
-        return res;
+        return dbHelper.getDaoLinea().queryForId(id);
     }
 
     public static List<Linea> getTodasLineas(DBHelper dbHelper) throws SQLException {
-        List<Linea> res = null;
-
         QueryBuilder<Linea, Integer> queryBuilder = dbHelper.getDaoLinea().queryBuilder();
         queryBuilder.orderBy("numero", true);
 
-        res = queryBuilder.query();
-        return res;
+        return queryBuilder.query();
     }
 
     public static List<Linea> getLineasDeParada(DBHelper dbHelper, int parada_id) throws SQLException {
-        List<Linea> res = null;
-
         // Selecciono las relaciones con esta parada
         QueryBuilder<ParadaSeccion, Integer> paradaseccionQb = dbHelper.getDaoParadaSeccion().queryBuilder();
         SelectArg paradaSelectArg = new SelectArg();
         paradaSelectArg.setValue(parada_id);
         paradaseccionQb.where().eq("parada_id", paradaSelectArg);
 
-        // Selecciono las secciones que contienen esta relaci√≥n
+        // Selecciono las secciones que contienen esta relación
         QueryBuilder<Seccion, Integer> seccionQb = dbHelper.getDaoSeccion().queryBuilder();
         seccionQb.join(paradaseccionQb);
 
-        // Selecciono las l√≠neas que contienen dichas secciones
+        // Selecciono las líneas que contienen dichas secciones
         QueryBuilder<Linea, Integer> lineaQb = dbHelper.getDaoLinea().queryBuilder();
         lineaQb.join(seccionQb);
         lineaQb.orderBy("numero", true);
         lineaQb.distinct();
-        res = lineaQb.query();
-
-        return res;
+        return lineaQb.query();
     }
 
     public static List<Linea> getLineasCercanas(DBHelper dbHelper, double latitud, double longitud) throws SQLException {
@@ -82,13 +76,10 @@ public class DBQueries {
     /* -- Paradas -- */
 
     public static Parada getParadaById(DBHelper dbHelper, int paradaId) {
-        Parada res = dbHelper.getDaoParada().queryForId(paradaId);
-        return res;
+        return dbHelper.getDaoParada().queryForId(paradaId);
     }
 
     public static List<Parada> getParadasDeLinea(DBHelper dbHelper, int linea_id) throws SQLException {
-        //GenericRawResults<String[]> strings = dbHelper.getDaoParada().queryRaw("select * from parada where numero in (select parada_id from paradaseccion where seccion_id in (select id from seccion where linea_id = :linea))", String.valueOf(linea_id));
-
         QueryBuilder<Seccion, Integer> seccionQb = dbHelper.getDaoSeccion().queryBuilder();
         SelectArg lineaSelectArg = new SelectArg();
         lineaSelectArg.setValue(linea_id);
@@ -97,7 +88,6 @@ public class DBQueries {
         QueryBuilder<ParadaSeccion, Integer> paradaSeccionQb = dbHelper.getDaoParadaSeccion().queryBuilder();
         paradaSeccionQb.join(seccionQb);
 
-        // Selecciono las paradas coincidentes con la b√∫squeda anterior
         QueryBuilder<Parada, Integer> paradaQb = dbHelper.getDaoParada().queryBuilder();
         paradaQb.join(paradaSeccionQb);
 
@@ -105,13 +95,11 @@ public class DBQueries {
     }
 
     public static List<Parada> getParadasDeSeccion(DBHelper dbHelper, int seccion_id) throws SQLException {
-        // Selecciono las relaciones de la secci√≥n
         QueryBuilder<ParadaSeccion, Integer> paradaSeccionQb = dbHelper.getDaoParadaSeccion().queryBuilder();
         SelectArg seccionSelectArg = new SelectArg();
         seccionSelectArg.setValue(seccion_id);
         paradaSeccionQb.where().eq("seccion_id", seccionSelectArg);
 
-        // Selecciono las paradas coincidentes con la búsqueda anterior
         QueryBuilder<Parada, Integer> paradaQb = dbHelper.getDaoParada().queryBuilder();
         paradaQb.join(paradaSeccionQb);
 
@@ -155,10 +143,9 @@ public class DBQueries {
         }
     }
 
-    public static Boolean setParadasFavoritas(final DBHelper dbHelper, final List<Favorita> favoritasOrdenadas) throws SQLException {
-        Boolean res = false;
+    public static void setParadasFavoritas(final DBHelper dbHelper, final List<Favorita> favoritasOrdenadas) throws SQLException {
         TableUtils.clearTable(dbHelper.getConnectionSource(), Favorita.class);
-        res = dbHelper.getDaoFavorita().callBatchTasks(new Callable<Boolean>() {
+        dbHelper.getDaoFavorita().callBatchTasks(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 for (Favorita f : favoritasOrdenadas) {
@@ -167,8 +154,6 @@ public class DBQueries {
                 return true;
             }
         });
-
-        return res;
     }
 
     public static void setNewParadaFavorita(DBHelper dbHelper, Parada parada, String nombrePropio, int color) {
@@ -202,18 +187,11 @@ public class DBQueries {
 
     public static void setParadaReciente(DBHelper dbHelper, Reciente reciente) throws SQLException {
         RuntimeExceptionDao<Reciente,Integer> daoReciente = dbHelper.getDaoReciente();
-        // Borra las paradas recientes que tengan este id, primero
         DeleteBuilder<Reciente,Integer> delBuilder = daoReciente.deleteBuilder();
         delBuilder.where().eq("paradaAsociada_id", reciente.getParadaAsociada().getNumero());
         delBuilder.delete();
 
-        // Y ahora la guarda
         daoReciente.create(reciente);
-    }
-
-    //TODO añadir una función que use esto
-    public static void clearParadasRecientes(DBHelper dbHelper) throws SQLException {
-        TableUtils.clearTable(dbHelper.getConnectionSource(), Reciente.class);
     }
 
     /* -- Twitter -- */
@@ -256,7 +234,6 @@ public class DBQueries {
     }
 
     public static void saveTweets(DBHelper dbHelper, List<TweetHolder> tweets) {
-        // TODO tiene que haber una mejor forma de hacer esto
         for (TweetHolder t : tweets) {
             dbHelper.getDaoTweetHolder().createOrUpdate(t);
         }

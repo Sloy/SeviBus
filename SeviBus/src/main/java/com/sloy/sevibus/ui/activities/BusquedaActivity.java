@@ -97,7 +97,6 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
 
-        //Easter egg :D
         if (query.equalsIgnoreCase("virgi")) {
             ImageView img = new ImageView(this);
             img.setImageResource(R.drawable.secret);

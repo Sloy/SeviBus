@@ -9,9 +9,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
-/**
- * Created by rafa on 08/11/13.
- */
 public abstract class Layer implements GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener{
 
     public abstract Object getItemFromMarker(Marker marker);
@@ -42,7 +39,6 @@ public abstract class Layer implements GoogleMap.InfoWindowAdapter, GoogleMap.On
         return bitmap;
     }
 
-    // No usaremos este método, así que puede ser null para todas las capas
     @Override
     public View getInfoWindow(Marker marker) {
         return null;

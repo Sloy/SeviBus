@@ -1,6 +1,5 @@
 package com.sloy.sevibus.ui.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBHelper;
@@ -18,20 +18,14 @@ import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.TipoLinea;
 import com.sloy.sevibus.ui.adapters.LineasAdapter;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-/**
- * Esta clase es fruto del copy&paste descarado de otras clases. Que la mantenga su padre.
- * En verdad las clases podrían ser idénticas, pero una hereda de DialogFragment y la otra no D:
- */
 public class SeleccionaLineaDialogFragment extends DialogFragment {
 
-    /*
-     * La parte de BaseDBFragment:
-     */
     private DBHelper dbHelper;
 
     protected DBHelper getDBHelper() {
@@ -53,7 +47,7 @@ public class SeleccionaLineaDialogFragment extends DialogFragment {
     }
 
     public interface LineaSelectedListener {
-        public void onLineaSelecteded(Linea linea);
+        void onLineaSelecteded(Linea linea);
     }
 
     @Override
@@ -69,25 +63,23 @@ public class SeleccionaLineaDialogFragment extends DialogFragment {
                 Linea l = (Linea) mAdapter.getItem(pos);
                 if (mListener != null) {
                     mListener.onLineaSelecteded(l);
-                    dismiss(); // <---- El especial de DialogFragment. ¡Nada más!
+                    dismiss();
                 } else {
                     ((LineaSelectedListener) getActivity()).onLineaSelecteded(l);
                 }
             }
         });
 
-        getDialog().setTitle("Elige línea para mostrar"); // <---- Bueno, y esto también xD
+        getDialog().setTitle("Elige línea para mostrar");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             v.setBackgroundColor(getResources().getColor(R.color.window_background));
         }
         return v;
     }
 
-    @SuppressLint("NewApi")
     @Override
     public void onStart() {
         super.onStart();
-        // TODO usar Loaders
         mAdapter = new LineasAdapter(getActivity());
         AsyncTask<Void, Void, Boolean> descargaLineas = new AsyncTask<Void, Void, Boolean>() {
 
@@ -112,7 +104,6 @@ public class SeleccionaLineaDialogFragment extends DialogFragment {
                     mLineasOrganizadas = lineasOrganizadas;
                     res = true;
                 } catch (SQLException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 return res;
@@ -122,19 +113,11 @@ public class SeleccionaLineaDialogFragment extends DialogFragment {
             protected void onPostExecute(Boolean result) {
                 super.onPostExecute(result);
                 if (result) {
-
                     onLineasCargadas();
-                } else {
-                    // TODO mostrar aviso de error
                 }
             }
         };
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            descargaLineas.execute();
-        } else {
-            descargaLineas.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-
+        descargaLineas.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void selectTodasLineas() {
@@ -150,12 +133,7 @@ public class SeleccionaLineaDialogFragment extends DialogFragment {
         mAdapter.setItems(listaConEncabezados);
     }
 
-    private void selectTipoLinea(TipoLinea tipo) {
-
-    }
-
     private void onLineasCargadas() {
-        // TODO montar la navegación en el actionbar para elegir tipo y tal
         selectTodasLineas();
 
         mList.setAdapter(mAdapter);

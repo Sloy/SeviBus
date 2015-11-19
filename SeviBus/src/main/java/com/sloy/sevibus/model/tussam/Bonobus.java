@@ -51,7 +51,6 @@ public class Bonobus {
 
     public void setNumero(long numero) {
         this.numero = numero;
-        //TODO lanzar excepción si el número no tiene 12 cifras
     }
 
     public int getNfcTagId() {

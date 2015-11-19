@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.widget.Toast;
 import com.sloy.sevibus.ui.activities.HomeActivity;
 
-/**
- * Created by rafa on 23/09/13.
- */
 public class SecretCodeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {

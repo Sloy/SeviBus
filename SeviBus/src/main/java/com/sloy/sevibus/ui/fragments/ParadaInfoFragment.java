@@ -63,10 +63,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class ParadaInfoFragment extends BaseDBFragment implements EditarFavoritaDialogFragment.OnGuardarFavoritaListener {
 
-    public static final String LOADER_EXTRA_LINEA = "linea";
-    public static final String LOADER_EXTRA_PARADA = "parada";
-    private static final String SCREEN_NAME = "Parada Info";
-
     public static final String URL_ANUNCIO_PROPIO = "http://sevibus.sloydev.com/ads/getad.php?p=%d";
     private static final int AD_NET_CONNECT_TIMEOUT_MILLIS = 10 * 1000;
     private static final int AD_NET_READ_TIMEOUT_MILLIS = 10 * 1000;
@@ -139,7 +135,6 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     }
 
     private void onEliminarFavoritaClick() {
-        //TODO cambiar AlertDialog por la historia de deshacer
         new AlertDialog.Builder(getActivity()).setMessage("Esta parada está guardada como favorita. ¿Quieres eliminarla?")
                 .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
                     @Override
@@ -205,27 +200,32 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                 e.printStackTrace();
             }
 
-            // Guarda el registro de reciente
-            //TODO opcional?
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    Reciente reciente = new Reciente();
-                    reciente.setCreatedAt(System.currentTimeMillis());
-                    reciente.setParadaAsociada(mParada);
-                    try {
-                        DBQueries.setParadaReciente(getDBHelper(), reciente);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        Debug.registerHandledException(getActivity(), e);
-                    }
-                    return null;
-                }
-            }.execute();
+            guardaReciente();
         }
         cargaInfoDeParada();
 
-        // Inicia la carga de anuncios
+        cargaAnuncio();
+    }
+
+    private void guardaReciente() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                Reciente reciente = new Reciente();
+                reciente.setCreatedAt(System.currentTimeMillis());
+                reciente.setParadaAsociada(mParada);
+                try {
+                    DBQueries.setParadaReciente(getDBHelper(), reciente);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    Debug.registerHandledException(getActivity(), e);
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    private void cargaAnuncio() {
         new AsyncTask<Void, Void, MiAnuncio>() {
 
             @Override
@@ -234,12 +234,11 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                     URL url = new URL(String.format(URL_ANUNCIO_PROPIO, mParada.getNumero()));
 
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setReadTimeout(AD_NET_READ_TIMEOUT_MILLIS /* milliseconds */);
-                    conn.setConnectTimeout(AD_NET_CONNECT_TIMEOUT_MILLIS /* milliseconds */);
+                    conn.setReadTimeout(AD_NET_READ_TIMEOUT_MILLIS);
+                    conn.setConnectTimeout(AD_NET_CONNECT_TIMEOUT_MILLIS);
                     conn.setRequestMethod("GET");
                     conn.setDoOutput(true);
                     conn.setUseCaches(false);
-                    // Starts the query
                     conn.connect();
                     int responseCode = conn.getResponseCode();
                     if (responseCode != 200) {
@@ -271,13 +270,6 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
             }
         }.execute();
 
-        // En versiones anteriores, invalida el menú, porque cuando se creó aún no se había cargado la parada y no se sabía si había que ocultar las favoritas. Ay señor...
-        //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-        // Y algunos capullos como HTC arrastran el problema a versiones superiores. Toca ejecutarlo siempre, qué bien... ¬¬
-        getActivity().supportInvalidateOptionsMenu();
-        //}
-
-        // Restaura el listener del dialog (el de guardar favorita), que se va al carajo al girar la pantalla
         EditarFavoritaDialogFragment f = (EditarFavoritaDialogFragment) getFragmentManager().findFragmentByTag(EditarFavoritaDialogFragment.TAG);
         if (f != null) {
             f.setOnGuardarFavoritaListener(this);
@@ -294,7 +286,10 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
         updateLlegadas();
 
-        // Carga las alertas
+        cargaAlertas();
+    }
+
+    private void cargaAlertas() {
         if (getActivity().getSharedPreferences(PreferenciasActivity.PREFS_CONFIG_VALUES, Context.MODE_PRIVATE).getBoolean("pref_alertas", true)) {
             new AsyncTask<Void, Void, SparseArray<List<LineaWarning>>>() {
                 @Override
@@ -349,7 +344,6 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         });
     }
 
-    //TODO indicar última comprobación, y actualizar automáticamente cuando... te parezca xD
     private void updateLlegadas() {
         TimeTracker timeTracker = new TimeTracker();
 
@@ -389,7 +383,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     public void cargaAnuncio(final MiAnuncio miAnuncio) {
         final FragmentActivity activity = getActivity();
         if (mAnuncioContainer == null || activity == null)
-            return; // Por si la activity se fue al carajo o algo
+            return;
 
         if (miAnuncio != null) {
             ImageView anuncioImagen = (ImageView) mAnuncioContainer.findViewById(R.id.anuncio_imagen);

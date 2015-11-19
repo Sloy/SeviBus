@@ -14,10 +14,6 @@ import com.sloy.sevibus.ui.fragments.main.ILocationSensitiveFragment;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by rafa on 05/09/13.
- */
-//TODO escuchar actualizaciones de posición, no sólo la inicial pisha
 public class LocationProviderActivity extends BaseToolbarActivity
     implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 

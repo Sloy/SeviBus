@@ -29,7 +29,6 @@ public class BaseActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            //XXX Por algún motivo, usando ActionBarSherlock no funciona el método normal de JellyBean
             NavUtils.navigateUpFromSameTask(this);
             return true;
         }

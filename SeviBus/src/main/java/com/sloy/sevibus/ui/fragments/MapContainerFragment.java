@@ -42,8 +42,7 @@ public class MapContainerFragment extends BaseDBFragment implements ILocationSen
     }
 
     private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the
-        // map.
+        // confirm that we have not already instantiated the map.
         if (mMap == null) {
             mMap = mMapFragment.getMap();
             // Check if we were successful in obtaining the map.
@@ -53,12 +52,7 @@ public class MapContainerFragment extends BaseDBFragment implements ILocationSen
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 mMap.setMyLocationEnabled(true);
                 //Config
-                //showMapControls(mShowInterface);
-                //TODO y algo más?
                 mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(37.3808828009948, -5.986958742141724), 13)));
-            } else {
-                // Tenemos un poblema gordo gordo...
-                //FIXME quillo!! Si no tiene los servicios del Google Play avisa, no lo ignores y ya está
             }
         }
     }
@@ -67,7 +61,7 @@ public class MapContainerFragment extends BaseDBFragment implements ILocationSen
     public void onStart() {
         super.onStart();
         setUpMapIfNeeded();
-        if (mMap != null) { //TODO manejar mejor esta situación, porque impide el uso de buena parte de la app, y esto seguramente no es solución.
+        if (mMap != null) {
             showMapControls(mShowInterface);
             asociarOpciones(true);
             ((LocationProviderActivity) getActivity()).suscribeForUpdates(this);
@@ -119,17 +113,11 @@ public class MapContainerFragment extends BaseDBFragment implements ILocationSen
         }
     }
 
-    /**
-     * Recibe una actualización de localización, normalmente desde la pantalla principal, para centrar el mapa
-     *
-     * @param location
-     */
     @Override
     public void updateLocation(Location location) {
         if (location != null && !mShowInterface) {
-            // Sólo se mueve la cámara si la interfaz NO se está mostrando. Es decir, el usuario no tiene abierto el mapa.
             LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 16)); //TODO ajustar zoom?
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
         }
     }
 
@@ -137,7 +125,7 @@ public class MapContainerFragment extends BaseDBFragment implements ILocationSen
         if (activar) {
             ((HomeActivity) getActivity()).getMapOptions().setMapa(mMap);
         } else {
-            ((HomeActivity) getActivity()).getMapOptions().releaseMapa(); //FIXME acoplamiento? psss xD
+            ((HomeActivity) getActivity()).getMapOptions().releaseMapa();
         }
     }
 }

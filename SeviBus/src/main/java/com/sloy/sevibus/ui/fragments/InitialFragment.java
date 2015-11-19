@@ -14,12 +14,7 @@ import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 
-/**
- * Created by rafa on 29/06/13.
- */
 public class InitialFragment extends BaseDBFragment {
-
-    private static final String SCREEN_NAME = "InitialFragment";
 
     public static interface ApplicationReadyListener {
         public void onApplicationReady();

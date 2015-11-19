@@ -24,12 +24,6 @@ import org.json.JSONObject;
 
 import static com.sloy.sevibus.bbdd.DBQueries.getTodasLineas;
 
-/**
- * Clase estática que gestiona la obtención de alertas de Tweets, tanto de Tussam como de SeviBus.
- * <p/>
- * Utiliza una caché en la base de datos para almacenar los tweets, y los descarga de la red
- * cuando la caché está invalidada por su criterio propio de tiempo.
- */
 public class AlertasManager {
 
     public static final String URL_TWEETS_SEVIBUS = "http://sevibus.sloydev.com/twitterapi/sevibus.php";
@@ -133,7 +127,7 @@ public class AlertasManager {
         List<LineaWarning> warnings = generaWarnings(dbHelper, tweetHolders);
         DBQueries.saveLineaWarning(dbHelper, warnings);
         DBQueries.saveTweets(dbHelper, tweetHolders);
-        // Guarda el timestamp actual
+
         context.getSharedPreferences(PREF_ALERTS, Context.MODE_PRIVATE).edit().putLong(PREF_TIMESTAMP_TUSSAM, System.currentTimeMillis()).commit();
     }
 
@@ -142,7 +136,6 @@ public class AlertasManager {
         DBQueries.deleteTweetsFromSevibus(dbHelper);
         DBQueries.saveTweets(dbHelper, tweetHolders);
 
-        // Guarda el timestamp actual
         context.getSharedPreferences(PREF_ALERTS, Context.MODE_PRIVATE).edit().putLong(PREF_TIMESTAMP_SEVIBUS, System.currentTimeMillis()).commit();
     }
 
@@ -162,7 +155,7 @@ public class AlertasManager {
 
     private static List<LineaWarning> generaWarnings(DBHelper dbHelper, List<TweetHolder> tweetsTussam) throws SQLException {
         long t1 = System.currentTimeMillis();
-        // Saca un array con los números de todas las líneas
+
         List<Linea> todasLineas = getTodasLineas(dbHelper);
         String[] numeros = new String[todasLineas.size()];
         for (int i = 0; i < todasLineas.size(); i++) {
@@ -176,7 +169,6 @@ public class AlertasManager {
             if (tweet.getFecha().after(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000))) {
                 for (int i = 0; i < numeros.length; i++) {
                     String numero = numeros[i];
-                    //TODO detectar cuando en el tweet se pone "línea 1" en vez de "01"
                     if (tweet.getTexto().contains(numero)) {
                         warnings.add(new LineaWarning(tweet, todasLineas.get(i)));
                     }

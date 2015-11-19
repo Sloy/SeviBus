@@ -195,7 +195,7 @@ public class MainPageFragment extends BaseDBFragment {
         try {
             currentVersion = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            //TODO oops
+            throw new RuntimeException(e);
         }
         final SharedPreferences prefs = getActivity().getSharedPreferences(PreferenciasActivity.PREFS_CONFIG_VALUES, Context.MODE_PRIVATE);
         int lastVersion = prefs.getInt(PREF_SHOW_NEW_VERSION_LATEST_SEEN, 0);
@@ -335,12 +335,11 @@ public class MainPageFragment extends BaseDBFragment {
         try {
             currentVersion = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            //TODO oops
+            throw new RuntimeException(e);
         }
         final SharedPreferences.Editor prefsEditor = getActivity().getSharedPreferences(PreferenciasActivity.PREFS_CONFIG_VALUES, Context.MODE_PRIVATE).edit();
         if (foreverAndEver) {
             prefsEditor.putBoolean(PREF_SHOW_NEW_VERSION, false); //Ojo: no commit
-            //TODO mostrar toast o algo
         }
         prefsEditor.putInt(PREF_SHOW_NEW_VERSION_LATEST_SEEN, currentVersion).apply();
 

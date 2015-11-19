@@ -20,20 +20,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by rafa on 17/07/13.
- */
 public class ParadasCercanasMainFragment extends BaseDBFragment implements ILocationSensitiveFragment {
-
-    private static final String SCREEN_NAME = "Favoritas Main";
 
     private View mContenido;
     private TextView mMensaje;
     private MainPageFragment mMainPage;
     private List<Integer> mDistanciasTmp;
 
-    public static interface ParadasCercanasMainClickListener {
-        public void onParadaCercanaClick(int idParada);
+    public interface ParadasCercanasMainClickListener {
+        void onParadaCercanaClick(int idParada);
     }
 
     public static ParadasCercanasMainFragment getInstance() {
@@ -52,7 +47,6 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main_paradas_cercanas, container, false);
 
-        // Vistas para ocultar/mostrar
         mMensaje = (TextView) v.findViewById(R.id.main_paradas_cercanas_mensaje);
         mContenido = v.findViewById(R.id.main_paradas_cercanas_contenido);
 
@@ -87,7 +81,7 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        muestraCargando(); //TODO seguro?
+        muestraCargando();
     }
 
     @Override
@@ -109,14 +103,12 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
     }
 
     private void muestraNoDatos() {
-        //FIXME si ya hay paradas cercanas cargadas, las deja y ya está
         mMensaje.setText(R.string.paradas_cercanas_empty);
         mMensaje.setVisibility(View.VISIBLE);
         mContenido.setVisibility(View.GONE);
     }
 
     private void muestraError() {
-        //FIXME si ya hay paradas cercanas cargadas, las deja y ya está
         mMensaje.setText(R.string.ubicacion_error);
         mMensaje.setVisibility(View.VISIBLE);
         mContenido.setVisibility(View.GONE);
@@ -126,7 +118,6 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
         mMensaje.setVisibility(View.GONE);
         mContenido.setVisibility(View.VISIBLE);
 
-        //TODO crea las vistas y las añade dinámicamente
         Parada p1 = null, p2 = null, p3 = null, p4 = null;
         int d1 = 0, d2 = 0, d3 = 0, d4 = 0;
 

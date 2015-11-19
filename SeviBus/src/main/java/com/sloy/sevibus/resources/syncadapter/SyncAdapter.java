@@ -23,58 +23,27 @@ import java.sql.SQLException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Handle the transfer of data between a server and an
- * app, using the Android sync adapter framework.
- */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 
     private DBHelper mHelper;
 
-    /**
-     * Set up the sync adapter
-     */
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
-        /*
-         * If your app uses a content resolver, get an instance of it
-         * from the incoming Context
-         */
         mHelper = OpenHelperManager.getHelper(context, DBHelper.class);
     }
 
-    /**
-     * Set up the sync adapter. This form of the
-     * constructor maintains compatibility with Android 3.0
-     * and later platform versions
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
-        /*
-         * If your app uses a content resolver, get an instance of it
-         * from the incoming Context
-         */
         mHelper = OpenHelperManager.getHelper(context, DBHelper.class);
     }
 
-    /*
-     * Specify the code you want to run in the sync adapter. The entire
-     * sync adapter runs in a background thread, so you don't have to set
-     * up your own background processing.
-     */
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.i(SyncUtils.TAG, "Beginning network synchronization");
         try {
-            // Actualiza la información de líneas y paradas
             updateLineasYParadas(syncResult);
-
-            //TODO sincroniza favoritas
-            //TODO actualiza twitters
-            //TODO envía estadísticas
-            //TODO etc...
 
             getContext().sendBroadcast(new Intent(SyncUtils.ACTION_UPDATE_FINISH));
         } catch (MalformedURLException e) {
@@ -93,11 +62,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         Log.i(SyncUtils.TAG, "Network synchronization complete");
     }
 
-    /**
-     * Parsea la respuesta del servidor para generar las recetas y las guarda en la BBDD
-     *
-     * @param syncResult
-     */
     private void updateLineasYParadas(SyncResult syncResult) throws IOException, JSONException {
         Log.i(SyncUtils.TAG, "Comenzando sincronización de líneas y paradas");
         // 1. Obtiene la información de los datos (el json con la versión, las urls y tal)
@@ -124,15 +88,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             String sqlTipoLineas = SyncUtils.streamToString(SyncUtils.downloadUrl(urlTipoLineas));
 
             // 4. Actualiza la Base de Datos con esta información. Buena suerte, chaval xD
-            // TODO implementar reintento? No sé si fallaría aquí fácilmente
             try {
                 mHelper.updateManual(sqlParadas, sqlLineas, sqlSecciones, sqlRelaciones, sqlTipoLineas);
                 prefsDatos.edit().putInt("data_version", dataVersion).commit();
             } catch (SQLException e) {
                 Log.e(SyncUtils.TAG, "Error actualizando los datos en la BBDD", e);
                 Debug.registerHandledException(getContext(), e);
-                // Como la inserción ha fallado, mete los datos, aunque sean antiguos.
-                // TODO meter datos más actuales, guardados en memoria o algo...
                 mHelper.updateFromAssets();
             }
             Log.i(SyncUtils.TAG, "Terminada sincronización de líneas y paradas");

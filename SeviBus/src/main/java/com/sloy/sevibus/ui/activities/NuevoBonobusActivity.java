@@ -37,7 +37,6 @@ import javax.xml.xpath.XPathExpressionException;
 
 public class NuevoBonobusActivity extends BaseToolbarActivity {
 
-    private static final String SCREEN_NAME = "Nuevo Bonobus";
     private static final int ANIM_DURATION_SHOW = 500;
     private static final int ANIM_DURATION_HIDE = 250;
 
@@ -171,7 +170,6 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
     }
 
     private void verificaNumero(String numeroString) {
-        //TODO verificar si el número ya existe
         Bonobus nuevoBono = new Bonobus();
         nuevoBono.setNumero(Long.parseLong(numeroString));
 
@@ -181,7 +179,6 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
         }
         mCurrentTask = new VerificaBonobusTask(nuevoBono);
         mCurrentTask.execute();
-        //TODO cancelarla cuando te parezca (destroy, etc)
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mNumeroText.getWindowToken(), 0);
@@ -241,7 +238,7 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
         for (int i = 0; i < lastIndex; i++) {
             result[i] = s.substring(j, j + interval);
             j += interval;
-        } //Add the last bit
+        }
         result[lastIndex] = s.substring(j);
 
         return result;

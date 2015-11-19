@@ -16,7 +16,7 @@ import java.util.List;
 public class LineasAdapter extends BaseAdapter {
     
     private Context mContext;
-    private List<Object> mItems; // TIENEN que ser de clase Linea o TipoLinea
+    private List<Object> mItems;
     
     public LineasAdapter(Context context) {
         mContext = context;

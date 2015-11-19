@@ -91,32 +91,12 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(cs, TipoLinea.class, true);
             TableUtils.dropTable(cs, Seccion.class, true);
 
-            // TODO preparar el backup de las otras tablas y eliminarlas también
-
-            // Casos particulares de cada versión
-            // -- 6: introduce tabla Recientes. No es necesaria acción, pues se generará en onCreate
-
             onCreate(db, cs);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    /**
-     * Actualiza la base de datos a partir de un archivo SQL almacenado en
-     * memoria.
-     *
-     * @return true si se pudo actualizar, en caso de existir el archivo
-     */
-    public boolean updateFromMemory() {
-        // TODO dale caña
-        return false;
-    }
-
-    /**
-     * Actualiza la base de datos a partir de los archivos SQL contenido en los
-     * assets del APK
-     */
     public void updateFromAssets() {
         Log.i("sevibus", "Actualizando base de datos...");
         String sqlLineas = null, sqlParadas = null, sqlSecciones = null, sqlRelaciones = null, sqlTipoLineas = null;
@@ -199,9 +179,9 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     }
 
     /**
-     * Actualiza el contenido de las tablas de paradas, lÔøΩneas y sus
-     * relaciones con el cÔøΩdigo SQL pasado directamente por los parÔøΩmetros.
-     * El cÔøΩdigo SQL debe constar de una serie de Inserts con los nuevos
+     * Actualiza el contenido de las tablas de paradas, líneas y sus
+     * relaciones con el código SQL pasado directamente por los parÔøΩmetros.
+     * El código SQL debe constar de una serie de Inserts con los nuevos
      * datos.
      *
      * @param sqlParadas
@@ -210,14 +190,12 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
      */
     public void updateManual(final String sqlParadas, final String sqlLineas, final String sqlSecciones, final String sqlRelaciones, final String sqlTipoLineas) throws SQLException {
 
-        // Limpia el contenido de las tablas "estáticas"
         TableUtils.clearTable(this.getConnectionSource(), Parada.class);
         TableUtils.clearTable(this.getConnectionSource(), Linea.class);
         TableUtils.clearTable(this.getConnectionSource(), Seccion.class);
         TableUtils.clearTable(this.getConnectionSource(), ParadaSeccion.class);
         TableUtils.clearTable(this.getConnectionSource(), TipoLinea.class);
 
-        // Ejecuta el sql para cada una...}
         getDaoLinea().callBatchTasks(new Callable<Void>() {
 
             @Override
