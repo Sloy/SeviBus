@@ -2,11 +2,12 @@
 <resources>
     <color name="main_separators">#ccc</color>
 
-    <color name="window_background">#e8e3dc</color>
+    <color name="window_background">#f5f5f5</color>
     <color name="soft_black">#FF363636</color>
 
     <color name="rojo_sevibus">#aa0000</color>
 
     <color name="white">#FFFFFF</color>
     <color name="white_alpha">#aaffffff</color>
+    <color name="cardview_white_background">#FFFFFF</color>
 </resources>

@@ -13,6 +13,7 @@
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true"
+        card_view:cardBackgroundColor="@color/cardview_white_background"
         tools:ignore="UnusedAttribute">
 
         <TextView
