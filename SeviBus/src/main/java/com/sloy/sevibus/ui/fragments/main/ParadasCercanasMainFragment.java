@@ -2,12 +2,15 @@ package com.sloy.sevibus.ui.fragments.main;
 
 import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Parada;
@@ -16,6 +19,8 @@ import com.sloy.sevibus.ui.activities.HomeActivity;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloy.sevibus.ui.fragments.BaseDBFragment;
 import com.sloy.sevibus.ui.fragments.MainPageFragment;
+import com.sloy.sevibus.ui.fragments.MapContainerFragment;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +34,7 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
 
     public interface ParadasCercanasMainClickListener {
         void onParadaCercanaClick(int idParada);
+        void onParadaCercanaMas();
     }
 
     public static ParadasCercanasMainFragment getInstance() {
@@ -56,14 +62,11 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
         mParada4View = mContenido.findViewById(R.id.main_paradas_cercanas_parada_4);
 
         mButtonMas = mContenido.findViewById(R.id.main_paradas_cercanas_boton_mas);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            mButtonMas.setVisibility(View.GONE);
-        }
         mButtonMas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((HomeActivity)getActivity()).getMapOptions().setMostrarCercanas(true);
-                //TODO open map
+                ((HomeActivity) getActivity()).getMapOptions().setMostrarCercanas(true);
+                ((ParadasCercanasMainClickListener) getActivity()).onParadaCercanaMas();
             }
         });
 
@@ -82,9 +85,35 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         muestraCargando();
+        setupMapa();
+
     }
 
-    @Override
+    private void setupMapa() {
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction trans = fm.beginTransaction();
+        Fragment f = fm.findFragmentByTag("mapa");
+        if (f == null) {
+            f = MapContainerFragment.getInstance(false);
+        }
+        if (f.isAdded()) {
+            trans.attach(f);
+        } else {
+            trans.add(R.id.main_paradas_cercanas_mapa_content, f, "mapa");
+        }
+
+        getView().findViewById(R.id.main_paradas_cercanas_mapa_trigger).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ParadasCercanasMainClickListener) getActivity()).onParadaCercanaMas();
+            }
+        });
+
+        trans.commit();
+
+    }
+
+        @Override
     public void onStart() {
         super.onStart();
         ((LocationProviderActivity)getActivity()).suscribeForUpdates(this);

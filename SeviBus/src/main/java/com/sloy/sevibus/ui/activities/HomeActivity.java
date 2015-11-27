@@ -295,6 +295,11 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
     }
 
     @Override
+    public void onParadaCercanaMas() {
+        doSelectDrawerItemById(R.id.nav_mapa);
+    }
+
+    @Override
     public void onLineaCercanaClick(int idLinea) {
         startActivity(ParadasDeLineaActivity.getIntent(this, idLinea));
     }

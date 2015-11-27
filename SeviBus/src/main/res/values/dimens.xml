@@ -1,7 +1,8 @@
 <resources>
     <dimen name="main_favorita_text_size_3">32sp</dimen>
 
-    <dimen name="main_map_height">100dp</dimen>
+    <dimen name="main_map_height">132dp</dimen>
+    <dimen name="main_map_google_logo_offset">-28dp</dimen>
 
     <dimen name="polyline_width">2.5dp</dimen>
 
