@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import com.sloy.sevibus.R;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class BaseToolbarActivity extends BaseActivity {
 
     private ViewGroup containerView;
@@ -18,15 +20,30 @@ public class BaseToolbarActivity extends BaseActivity {
     private Toolbar toolbar;
 
     @Override public void setContentView(int layoutResID) {
-        ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
-        View toolbarDecorator = LayoutInflater.from(this).inflate(R.layout.toolbar_decorator, root, true);
-        containerView = (ViewGroup) toolbarDecorator.findViewById(R.id.action_bar_activity_content);
+        ViewGroup root = getRootView();
 
-        LayoutInflater.from(this).inflate(layoutResID, containerView, true);
+        if (needsToolbarDecorator()) {
+            View toolbarDecorator = LayoutInflater.from(this).inflate(R.layout.toolbar_decorator, root, true);
+            toolbar = (Toolbar) toolbarDecorator.findViewById(R.id.toolbar_actionbar);
 
-        toolbar = (Toolbar) toolbarDecorator.findViewById(R.id.toolbar_actionbar);
+            containerView = (ViewGroup) toolbarDecorator.findViewById(R.id.action_bar_activity_content);
+            LayoutInflater.from(this).inflate(layoutResID, containerView, true);
+        } else {
+            super.setContentView(layoutResID);
+            toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+            checkNotNull(toolbar, "needsToolbarDecorator() es false, pero no se encontró toolbar en el layout");
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+    }
+
+    protected boolean needsToolbarDecorator() {
+        return true;
+    }
+
+    private ViewGroup getRootView() {
+        return (ViewGroup) findViewById(android.R.id.content);
     }
 
     public ViewGroup getContainerView() {

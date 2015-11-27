@@ -54,6 +54,11 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
     private SparseArray<String> drawerFragments;
 
     @Override
+    protected boolean needsToolbarDecorator() {
+        return false;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
