@@ -123,57 +123,52 @@ public class LlegadasList extends LinearLayout {
         View progress = vistaLlegada.findViewById(R.id.item_llegada_progress);
         View container = vistaLlegada.findViewById(R.id.item_llegada_container);
 
+        fillLlegada(tiempo1Text, distancia1Text, llegada.getNextBus());
+        fillLlegada(tiempo2Text, distancia2Text, llegada.getSecondBus());
 
-        if (llegada==null) {
-            tiempo1Text.setText("Error");
-            tiempo2Text.setText("Sin conexión a Internet o servidor no disponible");
-            distancia1Text.setText("");
-            distancia2Text.setText("");
-        } else {
-            if (llegada.getNextBus().getStatus() == ArrivalTime.Status.ESTIMATE) {
-                int tiempo1 = llegada.getNextBus().getTimeInMinutes();
-                int distancia1 = llegada.getNextBus().getDistanceInMeters();
-                if (tiempo1 > 0) {
-                    tiempo1Text.setText(String.format("%d minutos", tiempo1));
-                    distancia1Text.setText(String.format("%d metros", distancia1));
-                } else if (tiempo1 == 0) {
-                    tiempo1Text.setText("Llegada inminente");
-                    distancia1Text.setText("");
-                } else {
-                    tiempo1Text.setText("No disponible");
-                    distancia1Text.setText("");
-                }
-            } else {
-                tiempo1Text.setText("No disponible");
-                distancia1Text.setText("");
-            }
-
-            // Segunda llegada
-            if (llegada.getSecondBus().getStatus() == ArrivalTime.Status.ESTIMATE) {
-                int tiempo2 = llegada.getSecondBus().getTimeInMinutes();
-                int distancia2 = llegada.getSecondBus().getDistanceInMeters();
-                if (tiempo2 > 0) {
-                    tiempo2Text.setText(String.format("%d minutos", tiempo2));
-                    distancia2Text.setText(String.format("%d metros", distancia2));
-                } else if (tiempo2 == 0) {
-                    tiempo2Text.setText("Llegada inminente");
-                    distancia2Text.setText("");
-                } else {
-                    tiempo2Text.setText("No disponible");
-                    distancia2Text.setText("o erróneo");
-                }
-            } else {
-                tiempo2Text.setText("No disponible");
-                distancia2Text.setText("");
-            }
-
-            if (Debug.isDebugEnabled(getContext())) {
-                distancia2Text.setText(llegada.getDataSource());
-            }
+        if (Debug.isDebugEnabled(getContext())) {
+            distancia2Text.setText(llegada.getDataSource());
         }
 
         progress.setVisibility(View.GONE);
         container.setVisibility(VISIBLE);
+    }
+
+    private void fillLlegada(TextView tiempo1Text, TextView distancia1Text, ArrivalTime.BusArrival bus) {
+        tiempo1Text.setText(tiempoForBus(bus));
+        distancia1Text.setText(distanciaForBus(bus));
+    }
+
+    public String tiempoForBus(ArrivalTime.BusArrival bus) {
+        switch (bus.getStatus()) {
+            case ESTIMATE:
+                return String.format("%d minutos", bus.getTimeInMinutes());
+            case BEYOND_HALF_HOUR:
+                return "Más de 30 minutos";
+            case IMMINENT:
+                return "Llegada inminente";
+            case NO_ESTIMATION:
+                return "Sin estimación";
+            case NOT_AVAILABLE:
+            default:
+                return "No disponible";
+        }
+    }
+
+    private String distanciaForBus(ArrivalTime.BusArrival bus) {
+        switch (bus.getStatus()) {
+            case ESTIMATE:
+                return String.format("%d metros", bus.getDistanceInMeters());
+            case BEYOND_HALF_HOUR:
+                return "Más de 30 minutos";
+            case IMMINENT:
+                return "";
+            case NO_ESTIMATION:
+                return "";
+            case NOT_AVAILABLE:
+            default:
+                return "o erróneo";
+        }
     }
 
     public void setLlegadaCargando(String linea) {

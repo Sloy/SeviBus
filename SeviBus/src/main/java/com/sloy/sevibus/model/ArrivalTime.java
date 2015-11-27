@@ -66,7 +66,7 @@ public class ArrivalTime {
     }
 
     public enum Status {
-        ESTIMATE, IMMINENT, NO_ESTIMATION, NOT_AVAILABLE,
+        ESTIMATE, IMMINENT, BEYOND_HALF_HOUR, NO_ESTIMATION, NOT_AVAILABLE,
     }
 
     public static class BusArrival {
