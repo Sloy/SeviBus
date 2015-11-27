@@ -117,7 +117,7 @@ public class MapContainerFragment extends BaseDBFragment implements ILocationSen
     public void updateLocation(Location location) {
         if (location != null && !mShowInterface) {
             LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
         }
     }
 
