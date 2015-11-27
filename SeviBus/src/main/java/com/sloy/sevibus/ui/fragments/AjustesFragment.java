@@ -45,22 +45,6 @@ public class AjustesFragment extends PreferenceFragment {
     }
 
     // Datos de paradas y líneas
-
-    CheckBoxPreference actualizarAutomatica =
-        (CheckBoxPreference) findPreference("pref_update_auto");
-    assert actualizarAutomatica != null;
-    actualizarAutomatica.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
-        Boolean updateAuto = (Boolean) newValue;
-        getActivity().getSharedPreferences("sync", Context.MODE_MULTI_PROCESS)
-            .edit()
-            .putBoolean("pref_update_auto", updateAuto)
-            .commit();
-        //TODO enable/disable sync
-        return true;
-      }
-    });
-
     actualizarManual = findPreference("pref_update_manual");
     assert actualizarManual != null;
     actualizarManual.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
