@@ -47,20 +47,6 @@ public class InitialFragment extends BaseDBFragment {
             }
         });
         setupDatabase();
-        setupLiteMode();
-    }
-
-    private void setupLiteMode() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                if (Debug.readTotalRam() < Debug.LITE_MODE_RAM_THRESHOLD) {
-                    getActivity().getSharedPreferences(PreferenciasActivity.PREFS_CONFIG_VALUES, Context.MODE_MULTI_PROCESS).edit().putBoolean("pref_lite_mode", true).commit();
-                    Log.d("SeviBus", "Lite mode activado por falta de ram");
-                }
-                return null;
-            }
-        }.execute();
     }
 
     private void setupDatabase() {

@@ -28,7 +28,6 @@ public class BonobusView extends FrameLayout {
     View panelOpciones;
 
     boolean isCargando;
-    boolean useAnimations;
 
     public BonobusView(Context context) {
         super(context);
@@ -56,14 +55,12 @@ public class BonobusView extends FrameLayout {
             cargando = (ProgressBar) v.findViewById(R.id.item_bonobus_cargando);
             imagen = (ImageView) v.findViewById(R.id.item_bonobus_imagen);
             panelOpciones = v.findViewById(R.id.item_bonobus_opciones_panel);
-
-            useAnimations = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && !context.getSharedPreferences(PreferenciasActivity.PREFS_CONFIG_VALUES, Context.MODE_PRIVATE).getBoolean(PreferenciasActivity.PREF_LITE_MODE_ENABLED, false);
         }
     }
 
     public void setCargando(boolean carga) {
         isCargando = carga;
-        if (useAnimations && !carga) { // Sólo animo la transición a NO cargando
+        if (!carga) { // Sólo animo la transición a NO cargando
             // Oculto el progreso
             ObjectAnimator progAnim = ObjectAnimator.ofFloat(cargando, "alpha", 0f);
             progAnim.addListener(new AnimatorListenerAdapter() {
@@ -126,14 +123,10 @@ public class BonobusView extends FrameLayout {
     }
 
     public void mostrarOpciones(boolean mostrar) {
-        if (useAnimations) {
-            if (mostrar) {
-                expandirOpcionesAnimacion();
-            } else {
-                contraerOpcionesAnimacion();
-            }
+        if (mostrar) {
+            expandirOpcionesAnimacion();
         } else {
-            panelOpciones.setVisibility(mostrar ? VISIBLE : GONE);
+            contraerOpcionesAnimacion();
         }
     }
 

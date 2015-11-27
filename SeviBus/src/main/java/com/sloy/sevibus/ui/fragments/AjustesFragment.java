@@ -45,23 +45,6 @@ public class AjustesFragment extends PreferenceFragment {
       addPreferencesFromResource(R.xml.preferences_debug);
     }
 
-    // Interfaz
-
-    CheckBoxPreference liteMode = (CheckBoxPreference) findPreference("pref_lite_mode");
-    liteMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
-        Boolean liteMode = (Boolean) newValue;
-        getActivity().getSharedPreferences(PREFS_CONFIG_VALUES, Activity.MODE_PRIVATE)
-            .edit()
-            .putBoolean("pref_lite_mode", liteMode)
-            .commit();
-
-        Toast.makeText(getActivity(), "Puede que necesites reiniciar la aplicación",
-            Toast.LENGTH_SHORT).show();
-        return true;
-      }
-    });
-
     CheckBoxPreference alertas = (CheckBoxPreference) findPreference("pref_alertas");
     alertas.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {

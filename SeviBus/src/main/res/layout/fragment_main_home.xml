@@ -34,14 +34,6 @@
             android:layout_height="wrap_content"
             />
 
-        <ViewStub
-            android:id="@+id/fragment_main_share_stub"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:inflatedId="@+id/fragment_main_compartir"
-            android:layout="@layout/fragment_main_share"/>
-
         <FrameLayout
             android:id="@+id/fragment_main_paradas_cercanas"
             android:layout_width="match_parent"

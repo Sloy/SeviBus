@@ -3,23 +3,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="Interfaz"
-        >
-        <CheckBoxPreference
-            android:key="pref_lite_mode"
-            android:title="Modo ligero"
-            android:summary="Menos funciones pero más rápido en teléfonos de recursos bajos"
-            android:defaultValue="false"
-            />
-        <CheckBoxPreference
-            android:key="pref_alertas"
-            android:title="Mostrar alertas"
-            android:summary="Muestra alertas en las líneas identificadas a partir de los tweets de @Ayto_Sevilla"
-            android:defaultValue="true"
-            />
-
-        </PreferenceCategory>
-    <PreferenceCategory
         android:title="Datos de paradas y líneas"
         >
 
@@ -35,20 +18,6 @@
             android:title="Actualización manual"
             />
     </PreferenceCategory>
-
-    <!--<PreferenceCategory
-        android:title="Ajustes personales"
-        >
-        <CheckBoxPreference
-            android:title="Sincronizar favoritas"
-            android:summary="Sincroniza las paradas favoritas entre dispositivos con Google Drive"
-            />
-        <Preference
-            android:title="Cambiar cuenta"
-            android:summary="Actual: rafagames92@gmail.com"
-            />
-
-    </PreferenceCategory>-->
 
     <PreferenceCategory
         android:title="Información"

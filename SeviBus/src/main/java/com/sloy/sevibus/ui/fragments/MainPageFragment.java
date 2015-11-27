@@ -16,10 +16,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 
 import com.sloy.sevibus.R;
-import com.sloy.sevibus.resources.syncadapter.IntentFactory;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 import com.sloy.sevibus.ui.fragments.main.FavoritasMainFragment;
 import com.sloy.sevibus.ui.fragments.main.LineasCercanasMainFragment;
@@ -31,17 +29,11 @@ public class MainPageFragment extends BaseDBFragment {
     private static final String FRAG_FAVORITAS = "f_favoritas";
     private static final String FRAG_PARADAS_CERCANAS = "f_p_cercanas";
     private static final String FRAG_LINEAS_CERCANAS = "f_l_cercanas";
-    private static final String FRAG_MAPA = "f_mapa";
-    private static final String FRAG_FIRST_RUN = "f_firstrun";
     private static final String FRAG_NEW_VERSION = "f_newversion";
 
 
-    private static final String PREF_SHOW_FIRST_FUN_INFO = "show_firstrun";
     private static final String PREF_SHOW_NEW_VERSION_LATEST_SEEN = "newversion_last_seen";
     private static final String PREF_SHOW_NEW_VERSION = "newversion_show";
-
-    private static final String PREF_LAUNCHES = "launches";
-    private static final String PREF_COMPARTIR_DISCARDED = "compartir_discarded";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +59,6 @@ public class MainPageFragment extends BaseDBFragment {
         setupNewVersion(fm, trans);
         setupParadasCercanas(fm, trans);
         setupLineasCercanas(fm, trans);
-        setupCompartir();
         trans.commit();
     }
 
@@ -96,40 +87,6 @@ public class MainPageFragment extends BaseDBFragment {
             prefs.edit().putInt(PREF_SHOW_NEW_VERSION_LATEST_SEEN, currentVersion).apply();
         }
     }
-
-    private void setupCompartir() {
-        final SharedPreferences prefs = getActivity().getSharedPreferences(PreferenciasActivity.PREFS_CONFIG_VALUES, Context.MODE_PRIVATE);
-        boolean compartirDiscarded = prefs.getBoolean(PREF_COMPARTIR_DISCARDED, false);
-        int launches = prefs.getInt(PREF_LAUNCHES, 0);
-        prefs.edit().putInt(PREF_LAUNCHES, launches + 1).apply();
-
-        if (!compartirDiscarded && launches > 5) {
-            ViewStub stubWarningLite = (ViewStub) getView().findViewById(R.id.fragment_main_share_stub);
-            if (stubWarningLite == null) {
-                return;
-            }
-            stubWarningLite.inflate();
-            final View warningLiteView = getView().findViewById(R.id.fragment_main_compartir);
-            View botonDescartar = warningLiteView.findViewById(R.id.main_compartir_descartar);
-            botonDescartar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    warningLiteView.setVisibility(View.GONE);
-                    prefs.edit().putBoolean(PREF_COMPARTIR_DISCARDED, true).apply();
-                }
-            });
-            View botonAceptar = warningLiteView.findViewById(R.id.main_compartir_aceptar);
-            botonAceptar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(IntentFactory.shareApp());
-                    warningLiteView.setVisibility(View.GONE);
-                    prefs.edit().putBoolean(PREF_COMPARTIR_DISCARDED, true).apply();
-                }
-            });
-        }
-    }
-
 
     private void setupFavoritas(FragmentManager fm, FragmentTransaction trans) {
         Fragment f = fm.findFragmentByTag(FRAG_FAVORITAS);

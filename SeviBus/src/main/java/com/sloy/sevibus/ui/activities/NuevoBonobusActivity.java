@@ -4,10 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.text.Editable;
@@ -52,8 +50,6 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
 
     private Bonobus mBonobusConfigurado;
 
-    private boolean mLiteMode;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +64,6 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
         mNombrePropio = (EditText) findViewById(R.id.nuevo_bonobus_nombre);
         mErrorView = findViewById(R.id.nuevo_bonobus_error);
         mAyudaView = findViewById(R.id.nuevo_bonobus_ayuda);
-
-        mLiteMode = Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH || getSharedPreferences(PreferenciasActivity.PREFS_CONFIG_VALUES, Context.MODE_PRIVATE).getBoolean(PreferenciasActivity.PREF_LITE_MODE_ENABLED, false);
 
         mBonobusView.setCargando(false);
         reseteaInterfaz();
@@ -197,35 +191,30 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
 
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void setShowError(final boolean show) {
         mNumeroText.setError(show ? "¿Número incorrecto?" : null);
-        if (mLiteMode) {
-            mErrorView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-        } else {
-            boolean isErrorVisible = mErrorView.getVisibility() == View.VISIBLE;
-            if (show != isErrorVisible) {
-                float initAlpha = show ? 0f : 1f;
-                float endAlpha = show ? 1f : 0f;
-                ObjectAnimator animError = ObjectAnimator.ofFloat(mErrorView, "alpha", initAlpha, endAlpha);
-                animError.setDuration(show ? ANIM_DURATION_SHOW : ANIM_DURATION_HIDE);
-                animError.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        if (show) {
-                            mErrorView.setVisibility(View.VISIBLE);
-                        }
+        boolean isErrorVisible = mErrorView.getVisibility() == View.VISIBLE;
+        if (show != isErrorVisible) {
+            float initAlpha = show ? 0f : 1f;
+            float endAlpha = show ? 1f : 0f;
+            ObjectAnimator animError = ObjectAnimator.ofFloat(mErrorView, "alpha", initAlpha, endAlpha);
+            animError.setDuration(show ? ANIM_DURATION_SHOW : ANIM_DURATION_HIDE);
+            animError.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    if (show) {
+                        mErrorView.setVisibility(View.VISIBLE);
                     }
+                }
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (!show) {
-                            mErrorView.setVisibility(View.GONE);
-                        }
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (!show) {
+                        mErrorView.setVisibility(View.GONE);
                     }
-                });
-                animError.start();
-            }
+                }
+            });
+            animError.start();
         }
     }
 
@@ -244,157 +233,136 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
         return result;
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void setShowResultado(final boolean show) {
-        if (mLiteMode) {
-            mBonobusView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mNombrePropio.setVisibility(show ? View.VISIBLE : View.GONE);
-        } else {
-            boolean isBonoVisible = mBonobusView.getVisibility() == View.VISIBLE;
-            boolean isNombreVisible = mNombrePropio.getVisibility() == View.VISIBLE;
-            if ((show && (!isBonoVisible || !isNombreVisible) || (!show && (isBonoVisible || isNombreVisible)))) {
-                int duracion = show ? ANIM_DURATION_SHOW : ANIM_DURATION_HIDE;
-                float initAlpha = show ? 0f : 1f;
-                float endAlpha = show ? 1f : 0f;
+        boolean isBonoVisible = mBonobusView.getVisibility() == View.VISIBLE;
+        boolean isNombreVisible = mNombrePropio.getVisibility() == View.VISIBLE;
+        if ((show && (!isBonoVisible || !isNombreVisible) || (!show && (isBonoVisible || isNombreVisible)))) {
+            int duracion = show ? ANIM_DURATION_SHOW : ANIM_DURATION_HIDE;
+            float initAlpha = show ? 0f : 1f;
+            float endAlpha = show ? 1f : 0f;
 
-                ObjectAnimator animBono = ObjectAnimator.ofFloat(mBonobusView, "alpha", initAlpha, endAlpha);
-                ObjectAnimator animNombreAlpha = ObjectAnimator.ofFloat(mNombrePropio, "alpha", initAlpha, endAlpha);
+            ObjectAnimator animBono = ObjectAnimator.ofFloat(mBonobusView, "alpha", initAlpha, endAlpha);
+            ObjectAnimator animNombreAlpha = ObjectAnimator.ofFloat(mNombrePropio, "alpha", initAlpha, endAlpha);
 
-                AnimatorSet animSet = new AnimatorSet();
-                animSet.setDuration(duracion);
+            AnimatorSet animSet = new AnimatorSet();
+            animSet.setDuration(duracion);
 
-                if (show) {
-                    float alturaNombre = mNombrePropio.getHeight();
-                    float initTransY = -2 * alturaNombre;
-                    float endTransY = 0f;
+            if (show) {
+                float alturaNombre = mNombrePropio.getHeight();
+                float initTransY = -2 * alturaNombre;
+                float endTransY = 0f;
 
-                    ObjectAnimator animNombreTranslationY = ObjectAnimator.ofFloat(mNombrePropio, "translationY", initTransY, endTransY);
-                    animNombreTranslationY.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            mNombrePropio.setVisibility(View.VISIBLE);
-                        }
-                    });
-                    animBono.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            mBonobusView.setVisibility(View.VISIBLE);
-                        }
-                    });
-                    animSet.play(animBono).before(animNombreAlpha).before(animNombreTranslationY);
-                } else {
-                    animSet.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            mBonobusView.setVisibility(View.GONE);
-                            mNombrePropio.setVisibility(View.GONE);
-                        }
-                    });
-                    animSet.playTogether(animBono, animNombreAlpha);
-                }
-                animSet.start();
+                ObjectAnimator animNombreTranslationY = ObjectAnimator.ofFloat(mNombrePropio, "translationY", initTransY, endTransY);
+                animNombreTranslationY.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        mNombrePropio.setVisibility(View.VISIBLE);
+                    }
+                });
+                animBono.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        mBonobusView.setVisibility(View.VISIBLE);
+                    }
+                });
+                animSet.play(animBono).before(animNombreAlpha).before(animNombreTranslationY);
+            } else {
+                animSet.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mBonobusView.setVisibility(View.GONE);
+                        mNombrePropio.setVisibility(View.GONE);
+                    }
+                });
+                animSet.playTogether(animBono, animNombreAlpha);
             }
+            animSet.start();
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void setShowCargando(final boolean show) {
-        if (mLiteMode) {
-            mCargando.setVisibility(show ? View.VISIBLE : View.GONE);
-        } else {
-            boolean isCargandoVisible = mCargando.getVisibility() == View.VISIBLE;
-            if ((show && !isCargandoVisible) || (!show && isCargandoVisible)) {
-                int duracion = show ? ANIM_DURATION_SHOW : ANIM_DURATION_HIDE;
-                float initAlpha = show ? 0f : 1f;
-                float endAlpha = show ? 1f : 0f;
+        boolean isCargandoVisible = mCargando.getVisibility() == View.VISIBLE;
+        if ((show && !isCargandoVisible) || (!show && isCargandoVisible)) {
+            int duracion = show ? ANIM_DURATION_SHOW : ANIM_DURATION_HIDE;
+            float initAlpha = show ? 0f : 1f;
+            float endAlpha = show ? 1f : 0f;
 
-                ObjectAnimator animCargando = ObjectAnimator.ofFloat(mCargando, "alpha", initAlpha, endAlpha);
-                animCargando.setDuration(duracion);
-                animCargando.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        if (show) {
-                            mCargando.setVisibility(View.VISIBLE);
-                        }
+            ObjectAnimator animCargando = ObjectAnimator.ofFloat(mCargando, "alpha", initAlpha, endAlpha);
+            animCargando.setDuration(duracion);
+            animCargando.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    if (show) {
+                        mCargando.setVisibility(View.VISIBLE);
                     }
+                }
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (!show) {
-                            mCargando.setVisibility(View.GONE);
-                        }
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (!show) {
+                        mCargando.setVisibility(View.GONE);
                     }
-                });
-                animCargando.start();
-            }
+                }
+            });
+            animCargando.start();
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void setShowGuardar(final boolean show) {
-        if (mLiteMode) {
-            mGuardar.setVisibility(show ? View.VISIBLE : View.GONE);
-        } else {
-            boolean isGuardarVisible = mGuardar.getVisibility() == View.VISIBLE;
-            if ((show && !isGuardarVisible) || (!show && isGuardarVisible)) {
-                int duracion = show ? ANIM_DURATION_SHOW : ANIM_DURATION_HIDE;
+        boolean isGuardarVisible = mGuardar.getVisibility() == View.VISIBLE;
+        if ((show && !isGuardarVisible) || (!show && isGuardarVisible)) {
+            int duracion = show ? ANIM_DURATION_SHOW : ANIM_DURATION_HIDE;
 
-                float alturaBoton = mGuardar.getHeight();
-                float initTransY = show ? alturaBoton : 0f;
-                float endTransY = show ? 0f : alturaBoton;
+            float alturaBoton = mGuardar.getHeight();
+            float initTransY = show ? alturaBoton : 0f;
+            float endTransY = show ? 0f : alturaBoton;
 
-                ObjectAnimator animGuardar = ObjectAnimator.ofFloat(mGuardar, "translationY", initTransY, endTransY);
-                animGuardar.setDuration(duracion);
-                animGuardar.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        if (show) {
-                            mGuardar.setVisibility(View.VISIBLE);
-                        }
+            ObjectAnimator animGuardar = ObjectAnimator.ofFloat(mGuardar, "translationY", initTransY, endTransY);
+            animGuardar.setDuration(duracion);
+            animGuardar.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    if (show) {
+                        mGuardar.setVisibility(View.VISIBLE);
                     }
+                }
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (!show) {
-                            mGuardar.setVisibility(View.GONE);
-                        }
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (!show) {
+                        mGuardar.setVisibility(View.GONE);
                     }
-                });
-                animGuardar.start();
-            }
+                }
+            });
+            animGuardar.start();
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void setShowAyuda(final boolean show) {
-        if (mLiteMode) {
-            mAyudaView.setVisibility(show ? View.VISIBLE : View.GONE);
-        } else {
-            boolean isAyudaVisible = mAyudaView.getVisibility() == View.VISIBLE;
-            if ((show && !isAyudaVisible) || (!show && isAyudaVisible)) {
-                int duracion = show ? ANIM_DURATION_SHOW : ANIM_DURATION_HIDE;
-                float initAlpha = show ? 0f : 1f;
-                float endAlpha = show ? 1f : 0f;
+        boolean isAyudaVisible = mAyudaView.getVisibility() == View.VISIBLE;
+        if ((show && !isAyudaVisible) || (!show && isAyudaVisible)) {
+            int duracion = show ? ANIM_DURATION_SHOW : ANIM_DURATION_HIDE;
+            float initAlpha = show ? 0f : 1f;
+            float endAlpha = show ? 1f : 0f;
 
-                ObjectAnimator animCargando = ObjectAnimator.ofFloat(mAyudaView, "alpha", initAlpha, endAlpha);
-                animCargando.setDuration(duracion);
-                animCargando.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        if (show) {
-                            mAyudaView.setVisibility(View.VISIBLE);
-                        }
+            ObjectAnimator animCargando = ObjectAnimator.ofFloat(mAyudaView, "alpha", initAlpha, endAlpha);
+            animCargando.setDuration(duracion);
+            animCargando.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    if (show) {
+                        mAyudaView.setVisibility(View.VISIBLE);
                     }
+                }
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (!show) {
-                            mAyudaView.setVisibility(View.GONE);
-                        }
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (!show) {
+                        mAyudaView.setVisibility(View.GONE);
                     }
-                });
-                animCargando.start();
-            }
+                }
+            });
+            animCargando.start();
         }
     }
 
