@@ -9,11 +9,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.R;
+import com.sloy.sevibus.ui.activities.BusquedaActivity;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 import com.sloy.sevibus.ui.fragments.main.FavoritasMainFragment;
 import com.sloy.sevibus.ui.fragments.main.LineasCercanasMainFragment;
@@ -33,6 +37,7 @@ public class MainPageFragment extends BaseDBFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -73,7 +78,7 @@ public class MainPageFragment extends BaseDBFragment {
                   .show();
             }, 1000);
         }
-        
+
         prefs.edit().putInt(PREF_SHOW_NEW_VERSION_LATEST_SEEN, currentVersion).apply();
     }
 
@@ -114,4 +119,18 @@ public class MainPageFragment extends BaseDBFragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_search) {
+            startActivity(BusquedaActivity.getIntent(getActivity()));
+            getActivity().overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

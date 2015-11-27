@@ -191,7 +191,7 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (arrancado) {
-            getMenuInflater().inflate(R.menu.main, menu);
+            getMenuInflater().inflate(R.menu.home, menu);
             menu.findItem(R.id.menu_mapa_abrir).setVisible(mIsRightDrawerAvailable);
         }
         return true;
@@ -202,10 +202,6 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         switch (item.getItemId()) {
             case R.id.menu_mapa_abrir:
                 toggleMapOptions();
-                return true;
-            case R.id.menu_search:
-                startActivity(BusquedaActivity.getIntent(this));
-                overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
                 return true;
         }
         return super.onOptionsItemSelected(item);
