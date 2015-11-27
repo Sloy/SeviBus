@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.crashlytics.android.answers.Answers;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
@@ -56,8 +57,8 @@ public class StuffProvider {
 
     private static SevibusApi getSevibusApi() {
         return new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(API_ENDPOINT)
+                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL: RestAdapter.LogLevel.NONE)
                 .setErrorHandler(new ApiErrorHandler())
                 .build()
                 .create(SevibusApi.class);
