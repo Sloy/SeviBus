@@ -17,10 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.ViewTreeObserver;
 
-import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
-import com.handmark.pulltorefresh.library.ScrollListener;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.syncadapter.IntentFactory;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
@@ -53,7 +50,7 @@ public class MainPageFragment extends BaseDBFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_main_home_lite, container, false);
+        View v = inflater.inflate(R.layout.fragment_main_home, container, false);
         return v;
     }
 
