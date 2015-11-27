@@ -212,9 +212,7 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         if (f instanceof InitialFragment) {
             super.onBackPressed();
         } else if (f instanceof MainPageFragment) {
-            if (!((MainPageFragment) f).onBackPressed()) {
-                super.onBackPressed();
-            }
+            super.onBackPressed();
         } else {
             doShowMainFragment();
         }

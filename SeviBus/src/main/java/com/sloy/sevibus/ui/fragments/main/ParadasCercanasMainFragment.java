@@ -63,7 +63,7 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
             @Override
             public void onClick(View v) {
                 ((HomeActivity)getActivity()).getMapOptions().setMostrarCercanas(true);
-                mMainPage.abrirCerrarMapa(true);
+                //TODO open map
             }
         });
 

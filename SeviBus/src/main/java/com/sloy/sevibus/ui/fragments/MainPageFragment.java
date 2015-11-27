@@ -46,128 +46,15 @@ public class MainPageFragment extends BaseDBFragment {
     private static final String PREF_LAUNCHES = "launches";
     private static final String PREF_COMPARTIR_DISCARDED = "compartir_discarded";
 
-    private MapContainerFragment mMapContainerFragment;
-    private boolean mIsMapaAbierto = false;
-    private View mContenido;
-    private View mMapTrigger;
-    private float distanciaCentros;
-    private boolean liteMode;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        liteMode = Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH || getActivity().getSharedPreferences(PreferenciasActivity.PREFS_CONFIG_VALUES, Context.MODE_PRIVATE).getBoolean(PreferenciasActivity.PREF_LITE_MODE_ENABLED, false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(liteMode ? R.layout.fragment_main_home_lite : R.layout.fragment_main_home, container, false);
-        mContenido = v.findViewById(R.id.fragment_main_contenido);
-
-        if (!liteMode) {
-            mMapTrigger = mContenido.findViewById(R.id.fragment_main_map_trigger);
-
-            View.OnClickListener mapClickListener;
-            ((PullToRefreshScrollView) mContenido).setScrollListener(new ScrollListener() { // Método añadido a la librería
-                @Override
-                public void onScroll(int value) {
-                    // Bajar el mapa la mitad de lo que baja el scrollview
-                    View v = mMapContainerFragment.getView();
-                    int translationY = (-1 * value) / 2;
-                    v.setTranslationY(translationY);
-                }
-            });
-
-            mapClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    abrirCerrarMapa(!mIsMapaAbierto);
-                }
-            };
-            mMapTrigger.setOnClickListener(mapClickListener);
-
-        }
-
+        View v = inflater.inflate(R.layout.fragment_main_home_lite, container, false);
         return v;
-    }
-
-    public void abrirCerrarMapa(final boolean abrirMapa) {
-        final View mapView = mMapContainerFragment.getView();
-        final ViewGroup.MarginLayoutParams mapaLayoutParams = (ViewGroup.MarginLayoutParams) mapView.getLayoutParams();
-        mapaLayoutParams.height = mapView.getHeight();
-
-        if (liteMode || Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            return;
-        }
-        mIsMapaAbierto = abrirMapa;
-        long mapaAnimDuration = 500;
-        long contentAnimDuration = 500;
-
-        // Abrir y cerrar el mapa
-        float toYMapa = abrirMapa ? distanciaCentros : -1 * distanciaCentros;
-        ObjectAnimator mapAnim = ObjectAnimator.ofFloat(mapView, "translationY", 0f, toYMapa);
-        mapAnim.setDuration(mapaAnimDuration);
-        mapAnim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                if (!abrirMapa) {
-                    mMapContainerFragment.showMapControls(false);
-                }
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mapView.setTranslationY(0f);
-                mapaLayoutParams.topMargin = abrirMapa ? 0 : (int) (-1 * distanciaCentros);
-                mapView.requestLayout(); // Sí, muy necesario xD
-                if (abrirMapa) {
-                    mMapContainerFragment.showMapControls(true);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        mapAnim.start();
-
-        // Abrir y cerrar contenido
-        float contenidoAlturaVisible = mContenido.getHeight() - mMapTrigger.getHeight();
-        final float fromYContenido = abrirMapa ? 0 : contenidoAlturaVisible;
-        final float toYContenido = abrirMapa ? contenidoAlturaVisible : 0;
-        ObjectAnimator contentAnim = ObjectAnimator.ofFloat(mContenido, "translationY", fromYContenido, toYContenido);
-        contentAnim.setDuration(contentAnimDuration);
-        contentAnim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                if (!abrirMapa) {
-                    mContenido.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (abrirMapa) {
-                    mContenido.setVisibility(View.GONE);
-                    mContenido.setTranslationY(toYContenido);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
-        });
-        contentAnim.start();
     }
 
     @Override
@@ -183,9 +70,6 @@ public class MainPageFragment extends BaseDBFragment {
         setupNewVersion(fm, trans);
         setupParadasCercanas(fm, trans);
         setupLineasCercanas(fm, trans);
-        if (!liteMode) {
-            setupMapa(fm, trans);
-        }
         setupCompartir();
         trans.commit();
     }
@@ -284,46 +168,6 @@ public class MainPageFragment extends BaseDBFragment {
             trans.attach(f);
         } else {
             trans.add(R.id.fragment_main_lineas_cercanas, f, FRAG_LINEAS_CERCANAS);
-        }
-    }
-
-    private void setupMapa(FragmentManager fm, FragmentTransaction trans) {
-        Fragment f = fm.findFragmentByTag(FRAG_MAPA);
-        if (f == null) {
-            f = MapContainerFragment.getInstance(false);
-        }
-        if (f.isAdded()) {
-            trans.attach(f);
-        } else {
-            trans.add(R.id.fragment_main_mapa, f, FRAG_MAPA);
-        }
-
-        mMapContainerFragment = (MapContainerFragment) f;
-
-        // Listener para ajustar el mapa cuando las vistas estén creadas y se pueda medir el espacio
-        final View yourView = getView().findViewById(R.id.fragment_main_mapa);
-        yourView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                // Ensure you call it only once :
-                yourView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-
-                // Here you can get the size :)
-                float fullCenterY = mContenido.getMeasuredHeight() / 2;
-                float smallCenterY = mMapTrigger.getMeasuredHeight() / 2;
-                distanciaCentros = fullCenterY - smallCenterY;
-                abrirCerrarMapa(false);
-
-            }
-        });
-    }
-
-    public boolean onBackPressed() {
-        if (mIsMapaAbierto) {
-            abrirCerrarMapa(false);
-            return true;
-        } else {
-            return false;
         }
     }
 
