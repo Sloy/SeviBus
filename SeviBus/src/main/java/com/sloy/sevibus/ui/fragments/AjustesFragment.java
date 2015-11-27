@@ -1,6 +1,5 @@
 package com.sloy.sevibus.ui.fragments;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -44,18 +43,6 @@ public class AjustesFragment extends PreferenceFragment {
     if (Debug.isDebugEnabled(getActivity())) {
       addPreferencesFromResource(R.xml.preferences_debug);
     }
-
-    CheckBoxPreference alertas = (CheckBoxPreference) findPreference("pref_alertas");
-    alertas.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
-        Boolean activar = (Boolean) newValue;
-        getActivity().getSharedPreferences(PREFS_CONFIG_VALUES, Activity.MODE_PRIVATE)
-            .edit()
-            .putBoolean("pref_alertas", activar)
-            .commit();
-        return true;
-      }
-    });
 
     // Datos de paradas y líneas
 
