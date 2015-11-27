@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,12 +19,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 import com.sloy.sevibus.ui.fragments.main.FavoritasMainFragment;
 import com.sloy.sevibus.ui.fragments.main.LineasCercanasMainFragment;
-import com.sloy.sevibus.ui.fragments.main.NewVersionMainFragment;
 import com.sloy.sevibus.ui.fragments.main.ParadasCercanasMainFragment;
+
+import de.cketti.library.changelog.ChangeLog;
 
 public class MainPageFragment extends BaseDBFragment {
 
@@ -34,6 +38,7 @@ public class MainPageFragment extends BaseDBFragment {
 
     private static final String PREF_SHOW_NEW_VERSION_LATEST_SEEN = "newversion_last_seen";
     private static final String PREF_SHOW_NEW_VERSION = "newversion_show";
+    public static final int NEW_VERSION_SNACKBAR_DURATION = 10000;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,36 +61,30 @@ public class MainPageFragment extends BaseDBFragment {
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction trans = fm.beginTransaction();
         setupFavoritas(fm, trans);
-        setupNewVersion(fm, trans);
         setupParadasCercanas(fm, trans);
         setupLineasCercanas(fm, trans);
         trans.commit();
+        setupNewVersion();
     }
 
-    private void setupNewVersion(FragmentManager fm, FragmentTransaction trans) {
-        int currentVersion = 0;
-        try {
-            currentVersion = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    private void setupNewVersion() {
         final SharedPreferences prefs = getActivity().getSharedPreferences(PreferenciasActivity.PREFS_CONFIG_VALUES, Context.MODE_PRIVATE);
         int lastVersion = prefs.getInt(PREF_SHOW_NEW_VERSION_LATEST_SEEN, 0);
+        int currentVersion = BuildConfig.VERSION_CODE;
 
-        if (prefs.getBoolean(PREF_SHOW_NEW_VERSION, true) && lastVersion < currentVersion && lastVersion > 0) {
-            Fragment f = fm.findFragmentByTag(FRAG_NEW_VERSION);
-            if (f == null) {
-                f = NewVersionMainFragment.getInstance();
-            }
-            ((NewVersionMainFragment) f).setMainPage(this);
-            if (f.isAdded()) {
-                trans.attach(f);
-            } else {
-                trans.add(R.id.fragment_main_newversion, f, FRAG_NEW_VERSION);
-            }
-        } else if (lastVersion == 0) {
-            prefs.edit().putInt(PREF_SHOW_NEW_VERSION_LATEST_SEEN, currentVersion).apply();
+        if (lastVersion < currentVersion) {
+            new Handler().postDelayed(() -> {
+                //noinspection ResourceType
+                Snackbar.make(getView(), "SeviBus se ha actualizado!", NEW_VERSION_SNACKBAR_DURATION)
+                  .setAction("Ver cambios", v -> {
+                      ChangeLog cl = new ChangeLog(getActivity());
+                      cl.getFullLogDialog().show();
+                  })
+                  .show();
+            }, 1000);
         }
+        
+        prefs.edit().putInt(PREF_SHOW_NEW_VERSION_LATEST_SEEN, currentVersion).apply();
     }
 
     private void setupFavoritas(FragmentManager fm, FragmentTransaction trans) {
