@@ -30,11 +30,11 @@
 
     <group android:id="@+id/nav_group_more" android:checkableBehavior="none">
         <item
-            android:id="@+id/menu_compartir"
-            android:title="Compartir" />
-        <item
             android:id="@+id/menu_ajustes"
             android:title="Ajustes" />
+        <item
+            android:id="@+id/menu_compartir"
+            android:title="Compartir" />
         <item
             android:id="@+id/menu_acerca"
             android:title="Acerca de" />
