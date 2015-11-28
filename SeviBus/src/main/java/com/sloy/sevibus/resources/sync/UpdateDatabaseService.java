@@ -13,6 +13,7 @@ import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
+import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.StuffProvider;
 
@@ -59,6 +60,9 @@ public class UpdateDatabaseService extends GcmTaskService {
 
     @TargetApi(Build.VERSION_CODES.M)
     private void notifyTaskRun(@Nullable Exception error) {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
         NotificationManager nm = getApplicationContext().getSystemService(NotificationManager.class);
 
         Notification notification = new Notification.Builder(getApplicationContext())
