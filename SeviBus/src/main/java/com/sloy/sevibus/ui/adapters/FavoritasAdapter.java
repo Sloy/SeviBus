@@ -1,10 +1,11 @@
 package com.sloy.sevibus.ui.adapters;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,12 +66,13 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
         return true;
     }
 
-    public static class FavoritaViewHolder extends RecyclerView.ViewHolder {
+    public static class FavoritaViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
 
         private final TextView numeroBadge;
         private final TextView nombre;
         private final TextView lineas;
         private final OnFavoritaClickListener onFavoritaClickListener;
+        private final float selectedCardElevation;
 
         public FavoritaViewHolder(View itemView, OnFavoritaClickListener onFavoritaClickListener) {
             super(itemView);
@@ -78,6 +80,7 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
             numeroBadge = (TextView) itemView.findViewById(R.id.favorita_numero);
             nombre = (TextView) itemView.findViewById(R.id.favorita_nombre);
             lineas = (TextView) itemView.findViewById(R.id.favorita_lineas);
+            selectedCardElevation = itemView.getResources().getDimension(R.dimen.favorita_selected_elevation);
         }
 
         public void bind(Favorita favorita) {
@@ -99,6 +102,21 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
             lineas.setText(sbLineas.toString());
 
             itemView.setOnClickListener(v -> onFavoritaClickListener.onFavoritaClick(favorita));
+        }
+
+        @Override
+        public void onItemSelected() {
+            CardView cardView = (CardView) this.itemView;
+            // This value is being ignored for some reason :/
+            cardView.setCardElevation(selectedCardElevation);
+            cardView.setCardBackgroundColor(Color.WHITE);
+        }
+
+        @Override
+        public void onItemClear() {
+            CardView cardView = (CardView) this.itemView;
+            cardView.setCardElevation(0f);
+            cardView.setCardBackgroundColor(Color.TRANSPARENT);
         }
     }
 

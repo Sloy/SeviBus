@@ -9,4 +9,6 @@
     <dimen name="arrival_detail_line_badge_size">40dp</dimen>
     <dimen name="linea_badge_text_size_2digits">17sp</dimen>
     <dimen name="linea_badge_text_size_3digits">15sp</dimen>
+
+    <dimen name="favorita_selected_elevation">18dp</dimen>
 </resources>
