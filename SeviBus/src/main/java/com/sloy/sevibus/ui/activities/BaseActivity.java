@@ -3,10 +3,13 @@ package com.sloy.sevibus.ui.activities;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.bbdd.DBHelper;
+import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.ui.ThemeSelector;
 
 public class BaseActivity extends AppCompatActivity{
@@ -16,6 +19,11 @@ public class BaseActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         ThemeSelector.selectTheme(this);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void setContentView(int layoutResID) {
+        LayoutInflater.from(this).inflate(layoutResID, getRootView(), true);
     }
 
     protected DBHelper getDBHelper() {
@@ -32,5 +40,9 @@ public class BaseActivity extends AppCompatActivity{
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected ViewGroup getRootView() {
+        return StuffProvider.getAppContainer().get(this);
     }
 }

@@ -29,7 +29,7 @@ public class BaseToolbarActivity extends BaseActivity {
             containerView = (ViewGroup) toolbarDecorator.findViewById(R.id.action_bar_activity_content);
             LayoutInflater.from(this).inflate(layoutResID, containerView, true);
         } else {
-            super.setContentView(layoutResID);
+            LayoutInflater.from(this).inflate(layoutResID, root, true);
             toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
             checkNotNull(toolbar, "needsToolbarDecorator() es false, pero no se encontró toolbar en el layout");
             containerView = getRootView();
@@ -41,10 +41,6 @@ public class BaseToolbarActivity extends BaseActivity {
 
     protected boolean needsToolbarDecorator() {
         return true;
-    }
-
-    private ViewGroup getRootView() {
-        return (ViewGroup) findViewById(android.R.id.content);
     }
 
     public ViewGroup getContainerView() {

@@ -14,6 +14,8 @@ import com.sloy.sevibus.resources.datasource.SevibusApi;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
 import com.sloy.sevibus.resources.datasource.TussamLlegadaDataSource;
 import com.sloy.sevibus.resources.sync.UpdateDatabaseAction;
+import com.sloy.sevibus.ui.AppContainer;
+import com.sloy.sevibus.ui.DebugAppContainer;
 
 import retrofit.RestAdapter;
 
@@ -24,6 +26,14 @@ public class StuffProvider {
     public static final String API_ENDPOINT = PRODUCTION_API_ENDPOINT;
 
     private static CrashReportingTool crashReportingToolInstance;
+
+    public static AppContainer getAppContainer() {
+        if (BuildConfig.DEBUG) {
+            return new DebugAppContainer();
+        } else {
+            return AppContainer.DEFAULT;
+        }
+    }
 
     public static UpdateDatabaseAction getUpdateDatabaseAction(Context context) {
         return new UpdateDatabaseAction(context, getDbHelper(context), getStringDownloader());
