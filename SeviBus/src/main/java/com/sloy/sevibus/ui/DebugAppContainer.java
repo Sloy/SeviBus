@@ -6,6 +6,11 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.sloy.sevibus.R;
+import com.sloy.sevibus.modules.endpoint.Endpoint;
+import com.sloy.sevibus.modules.endpoint.EndpointModule;
+import com.sloy.sevibus.resources.StuffProvider;
+
+import java.util.Arrays;
 
 import io.palaima.debugdrawer.DebugView;
 import io.palaima.debugdrawer.module.BuildModule;
@@ -17,6 +22,7 @@ public class DebugAppContainer implements AppContainer {
     private DrawerLayout drawerLayout;
     private ViewGroup debugDrawer;
     private ViewGroup content;
+    private DebugView debugView;
 
     @Override
     public ViewGroup get(Activity activity) {
@@ -27,8 +33,13 @@ public class DebugAppContainer implements AppContainer {
         content = (ViewGroup) activity.findViewById(R.id.debug_content);
         debugDrawer = (ViewGroup) activity.findViewById(R.id.debug_drawer);
 
-        final DebugView debugView = new DebugView(activity);
+        debugView = new DebugView(activity);
         debugView.init(
+          new EndpointModule(activity, Arrays.asList(
+            new Endpoint("Production", StuffProvider.PRODUCTION_API_ENDPOINT),
+            new Endpoint("Staging", StuffProvider.STAGING_API_ENDPOINT),
+            Endpoint.CUSTOM
+          )),
           new DeviceModule(activity),
           new BuildModule(activity),
           new SettingsModule(activity)
@@ -38,5 +49,15 @@ public class DebugAppContainer implements AppContainer {
 
 
         return content;
+    }
+
+    @Override
+    public void onStart() {
+        debugView.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        debugView.onStop();
     }
 }

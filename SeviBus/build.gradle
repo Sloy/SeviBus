@@ -96,4 +96,5 @@ dependencies {
     }
 
     compile 'com.sloydev:debugdrawer:local'
+    compile 'com.jakewharton:process-phoenix:1.0.2'
 }

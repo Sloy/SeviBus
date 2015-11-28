@@ -10,15 +10,30 @@ import android.view.ViewGroup;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.ui.AppContainer;
 import com.sloy.sevibus.ui.ThemeSelector;
 
 public class BaseActivity extends AppCompatActivity{
     private DBHelper dbHelper;
+    private AppContainer appContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ThemeSelector.selectTheme(this);
         super.onCreate(savedInstanceState);
+        appContainer = StuffProvider.getAppContainer();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        appContainer.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        appContainer.onStop();
     }
 
     @Override
@@ -43,6 +58,6 @@ public class BaseActivity extends AppCompatActivity{
     }
 
     protected ViewGroup getRootView() {
-        return StuffProvider.getAppContainer().get(this);
+        return appContainer.get(this);
     }
 }

@@ -13,6 +13,10 @@ public interface AppContainer {
      */
     ViewGroup get(Activity activity);
 
+    void onStart();
+
+    void onStop();
+
     /**
      * An {@link AppContainer} which returns the normal activity content view.
      */
@@ -20,6 +24,14 @@ public interface AppContainer {
         @Override
         public ViewGroup get(Activity activity) {
             return (ViewGroup) activity.findViewById(android.R.id.content);
+        }
+
+        @Override
+        public void onStart() {
+        }
+
+        @Override
+        public void onStop() {
         }
     };
 }

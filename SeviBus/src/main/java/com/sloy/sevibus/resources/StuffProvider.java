@@ -6,6 +6,7 @@ import com.crashlytics.android.answers.Answers;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.bbdd.DBHelper;
+import com.sloy.sevibus.modules.endpoint.EndpointModule;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.ApiLlegadaDataSource;
@@ -23,7 +24,6 @@ public class StuffProvider {
 
     public static final String PRODUCTION_API_ENDPOINT = "http://api.sevibus.sloydev.com";
     public static final String STAGING_API_ENDPOINT = "https://sevibus-staging.herokuapp.com/";
-    public static final String API_ENDPOINT = PRODUCTION_API_ENDPOINT;
 
     private static CrashReportingTool crashReportingToolInstance;
 
@@ -55,21 +55,21 @@ public class StuffProvider {
         }
     }
 
-    public static ObtainLlegadasAction getObtainLlegadaAction() {
-        return new ObtainLlegadasAction(getLlegadaDataSource());
+    public static ObtainLlegadasAction getObtainLlegadaAction(Context context) {
+        return new ObtainLlegadasAction(getLlegadaDataSource(context));
     }
 
-    private static LlegadaDataSource getLlegadaDataSource() {
-        return new ApiLlegadaDataSource(getSevibusApi(), getLegacyLlegadaDataSource());
+    private static LlegadaDataSource getLlegadaDataSource(Context context) {
+        return new ApiLlegadaDataSource(getSevibusApi(context), getLegacyLlegadaDataSource());
     }
 
     private static LlegadaDataSource getLegacyLlegadaDataSource() {
         return new TussamLlegadaDataSource();
     }
 
-    private static SevibusApi getSevibusApi() {
+    private static SevibusApi getSevibusApi(Context context) {
         return new RestAdapter.Builder()
-                .setEndpoint(API_ENDPOINT)
+                .setEndpoint(getEndpoint(context))
                 .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL: RestAdapter.LogLevel.NONE)
                 .setErrorHandler(new ApiErrorHandler())
                 .build()
@@ -86,4 +86,13 @@ public class StuffProvider {
         }
         return crashReportingToolInstance;
     }
+
+    private static String getEndpoint(Context context) {
+        if (BuildConfig.DEBUG) {
+            return EndpointModule.getSelectedEndpointUrl(context);
+        } else {
+            return PRODUCTION_API_ENDPOINT;
+        }
+    }
+
 }
