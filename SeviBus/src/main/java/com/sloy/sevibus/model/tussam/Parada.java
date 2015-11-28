@@ -3,6 +3,8 @@ package com.sloy.sevibus.model.tussam;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.List;
+
 @DatabaseTable
 public class Parada implements Comparable<Parada> {
 
@@ -14,6 +16,8 @@ public class Parada implements Comparable<Parada> {
     private Double latitud;
     @DatabaseField
     private Double longitud;
+
+    private List<String> numeroLineas;
 
     public Parada() {
     }
@@ -50,5 +54,13 @@ public class Parada implements Comparable<Parada> {
     @Override
     public int compareTo(Parada another) {
         return this.getNumero().compareTo(another.getNumero());
+    }
+
+    public List<String> getNumeroLineas() {
+        return numeroLineas;
+    }
+
+    public void setNumeroLineas(List<String> numeroLineas) {
+        this.numeroLineas = numeroLineas;
     }
 }
