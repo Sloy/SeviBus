@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,16 @@ import com.sloy.sevibus.model.tussam.Parada;
 import java.util.Collections;
 import java.util.List;
 
-public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.FavoritaViewHolder> {
+public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.FavoritaViewHolder> implements DragFavoritaCallback.FavoritaDragHelperAdapter {
 
     private final OnFavoritaClickListener onFavoritaClickListener;
+    private final OnFavoritasReorderedListener onFavoritasReorderedListener;
 
     private List<Favorita> favoritas = Collections.emptyList();
 
-    public FavoritasAdapter(OnFavoritaClickListener onFavoritaClickListener) {
+    public FavoritasAdapter(OnFavoritaClickListener onFavoritaClickListener, OnFavoritasReorderedListener onFavoritasReorderedListener) {
         this.onFavoritaClickListener = onFavoritaClickListener;
+        this.onFavoritasReorderedListener = onFavoritasReorderedListener;
     }
 
     public void setFavoritas(List<Favorita> favoritas) {
@@ -44,6 +47,22 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
     @Override
     public int getItemCount() {
         return favoritas.size();
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(favoritas, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(favoritas, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+        onFavoritasReorderedListener.onFavoritasReordered(favoritas);
+        return true;
     }
 
     public static class FavoritaViewHolder extends RecyclerView.ViewHolder {
@@ -85,5 +104,9 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
 
     public interface OnFavoritaClickListener {
         void onFavoritaClick(Favorita favorita);
+    }
+
+    public interface OnFavoritasReorderedListener {
+        void onFavoritasReordered(List<Favorita> ordered);
     }
 }

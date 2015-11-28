@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.ui.activities.ParadaInfoActivity;
+import com.sloy.sevibus.ui.adapters.DragFavoritaCallback;
 import com.sloy.sevibus.ui.adapters.FavoritasAdapter;
 
 import java.sql.SQLException;
@@ -36,10 +38,12 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
         favoritasAdapter = new FavoritasAdapter(favorita -> {
             Integer numero = favorita.getParadaAsociada().getNumero();
             startActivity(ParadaInfoActivity.getIntent(getActivity(), numero));
-        });
+        }, this::guardarNuevoOrden);
 
         list.setAdapter(favoritasAdapter);
         list.setLayoutManager(new LinearLayoutManager(getActivity()));
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new DragFavoritaCallback(favoritasAdapter));
+        touchHelper.attachToRecyclerView(list);
 
         return v;
     }
@@ -88,6 +92,18 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
     private void editarFavoritaSeleccionada() {
         //TODO
 //        EditarFavoritaDialogFragment.getInstanceEditFavorita(this, fav).show(getFragmentManager(), EditarFavoritaDialogFragment.TAG);
+    }
+
+    private void guardarNuevoOrden(List<Favorita> ordered) {
+        for (int i = 0; i < ordered.size(); i++) {
+            Favorita favorita = ordered.get(i);
+            favorita.setOrden(i);
+        }
+        try {
+            DBQueries.setParadasFavoritas(getDBHelper(), ordered);
+        } catch (SQLException e) {
+            Snackbar.make(getView(), "Oops ocurrió un error", Snackbar.LENGTH_SHORT);
+        }
     }
 
     @Override
