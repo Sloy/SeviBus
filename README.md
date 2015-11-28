@@ -1,3 +1,5 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/9dfc46be57dd47aca6a655d901e01935)](https://www.codacy.com/app/Sloy/SeviBus)
+
 # WARNING
 This code is **not** nice. Is **not** clean. Doesn't follow good practices. 
 
