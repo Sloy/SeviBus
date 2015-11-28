@@ -16,4 +16,9 @@ public class EmptyAnalyticsTracker implements AnalyticsTracker {
         /* no-op */
     }
 
+    @Override
+    public void databaseUpdatedSuccessfuly(boolean success) {
+        /* no-op */
+    }
+
 }

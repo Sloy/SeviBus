@@ -36,4 +36,11 @@ public class AnswersAnalyticsTracker implements AnalyticsTracker {
           .putCustomAttribute("Tiempo de respuesta ms", responseTime));
     }
 
+    @Override
+    public void databaseUpdatedSuccessfuly(boolean success) {
+        answers.logCustom(new CustomEvent("Datos actualizados")
+            .putCustomAttribute("Éxito", String.valueOf(success))
+        );
+    }
+
 }

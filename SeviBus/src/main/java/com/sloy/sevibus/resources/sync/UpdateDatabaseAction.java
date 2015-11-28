@@ -13,6 +13,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import rx.Observable;
+import rx.Subscriber;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class UpdateDatabaseAction {
@@ -34,7 +37,18 @@ public class UpdateDatabaseAction {
         this.datosPreferences = context.getSharedPreferences("datos", Context.MODE_MULTI_PROCESS);
     }
 
-    public void update() throws JSONException, IOException {
+    public Observable<Void> update() {
+        return Observable.create(subscriber -> {
+            try {
+                UpdateDatabaseAction.this.updateData();
+                subscriber.onCompleted();
+            } catch (Exception e) {
+                subscriber.onError(e);
+            }
+        });
+    }
+
+    private void updateData() throws JSONException, IOException {
         serverDataInfo = getDataInfo();
 
         if (hasNewerData()) {

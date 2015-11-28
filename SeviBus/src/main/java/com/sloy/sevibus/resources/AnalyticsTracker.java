@@ -9,4 +9,5 @@ public interface AnalyticsTracker {
 
     void trackTiempoRecibido(Integer paradaNumber, String lineName, Long responseTime, String dataSource);
 
+    void databaseUpdatedSuccessfuly(boolean success);
 }
