@@ -1,9 +1,10 @@
 package com.sloy.sevibus.ui.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,8 +45,8 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Integer numero = mAdapter.getItem(position).getParadaAsociada().getNumero();
-                    startActivity(ParadaInfoActivity.getIntent(getActivity(), numero));
+                Integer numero = mAdapter.getItem(position).getParadaAsociada().getNumero();
+                startActivity(ParadaInfoActivity.getIntent(getActivity(), numero));
             }
         });
         return v;
@@ -141,22 +142,17 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
             if (convertView == null) {
                 convertView = View.inflate(mContext, R.layout.list_item_favorita, null);
             }
-            TextView numeroText = (TextView) convertView.findViewById(R.id.item_parada_numero_text);
-            TextView nombre = (TextView) convertView.findViewById(R.id.item_parada_nombre);
-            TextView lineas = (TextView) convertView.findViewById(R.id.item_parada_lineas);
 
-            // El nombre en sí de la parada siempre es fijo
-            nombre.setText(parada.getDescripcion());
+            TextView numeroBadge = (TextView) convertView.findViewById(R.id.favorita_numero);
+            TextView nombre = (TextView) convertView.findViewById(R.id.favorita_nombre);
+            TextView lineas = (TextView) convertView.findViewById(R.id.favorita_lineas);
 
-            // Según si tiene un nombre personalizado o no, pongo el título de una forma u otra
-            String numeroTextStyled;
-            if (item.getNombrePropio() != null && !TextUtils.isEmpty(item.getNombrePropio())) {
-                // Tiene un nombre especial
-                numeroTextStyled = String.format("%s <b>(%d)</b>", item.getNombrePropio(), parada.getNumero());
-            } else {
-                numeroTextStyled = String.format("Parada nº <b>%d</b>", parada.getNumero());
-            }
-            numeroText.setText(Html.fromHtml(numeroTextStyled));
+            boolean hasNombrePropio = item.getNombrePropio() != null && !TextUtils.isEmpty(item.getNombrePropio());
+            nombre.setText(hasNombrePropio? item.getNombrePropio() : parada.getDescripcion());
+
+            numeroBadge.setText(parada.getNumero().toString());
+            Drawable background = numeroBadge.getBackground();
+            ((GradientDrawable) background).setColor(item.getColor());
 
             // TODO WTF!! Quita la llamada a la BBDD de aquí, pedazo de loco!!!
             List<Linea> lineasList = null;
@@ -174,9 +170,6 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
             }
             sbLineas.setLength(sbLineas.length() - 2);
             lineas.setText(sbLineas.toString());
-
-            View color = convertView.findViewById(R.id.favorita_color);
-            color.setBackgroundColor(item.getColor());
 
             return convertView;
         }

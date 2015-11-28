@@ -1,28 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/RelativeLayout1"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list_item_parada_horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:foreground="?selectableItemBackground">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
+
+    <TextView
+        android:id="@+id/favorita_numero"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/arrival_detail_line_badge_background"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:maxLines="1"
+        android:maxWidth="@dimen/arrival_detail_line_badge_size"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        tools:text="677"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/box_background_normal">
+        android:layout_marginLeft="16dp"
+        android:orientation="vertical">
 
-        <View
-            android:id="@+id/favorita_color"
-            android:layout_width="8dp"
-            android:layout_height="match_parent"
-            tools:background="#FFAACC00"/>
 
-        <include
-            android:id="@+id/favorita_parada_content"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/favorita_nombre"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            layout="@layout/list_item_parada_extended_content"/>
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/soft_black"
+            android:textSize="15sp"
+            tools:text="Av. Cruz Roja (Clínica)"/>
 
+        <TextView
+            android:id="@+id/favorita_lineas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="13sp"
+            tools:text="01 11 12 16 A1"/>
     </LinearLayout>
-</FrameLayout>
+
+
+</LinearLayout>
