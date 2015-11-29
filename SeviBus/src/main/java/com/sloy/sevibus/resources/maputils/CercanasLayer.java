@@ -13,7 +13,7 @@ public class CercanasLayer extends ParadasLayer {
 
     public CercanasLayer(List<Parada> paradasCercanas, Context context, DBHelper dbHelper) {
         super(paradasCercanas, context, dbHelper);
-        mIcon = BitmapDescriptorFactory.fromResource(R.drawable.marker_cercanas);
+        mIcon = BitmapDescriptorFactory.fromResource(R.drawable.marker_cercana);
     }
 
     @Override
@@ -23,6 +23,6 @@ public class CercanasLayer extends ParadasLayer {
 
     @Override
     public float[] getIconAnchor() {
-        return new float[]{0.5f, 1f};
+        return new float[]{0.5f, 0.5f};
     }
 }

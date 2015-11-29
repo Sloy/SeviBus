@@ -318,7 +318,7 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
         mLineasContainer.addView(viewLinea);
 
         // Carga en el mapa
-        Drawable iconoLinea = colorearSuperficial(getResources().getDrawable(R.drawable.marker_template).mutate(), colorLinea);
+        Drawable iconoLinea = colorearSuperficial(getResources().getDrawable(R.drawable.marker_parada).mutate(), colorLinea);
         LineaLayer layerLinea = new LineaLayer(iconoLinea, colorLinea, paradasDeLinea, getActivity(), getDBHelper());
         mLayerManager.addLayer(layerLinea);
 
