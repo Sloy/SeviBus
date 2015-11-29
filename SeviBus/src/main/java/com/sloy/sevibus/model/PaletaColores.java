@@ -24,4 +24,13 @@ public enum PaletaColores {
         this.dark = dark;
         this.accent = accent;
     }
+
+    public static PaletaColores fromPrimary(int primary) {
+        for (PaletaColores paletaColores : values()) {
+            if (paletaColores.primary == primary) {
+                return paletaColores;
+            }
+        }
+        return null;
+    }
 }

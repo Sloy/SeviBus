@@ -38,6 +38,7 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
 
     public void setFavoritas(List<Favorita> favoritas) {
         this.favoritas = favoritas;
+        this.notifyDataSetChanged();
     }
 
     @Override
