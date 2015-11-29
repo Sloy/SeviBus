@@ -11,6 +11,7 @@ import android.widget.EditText;
 import com.fourmob.colorpicker.ColorPickerPalette;
 import com.fourmob.colorpicker.ColorPickerSwatch;
 import com.sloy.sevibus.R;
+import com.sloy.sevibus.model.PaletaColores;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Parada;
 
@@ -20,7 +21,7 @@ public class EditarFavoritaDialogFragment extends DialogFragment implements Colo
 
     public static final int SIZE = 2;
     public static final int COLUMNS = 4;
-    public static final int[] COLORS = new int[]{Favorita.COLOR_ROJO, Favorita.COLOR_AZUL_OSCURO, Favorita.COLOR_AZUL, Favorita.COLOR_MORADO, Favorita.COLOR_ROSA, Favorita.COLOR_NARANJA, Favorita.COLOR_VERDE_CLARO, Favorita.COLOR_VERDE};
+
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_SELECTED_COLOR = "selected_color";
     private static final String EXTRA_NOMBRE_PROPIO = "nombre_propio";
@@ -41,7 +42,7 @@ public class EditarFavoritaDialogFragment extends DialogFragment implements Colo
         Bundle arguments = new Bundle();
         arguments.putInt(EXTRA_PARADA_ID, parada.getNumero());
         arguments.putString(EXTRA_TITLE, "Nueva favorita, nº " + parada.getNumero());
-        arguments.putInt(EXTRA_SELECTED_COLOR, Favorita.COLOR_ROJO);
+        arguments.putInt(EXTRA_SELECTED_COLOR, PaletaColores.RED.primary);
         f.setArguments(arguments);
         f.setOnGuardarFavoritaListener(listener);
         return f;
@@ -61,15 +62,23 @@ public class EditarFavoritaDialogFragment extends DialogFragment implements Colo
 
     private void refreshPalette() {
         if (this.mPalette != null) {
-            this.mPalette.drawPalette(COLORS, this.mSelectedColor);
+            this.mPalette.drawPalette(valuesFromColors(PaletaColores.ALL_ORDERED), this.mSelectedColor);
         }
+    }
+
+    private int[] valuesFromColors(PaletaColores[] colors) {
+        int[] values = new int[colors.length];
+        for (int i = 0; i < colors.length; i++) {
+            values[i] = colors[i].primary;
+        }
+        return values;
     }
 
     @Override
     public void onColorSelected(int selectedColor) {
         if (selectedColor != this.mSelectedColor) {
             this.mSelectedColor = selectedColor;
-            this.mPalette.drawPalette(COLORS, this.mSelectedColor);
+            this.mPalette.drawPalette(valuesFromColors(PaletaColores.ALL_ORDERED), this.mSelectedColor);
         }
     }
 

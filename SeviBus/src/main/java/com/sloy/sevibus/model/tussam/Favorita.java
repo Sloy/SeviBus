@@ -6,15 +6,6 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable
 public class Favorita {
 
-    public final static int COLOR_VERDE_CLARO = 0xFFAACC00;
-    public final static int COLOR_VERDE = 0xFF669900;
-    public final static int COLOR_MORADO = 0xFF9933CC;
-    public final static int COLOR_AZUL = 0xFF0099CC;
-    public final static int COLOR_AZUL_OSCURO = 0xFF0041CC;
-    public final static int COLOR_NARANJA = 0xFFFF8800;
-    public final static int COLOR_ROJO = 0xFFCC0000;
-    public final static int COLOR_ROSA = 0xFFD687AB;
-
     @DatabaseField(id = true)
     private int id;
 
