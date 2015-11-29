@@ -144,7 +144,7 @@ public class LlegadasList extends LinearLayout {
             case ESTIMATE:
                 return String.format("%d minutos", bus.getTimeInMinutes());
             case BEYOND_HALF_HOUR:
-                return "Más de 30 minutos";
+                return "Más de 30 min";
             case IMMINENT:
                 return "Llegada inminente";
             case NO_ESTIMATION:
@@ -160,14 +160,12 @@ public class LlegadasList extends LinearLayout {
             case ESTIMATE:
                 return String.format("%d metros", bus.getDistanceInMeters());
             case BEYOND_HALF_HOUR:
-                return "Más de 30 minutos";
+                return String.format("%d m", bus.getDistanceInMeters());
             case IMMINENT:
-                return "";
             case NO_ESTIMATION:
-                return "";
             case NOT_AVAILABLE:
             default:
-                return "o erróneo";
+                return "";
         }
     }
 
