@@ -23,11 +23,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class FavoritasListFragment extends BaseDBFragment implements EditarFavoritaDialogFragment.OnGuardarFavoritaListener {
 
     private View emptyIndicator;
     private RecyclerView list;
     private FavoritasAdapter favoritasAdapter;
+    private ItemTouchHelper itemTouchHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,15 +40,19 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
         list = (RecyclerView) v.findViewById(android.R.id.list);
         emptyIndicator = v.findViewById(R.id.favoritas_emtpy_indicator);
 
+        //noinspection Convert2MethodRef
         favoritasAdapter = new FavoritasAdapter(favorita -> {
             Integer numero = favorita.getParadaAsociada().getNumero();
             startActivity(ParadaInfoActivity.getIntent(getActivity(), numero));
-        }, this::guardarNuevoOrden);
+        },
+          (ordered) -> guardarNuevoOrden(ordered),
+          (viewHolder) -> itemTouchHelper.startDrag(viewHolder));
 
         list.setAdapter(favoritasAdapter);
         list.setLayoutManager(new LinearLayoutManager(getActivity()));
-        ItemTouchHelper touchHelper = new ItemTouchHelper(new DragFavoritaCallback(favoritasAdapter));
-        touchHelper.attachToRecyclerView(list);
+
+        itemTouchHelper = new ItemTouchHelper(new DragFavoritaCallback(favoritasAdapter));
+        itemTouchHelper.attachToRecyclerView(list);
 
         return v;
     }
@@ -95,15 +104,27 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
     }
 
     private void guardarNuevoOrden(List<Favorita> ordered) {
-        for (int i = 0; i < ordered.size(); i++) {
-            Favorita favorita = ordered.get(i);
-            favorita.setOrden(i);
-        }
-        try {
-            DBQueries.setParadasFavoritas(getDBHelper(), ordered);
-        } catch (SQLException e) {
-            Snackbar.make(getView(), "Oops ocurrió un error", Snackbar.LENGTH_SHORT);
-        }
+        Observable.create(subscriber -> {
+            try {
+                for (int i = 0; i < ordered.size(); i++) {
+                    Favorita favorita = ordered.get(i);
+                    favorita.setOrden(i);
+                }
+                DBQueries.setParadasFavoritas(getDBHelper(), ordered);
+                subscriber.onCompleted();
+            } catch (SQLException e) {
+                subscriber.onError(e);
+            }
+        })
+          .subscribeOn(Schedulers.computation())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(o -> {
+            },
+            error -> {
+                Snackbar.make(getView(), "Oops ocurrió un error", Snackbar.LENGTH_SHORT);
+                Debug.registerHandledException(getActivity(), error);
+            });
+
     }
 
     @Override

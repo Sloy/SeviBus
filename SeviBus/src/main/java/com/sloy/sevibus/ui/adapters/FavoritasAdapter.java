@@ -3,12 +3,15 @@ package com.sloy.sevibus.ui.adapters;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sloy.sevibus.R;
@@ -22,12 +25,14 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
 
     private final OnFavoritaClickListener onFavoritaClickListener;
     private final OnFavoritasReorderedListener onFavoritasReorderedListener;
+    private final OnStartDragListener mDragStartListener;
 
     private List<Favorita> favoritas = Collections.emptyList();
 
-    public FavoritasAdapter(OnFavoritaClickListener onFavoritaClickListener, OnFavoritasReorderedListener onFavoritasReorderedListener) {
+    public FavoritasAdapter(OnFavoritaClickListener onFavoritaClickListener, OnFavoritasReorderedListener onFavoritasReorderedListener, OnStartDragListener mDragStartListener) {
         this.onFavoritaClickListener = onFavoritaClickListener;
         this.onFavoritasReorderedListener = onFavoritasReorderedListener;
+        this.mDragStartListener = mDragStartListener;
     }
 
     public void setFavoritas(List<Favorita> favoritas) {
@@ -37,7 +42,7 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
     @Override
     public FavoritaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_favorita, parent, false);
-        return new FavoritaViewHolder(view, onFavoritaClickListener);
+        return new FavoritaViewHolder(view, onFavoritaClickListener, mDragStartListener);
     }
 
     @Override
@@ -71,15 +76,19 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
         private final TextView numeroBadge;
         private final TextView nombre;
         private final TextView lineas;
+        private final ImageView handleView;
         private final OnFavoritaClickListener onFavoritaClickListener;
+        private final OnStartDragListener mDragStartListener;
         private final float selectedCardElevation;
 
-        public FavoritaViewHolder(View itemView, OnFavoritaClickListener onFavoritaClickListener) {
+        public FavoritaViewHolder(View itemView, OnFavoritaClickListener onFavoritaClickListener, OnStartDragListener mDragStartListener) {
             super(itemView);
             this.onFavoritaClickListener = onFavoritaClickListener;
+            this.mDragStartListener = mDragStartListener;
             numeroBadge = (TextView) itemView.findViewById(R.id.favorita_numero);
             nombre = (TextView) itemView.findViewById(R.id.favorita_nombre);
             lineas = (TextView) itemView.findViewById(R.id.favorita_lineas);
+            handleView = (ImageView) itemView.findViewById(R.id.handle);
             selectedCardElevation = itemView.getResources().getDimension(R.dimen.favorita_selected_elevation);
         }
 
@@ -102,6 +111,12 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
             lineas.setText(sbLineas.toString());
 
             itemView.setOnClickListener(v -> onFavoritaClickListener.onFavoritaClick(favorita));
+            handleView.setOnTouchListener((v, event) -> {
+                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                    mDragStartListener.onStartDrag(this);
+                }
+                return false;
+            });
         }
 
         @Override
