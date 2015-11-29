@@ -1,5 +1,7 @@
 package com.sloy.sevibus.resources;
 
+import com.sloy.sevibus.model.PaletaColores;
+
 public class EmptyAnalyticsTracker implements AnalyticsTracker {
     @Override
     public void paradaViewed(Integer paradaNumber) {
@@ -18,6 +20,11 @@ public class EmptyAnalyticsTracker implements AnalyticsTracker {
 
     @Override
     public void databaseUpdatedSuccessfuly(boolean success) {
+        /* no-op */
+    }
+
+    @Override
+    public void favoritaColorized(PaletaColores paleta, Integer numeroParada) {
         /* no-op */
     }
 

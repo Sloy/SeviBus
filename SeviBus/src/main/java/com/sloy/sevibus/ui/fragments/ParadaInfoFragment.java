@@ -373,6 +373,8 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
             // Other content
             ((TextView) getView().findViewById(R.id.parada_info_tiempos_llegadas_title))
               .setTextColor(paleta.primary);
+
+            analyticsTracker.favoritaColorized(paleta, fav.getParadaAsociada().getNumero());
         } else {
             Snackbar.make(getView(), "Actualiza el color de tu favorita y flipa en colores!", Snackbar.LENGTH_INDEFINITE)
               .setAction("Flipar", v -> onCrearFavoritaClick())
