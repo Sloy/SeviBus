@@ -7,6 +7,7 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -80,6 +81,10 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
         private final OnFavoritaClickListener onFavoritaClickListener;
         private final OnStartDragListener mDragStartListener;
         private final float selectedCardElevation;
+        private final float numeroOneDigitSize;
+        private final float numeroTwoDigitSize;
+        private final float numeroThreeDigitSize;
+        private final float numeroFourDigitSize;
 
         public FavoritaViewHolder(View itemView, OnFavoritaClickListener onFavoritaClickListener, OnStartDragListener mDragStartListener) {
             super(itemView);
@@ -90,6 +95,10 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
             lineas = (TextView) itemView.findViewById(R.id.favorita_lineas);
             handleView = (ImageView) itemView.findViewById(R.id.handle);
             selectedCardElevation = itemView.getResources().getDimension(R.dimen.favorita_selected_elevation);
+            numeroOneDigitSize = itemView.getResources().getDimension(R.dimen.favorita_numero_1_digit);
+            numeroTwoDigitSize = itemView.getResources().getDimension(R.dimen.favorita_numero_2_digits);
+            numeroThreeDigitSize = itemView.getResources().getDimension(R.dimen.favorita_numero_3_digits);
+            numeroFourDigitSize = itemView.getResources().getDimension(R.dimen.favorita_numero_4_digits);
         }
 
         public void bind(Favorita favorita) {
@@ -98,7 +107,9 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
             boolean hasNombrePropio = favorita.getNombrePropio() != null && !TextUtils.isEmpty(favorita.getNombrePropio());
             nombre.setText(hasNombrePropio ? favorita.getNombrePropio() : parada.getDescripcion());
 
-            numeroBadge.setText(parada.getNumero().toString());
+            String numeroParada = parada.getNumero().toString();
+            numeroBadge.setText(numeroParada);
+            numeroBadge.setTextSize(TypedValue.COMPLEX_UNIT_PX, numeroSizeFor(numeroParada));
             Drawable background = numeroBadge.getBackground();
             ((GradientDrawable) background).setColor(favorita.getColor());
 
@@ -117,6 +128,20 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
                 }
                 return false;
             });
+        }
+
+        private float numeroSizeFor(String numeroParada) {
+            switch (numeroParada.length()) {
+                case 1:
+                    return numeroOneDigitSize;
+                case 2:
+                    return numeroTwoDigitSize;
+                case 3:
+                    return numeroThreeDigitSize;
+                case 4:
+                default:
+                    return numeroFourDigitSize;
+            }
         }
 
         @Override

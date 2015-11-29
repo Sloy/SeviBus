@@ -11,4 +11,8 @@
     <dimen name="linea_badge_text_size_3digits">15sp</dimen>
 
     <dimen name="favorita_selected_elevation">18dp</dimen>
+    <dimen name="favorita_numero_1_digit">25sp</dimen>
+    <dimen name="favorita_numero_2_digits">21sp</dimen>
+    <dimen name="favorita_numero_3_digits">18sp</dimen>
+    <dimen name="favorita_numero_4_digits">15sp</dimen>
 </resources>

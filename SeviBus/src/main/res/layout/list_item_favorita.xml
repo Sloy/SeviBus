@@ -32,8 +32,8 @@
             android:maxLines="1"
             android:maxWidth="@dimen/arrival_detail_line_badge_size"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            tools:text="677"/>
+            tools:textSize="@dimen/favorita_numero_2_digits"
+            tools:text="50"/>
 
 
         <LinearLayout
