@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="beta" versioncode="72">
+        <change>Uff muchas cosas.</change>
+        <change>Revisa la comunidad para más detalles.</change>
+    </release>
+
     <release version="3.5" versioncode="68">
         <change>Nuevo: ¡Material Design! Más de un año, por fin SeviBus se actualiza con un diseño moderno y más limpio.</change>
         <change>Nuevo: Colores de líneas. Ahora los números de las líneas aparecerán con el color de las marquesinas. También al dibujarlas en el mapa.</change>
