@@ -32,6 +32,7 @@ public class BaseToolbarActivity extends BaseActivity {
             super.setContentView(layoutResID);
             toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
             checkNotNull(toolbar, "needsToolbarDecorator() es false, pero no se encontró toolbar en el layout");
+            containerView = getRootView();
         }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

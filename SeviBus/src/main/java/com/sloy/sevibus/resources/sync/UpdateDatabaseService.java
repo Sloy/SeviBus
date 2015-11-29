@@ -13,10 +13,16 @@ import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
+import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.R;
+import com.sloy.sevibus.resources.AnalyticsTracker;
+import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.StuffProvider;
 
 import java.util.Random;
+
+import rx.Subscription;
+import rx.schedulers.Schedulers;
 
 public class UpdateDatabaseService extends GcmTaskService {
 
@@ -28,12 +34,15 @@ public class UpdateDatabaseService extends GcmTaskService {
     private static final long INTERVAL_5_MINUTES_SECONDS = 5 * 60;
     private static final long INTERVAL_1_MINUTE_SECONDS = 60;
     private static final long INTERVAL_30_SECONDS = 30;
+
     private UpdateDatabaseAction updateDatabaseAction;
+    private AnalyticsTracker analyticsTracker;
 
     @Override
     public void onCreate() {
         super.onCreate();
         updateDatabaseAction = StuffProvider.getUpdateDatabaseAction(getApplicationContext());
+        analyticsTracker = StuffProvider.getAnalyticsTracker(getApplicationContext());
     }
 
     @Override
@@ -46,19 +55,27 @@ public class UpdateDatabaseService extends GcmTaskService {
     @Override
     public int onRunTask(TaskParams taskParams) {
         Log.d("Sync", "onRunTask :D");
-        try {
-            updateDatabaseAction.update();
-            notifyTaskRun(null);
-            return GcmNetworkManager.RESULT_SUCCESS;
-        } catch (Exception e) {
-            notifyTaskRun(e);
-            Log.e("Sync", "Update database failed", e);
-            return GcmNetworkManager.RESULT_FAILURE;
-        }
+        updateDatabaseAction.update()
+          .subscribeOn(Schedulers.io())
+          .subscribe(aVoid -> {/*no-op*/},
+            (error) -> {
+                notifyTaskRun(error);
+                analyticsTracker.databaseUpdatedSuccessfuly(false);
+                Debug.registerHandledException(getApplicationContext(), error);
+            },
+            () -> {
+                notifyTaskRun(null);
+                analyticsTracker.databaseUpdatedSuccessfuly(true);
+            }
+          );
+        return GcmNetworkManager.RESULT_SUCCESS;
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    private void notifyTaskRun(@Nullable Exception error) {
+    private void notifyTaskRun(@Nullable Throwable error) {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
         NotificationManager nm = getApplicationContext().getSystemService(NotificationManager.class);
 
         Notification notification = new Notification.Builder(getApplicationContext())

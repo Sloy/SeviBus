@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="3.6" versioncode="72">
+        <change>Favoritas! Sección rediseñada con estilo Material Design.</change>
+        <change>Ahora el color de tus paradas favoritas está más presente en la aplicación. ¡Pruébalos!</change>
+        <change>Ajuste del diseño de la pantalla principal. Más orientado a tarjetas que antes.</change>
+        <change>Optimizada actualización de datos de líneas y paradas. Ahora sólo se hará cuando el móvil está cargando y con Wifi.</change>
+        <change>Cambios internos en la petición de datos de tiempos.</change>
+    </release>
+
     <release version="3.5" versioncode="68">
         <change>Nuevo: ¡Material Design! Más de un año, por fin SeviBus se actualiza con un diseño moderno y más limpio.</change>
         <change>Nuevo: Colores de líneas. Ahora los números de las líneas aparecerán con el color de las marquesinas. También al dibujarlas en el mapa.</change>

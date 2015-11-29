@@ -116,6 +116,11 @@ public class LlegadasList extends LinearLayout {
     public void setLlegadaInfo(String lineaNumero, ArrivalTime llegada) {
         View vistaLlegada = mLlegadasMap.get(lineaNumero);
 
+        if (vistaLlegada==null) {
+            //TODO hey, mete log o algo
+            return;
+        }
+
         TextView tiempo1Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_tiempo_1);
         TextView tiempo2Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_tiempo_2);
         TextView distancia1Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_distancia_1);
@@ -144,7 +149,7 @@ public class LlegadasList extends LinearLayout {
             case ESTIMATE:
                 return String.format("%d minutos", bus.getTimeInMinutes());
             case BEYOND_HALF_HOUR:
-                return "Más de 30 minutos";
+                return "Más de 30 min";
             case IMMINENT:
                 return "Llegada inminente";
             case NO_ESTIMATION:
@@ -160,14 +165,12 @@ public class LlegadasList extends LinearLayout {
             case ESTIMATE:
                 return String.format("%d metros", bus.getDistanceInMeters());
             case BEYOND_HALF_HOUR:
-                return "Más de 30 minutos";
+                return String.format("%d m", bus.getDistanceInMeters());
             case IMMINENT:
-                return "";
             case NO_ESTIMATION:
-                return "";
             case NOT_AVAILABLE:
             default:
-                return "o erróneo";
+                return "";
         }
     }
 

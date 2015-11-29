@@ -1,6 +1,5 @@
 package com.sloy.sevibus.ui.fragments;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -9,35 +8,37 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.design.widget.Snackbar;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.sync.UpdateDatabaseAction;
 import com.sloy.sevibus.resources.sync.UpdateDatabaseService;
 import com.sloy.sevibus.ui.activities.AcercaDeActivity;
 import com.sloy.sevibus.ui.activities.ContactoActivity;
 
 import java.text.DateFormat;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class AjustesFragment extends PreferenceFragment {
 
   public static final String PREFS_CONFIG_VALUES = "com.sloy.sevibus_preferences";
 
   private Preference actualizarManual;
-  private BroadcastReceiver mUpdateFinishReceiver;
+  private UpdateDatabaseAction updateDatabaseAction;
 
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
     getPreferenceManager().setSharedPreferencesMode(Context.MODE_MULTI_PROCESS);
 
-    mUpdateFinishReceiver = new BroadcastReceiver() {
-      @Override public void onReceive(Context context, Intent intent) {
-        actualizaInterfaz();
-      }
-    };
+    updateDatabaseAction = StuffProvider.getUpdateDatabaseAction(getActivity());
 
     addPreferencesFromResource(R.xml.preferences);
     if (Debug.isDebugEnabled(getActivity())) {
@@ -49,9 +50,18 @@ public class AjustesFragment extends PreferenceFragment {
     assert actualizarManual != null;
     actualizarManual.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
       @Override public boolean onPreferenceClick(Preference preference) {
-        Toast.makeText(getActivity(), "Vale vale, ahora ya yo actualizo", Toast.LENGTH_SHORT)
-            .show();
-        // TODO force update
+        updateDatabaseAction.update()
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(aVoid -> {},
+            error -> {
+              Snackbar.make(getView(), "Algo fue mal :(", Snackbar.LENGTH_LONG).show();
+            },
+            ()->{
+              Snackbar.make(getView(), "Datos actualizados! :)", Snackbar.LENGTH_LONG).show();
+              actualizaInterfaz();
+            }
+          );
         return true;
       }
     });
@@ -93,10 +103,10 @@ public class AjustesFragment extends PreferenceFragment {
         @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
           // Cambio el valor, porque el que realmente uso está en otro archivo distinto
           getActivity().getSharedPreferences("debug", Context.MODE_MULTI_PROCESS).edit()
-              .putBoolean(Debug.FAKE_LOCATION_KEY, (Boolean) newValue)
-              .commit();
+            .putBoolean(Debug.FAKE_LOCATION_KEY, (Boolean) newValue)
+            .commit();
           Toast.makeText(getActivity(), "Puede que necesites reiniciar la aplicación",
-              Toast.LENGTH_SHORT).show();
+            Toast.LENGTH_SHORT).show();
           return true;
         }
       });
@@ -108,10 +118,10 @@ public class AjustesFragment extends PreferenceFragment {
         @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
           // Cambio el valor, porque el que realmente uso está en otro archivo distinto
           getActivity().getSharedPreferences("debug", Context.MODE_MULTI_PROCESS).edit()
-              .putBoolean(Debug.REPORTS_KEY, (Boolean) newValue)
-              .commit();
+            .putBoolean(Debug.REPORTS_KEY, (Boolean) newValue)
+            .commit();
           Toast.makeText(getActivity(), "Puede que necesites reiniciar la aplicación",
-              Toast.LENGTH_SHORT).show();
+            Toast.LENGTH_SHORT).show();
           return true;
         }
       });
@@ -123,7 +133,7 @@ public class AjustesFragment extends PreferenceFragment {
         @Override public boolean onPreferenceClick(Preference preference) {
           Debug.setDebugEnabled(getActivity(), false);
           Toast.makeText(getActivity(), "Seguramente debas reiniciar la aplicación",
-              Toast.LENGTH_SHORT).show();
+            Toast.LENGTH_SHORT).show();
           return true;
         }
       });
@@ -141,15 +151,5 @@ public class AjustesFragment extends PreferenceFragment {
     String summary = "Última actualización: " + lastUpdateText;
     actualizarManual.setSummary(summary);
     Log.d("SeviBus prefs", "Last update: " + lastUpdateText);
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    getActivity().registerReceiver(mUpdateFinishReceiver, new IntentFilter(UpdateDatabaseService.ACTION_UPDATE_FINISH));
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-    getActivity().unregisterReceiver(mUpdateFinishReceiver);
   }
 }

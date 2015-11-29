@@ -1,25 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
     >
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@color/main_separators"
-        android:dividerHeight="-2dp"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="gone"/>
 
-    <ImageView
+    <android.support.percent.PercentRelativeLayout
         android:id="@+id/favoritas_emtpy_indicator"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        tools:visibility="gone"
-        android:src="@drawable/favoritas_empty" />
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/favoritas_emtpy_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:scaleType="center"
+            android:src="@drawable/favoritas_empty"
+            app:layout_marginEndPercent="25%"
+            app:layout_marginStartPercent="25%"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/favoritas_emtpy_image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="No tienes ninguna parada favorita aún"
+            android:textSize="21sp"
+            app:layout_widthPercent="75%"
+            />
+    </android.support.percent.PercentRelativeLayout>
 
 </FrameLayout>

@@ -7,7 +7,6 @@ import android.view.MenuItem;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.bbdd.DBHelper;
-import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.ui.ThemeSelector;
 
 public class BaseActivity extends AppCompatActivity{

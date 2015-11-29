@@ -14,7 +14,7 @@ public class FavoritasLayer extends ParadasLayer {
 
     public FavoritasLayer(List<Parada> paradasFavoritas, Context context, DBHelper dbHelper) {
         super(paradasFavoritas, context, dbHelper);
-        mIcon = BitmapDescriptorFactory.fromResource(R.drawable.marker_favoritas);
+        mIcon = BitmapDescriptorFactory.fromResource(R.drawable.marker_favorita);
     }
 
     @Override
@@ -24,6 +24,6 @@ public class FavoritasLayer extends ParadasLayer {
 
     @Override
     public float[] getIconAnchor() {
-        return new float[]{0.5f, 1f};
+        return new float[]{0.5f, 0.5f};
     }
 }

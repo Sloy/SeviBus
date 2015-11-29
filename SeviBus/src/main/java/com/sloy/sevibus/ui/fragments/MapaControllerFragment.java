@@ -318,7 +318,7 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
         mLineasContainer.addView(viewLinea);
 
         // Carga en el mapa
-        Drawable iconoLinea = colorearSuperficial(getResources().getDrawable(R.drawable.marker_template).mutate(), colorLinea);
+        Drawable iconoLinea = colorearSuperficial(getResources().getDrawable(R.drawable.marker_parada).mutate(), colorLinea);
         LineaLayer layerLinea = new LineaLayer(iconoLinea, colorLinea, paradasDeLinea, getActivity(), getDBHelper());
         mLayerManager.addLayer(layerLinea);
 
@@ -463,10 +463,10 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
                 return;
             }
             // Crea el icono, coloreando el fondo y colocando el dibujo del bus encima
-            Drawable iconoBus = getResources().getDrawable(R.drawable.marker_bus);
+            Drawable iconoBus = getResources().getDrawable(R.drawable.marker_bus_backround);
             iconoBus.setColorFilter(mLineasColors.get(lineaId), PorterDuff.Mode.MULTIPLY);
             Bitmap bmpFondo = Layer.getDrawableBitmap(iconoBus);
-            Bitmap bmpBus = BitmapFactory.decodeResource(getResources(), R.drawable.marker_bus_overlay);
+            Bitmap bmpBus = BitmapFactory.decodeResource(getResources(), R.drawable.marker_bus_shape);
             Bitmap bmpIcono = Bitmap.createBitmap(bmpFondo.getWidth(), bmpFondo.getHeight(), bmpFondo.getConfig());
             Canvas canvas = new Canvas(bmpIcono);
             canvas.drawBitmap(bmpFondo, new Matrix(), null);
