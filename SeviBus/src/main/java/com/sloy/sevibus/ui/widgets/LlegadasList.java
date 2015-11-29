@@ -116,6 +116,11 @@ public class LlegadasList extends LinearLayout {
     public void setLlegadaInfo(String lineaNumero, ArrivalTime llegada) {
         View vistaLlegada = mLlegadasMap.get(lineaNumero);
 
+        if (vistaLlegada==null) {
+            //TODO hey, mete log o algo
+            return;
+        }
+
         TextView tiempo1Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_tiempo_1);
         TextView tiempo2Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_tiempo_2);
         TextView distancia1Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_distancia_1);
