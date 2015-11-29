@@ -4,9 +4,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -19,6 +22,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,6 +33,7 @@ import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.ArrivalTime;
 import com.sloy.sevibus.model.LineaWarning;
 import com.sloy.sevibus.model.MiAnuncio;
+import com.sloy.sevibus.model.PaletaColores;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
@@ -131,24 +137,24 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
     private void onCrearFavoritaClick() {
         EditarFavoritaDialogFragment.getInstanceNewFavorita(this, mParada).show(
-                getFragmentManager(), EditarFavoritaDialogFragment.TAG);
+          getFragmentManager(), EditarFavoritaDialogFragment.TAG);
     }
 
     private void onEliminarFavoritaClick() {
         new AlertDialog.Builder(getActivity()).setMessage("Esta parada está guardada como favorita. ¿Quieres eliminarla?")
-                .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        eliminarFavorita();
-                    }
-                })
-                .setNegativeButton("No no", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
+          .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                  eliminarFavorita();
+              }
+          })
+          .setNegativeButton("No no", new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                  dialog.dismiss();
+              }
+          })
+          .show();
     }
 
     private void guardarFavorita(String nombrePropio, int color) {
@@ -329,6 +335,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
         if (isFavorita) {
             favoritaButton.setImageResource(R.drawable.ic_fab_star_outline);
+            colorizeScreenFromFavorita(fav);
         } else {
             favoritaButton.setImageResource(R.drawable.ic_fab_star);
         }
@@ -342,6 +349,36 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                 }
             }
         });
+    }
+
+    private void colorizeScreenFromFavorita(Favorita fav) {
+        PaletaColores paleta = PaletaColores.fromPrimary(fav.getColor());
+        if (paleta != null) {
+            // Toolbar
+            CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) getView().findViewById(R.id.collapsing_toolbar);
+            collapsingToolbar.setContentScrimColor(paleta.primary);
+            collapsingToolbar.setBackgroundColor(paleta.primary);
+            getView().findViewById(R.id.toolbar).setBackgroundColor(paleta.primary);
+
+            // Status bar
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getActivity().getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(paleta.dark);
+            }
+
+            // FAB
+            favoritaButton.setBackgroundTintList(ColorStateList.valueOf(paleta.accent));
+
+            // Other content
+            ((TextView) getView().findViewById(R.id.parada_info_tiempos_llegadas_title))
+              .setTextColor(paleta.primary);
+        } else {
+            Snackbar.make(getView(), "Actualiza el color de tu favorita y flipa en colores!", Snackbar.LENGTH_INDEFINITE)
+              .setAction("Flipar", v -> onCrearFavoritaClick())
+              .show();
+        }
+
     }
 
     private void updateLlegadas() {
