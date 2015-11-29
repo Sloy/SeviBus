@@ -28,4 +28,9 @@ public class EmptyAnalyticsTracker implements AnalyticsTracker {
         /* no-op */
     }
 
+    @Override
+    public void favoritaNotColorized(Integer numero) {
+        /* no-op */
+    }
+
 }

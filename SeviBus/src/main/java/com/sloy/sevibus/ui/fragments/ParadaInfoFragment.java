@@ -376,6 +376,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
             analyticsTracker.favoritaColorized(paleta, fav.getParadaAsociada().getNumero());
         } else {
+            analyticsTracker.favoritaNotColorized(fav.getParadaAsociada().getNumero());
             Snackbar.make(getView(), "Actualiza el color de tu favorita y flipa en colores!", Snackbar.LENGTH_INDEFINITE)
               .setAction("Flipar", v -> onCrearFavoritaClick())
               .show();
