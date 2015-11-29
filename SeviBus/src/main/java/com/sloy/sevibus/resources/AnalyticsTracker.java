@@ -15,4 +15,6 @@ public interface AnalyticsTracker {
     void databaseUpdatedSuccessfuly(boolean success);
 
     void favoritaColorized(PaletaColores paleta, Integer numeroParada);
+
+    void favoritaNotColorized(Integer numero);
 }

@@ -55,4 +55,13 @@ public class AnswersAnalyticsTracker implements AnalyticsTracker {
         );
     }
 
+    @Override
+    public void favoritaNotColorized(Integer numeroParada) {
+        answers.logCustom(new CustomEvent("Parada colorizada")
+            .putCustomAttribute("Color paleta", "legacy")
+            .putCustomAttribute("Parada", String.valueOf(numeroParada))
+            .putCustomAttribute("Versión OS", String.valueOf(Build.VERSION.SDK_INT))
+        );
+    }
+
 }

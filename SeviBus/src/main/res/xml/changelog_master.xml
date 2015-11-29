@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="beta" versioncode="72">
-        <change>Uff muchas cosas.</change>
-        <change>Revisa la comunidad para más detalles.</change>
+    <release version="3.6" versioncode="72">
+        <change>Favoritas! Sección rediseñada con estilo Material Design.</change>
+        <change>Ahora el color de tus paradas favoritas está más presente en la aplicación. ¡Pruébalos!</change>
+        <change>Ajuste del diseño de la pantalla principal. Más orientado a tarjetas que antes.</change>
+        <change>Optimizada actualización de datos de líneas y paradas. Ahora sólo se hará cuando el móvil está cargando y con Wifi.</change>
+        <change>Cambios internos en la petición de datos de tiempos.</change>
     </release>
 
     <release version="3.5" versioncode="68">
