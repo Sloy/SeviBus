@@ -13,12 +13,8 @@ public class StringDownloader {
     private static final int NET_READ_TIMEOUT_MILLIS = 15000;  // 15 seconds
 
 
-    public String download(String url) {
-        try {
-            return streamToString(downloadUrl(new URL(url)));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public String download(String url) throws IOException {
+        return streamToString(downloadUrl(new URL(url)));
     }
 
     private InputStream downloadUrl(final URL url) throws IOException {

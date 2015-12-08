@@ -23,6 +23,8 @@ public class StuffProvider {
     public static final String STAGING_API_ENDPOINT = "https://sevibus-staging.herokuapp.com/";
     public static final String API_ENDPOINT = PRODUCTION_API_ENDPOINT;
 
+    private static CrashReportingTool crashReportingToolInstance;
+
     public static UpdateDatabaseAction getUpdateDatabaseAction(Context context) {
         return new UpdateDatabaseAction(context, getDbHelper(context), getStringDownloader());
     }
@@ -35,8 +37,8 @@ public class StuffProvider {
         return new StringDownloader();
     }
 
-    public static AnalyticsTracker getAnalyticsTracker(Context context) {
-        if (Debug.isReportsEnabled(context)) {
+    public static AnalyticsTracker getAnalyticsTracker() {
+        if (BuildConfig.DEBUG) {
             return new AnswersAnalyticsTracker(Answers.getInstance());
         } else {
             return new EmptyAnalyticsTracker();
@@ -64,4 +66,14 @@ public class StuffProvider {
                 .create(SevibusApi.class);
     }
 
+    public static CrashReportingTool getCrashReportingTool() {
+        if (crashReportingToolInstance == null) {
+            if (BuildConfig.DEBUG) {
+                crashReportingToolInstance = new EmptyCrashReportingTool();
+            } else {
+                crashReportingToolInstance = new CrashlyticsReportingTool();
+            }
+        }
+        return crashReportingToolInstance;
+    }
 }

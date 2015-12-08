@@ -109,7 +109,7 @@ public class MapContainerFragment extends BaseDBFragment implements ILocationSen
             ((HomeActivity) getActivity()).lockMapOptions(!show);
             mShowInterface = show;
         } else {
-            Debug.registerHandledException(getActivity(), new IllegalStateException("Aún no está creado el mapa, so capullo"));
+            Debug.registerHandledException(new IllegalStateException("Aún no está creado el mapa, so capullo"));
         }
     }
 

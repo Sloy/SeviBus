@@ -147,7 +147,7 @@ public class LineasCercanasMainFragment extends BaseDBFragment implements ILocat
     public void updateLocation(Location location) {
         if (location == null) {
             muestraError();
-            Debug.registerHandledException(getActivity(), new NullPointerException("Ubicación nula recibida"));
+            Debug.registerHandledException(new NullPointerException("Ubicación nula recibida"));
             return;
         }
 
@@ -162,7 +162,7 @@ public class LineasCercanasMainFragment extends BaseDBFragment implements ILocat
                     lineas = DBQueries.getLineasCercanas(getDBHelper(), latitud, longitud);
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    Debug.registerHandledException(getActivity(), e);
+                    Debug.registerHandledException(e);
                 }
                 return lineas;
             }

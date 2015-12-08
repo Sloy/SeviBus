@@ -75,7 +75,7 @@ public class FavoritasMainFragment extends BaseDBFragment {
                     paradasFavoritas = DBQueries.getParadasFavoritas(getDBHelper());
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    Debug.registerHandledException(getActivity(), e);
+                    Debug.registerHandledException(e);
                 }
                 return paradasFavoritas;
             }

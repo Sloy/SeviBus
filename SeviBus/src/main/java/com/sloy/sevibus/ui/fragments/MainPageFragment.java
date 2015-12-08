@@ -68,15 +68,18 @@ public class MainPageFragment extends BaseDBFragment {
         int currentVersion = BuildConfig.VERSION_CODE;
 
         if (lastVersion < currentVersion) {
-            new Handler().postDelayed(() -> {
-                //noinspection ResourceType
-                Snackbar.make(getView(), "SeviBus se ha actualizado!", NEW_VERSION_SNACKBAR_DURATION)
-                  .setAction("Ver cambios", v -> {
-                      ChangeLog cl = new ChangeLog(getActivity());
-                      cl.getFullLogDialog().show();
-                  })
-                  .show();
-            }, 1000);
+            ChangeLog cl = new ChangeLog(getActivity());
+            boolean hasChangelog = !cl.getChangeLog(false).isEmpty();
+            if (hasChangelog) {
+                new Handler().postDelayed(() -> {
+                    //noinspection ResourceType
+                    Snackbar.make(getView(), "SeviBus se ha actualizado!", NEW_VERSION_SNACKBAR_DURATION)
+                      .setAction("Ver cambios", v -> {
+                          cl.getFullLogDialog().show();
+                      })
+                      .show();
+                }, 1000);
+            }
         }
 
         prefs.edit().putInt(PREF_SHOW_NEW_VERSION_LATEST_SEEN, currentVersion).apply();

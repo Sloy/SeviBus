@@ -114,7 +114,7 @@ public abstract class ParadasLayer extends Layer {
         try {
             lineasList = DBQueries.getLineasDeParada(mDbHelper, p.getNumero());
         } catch (SQLException e) {
-            Debug.registerHandledException(mContext.get(), e);
+            Debug.registerHandledException(e);
             e.printStackTrace();
         }
 
@@ -139,7 +139,7 @@ public abstract class ParadasLayer extends Layer {
         } catch (Exception e) {
             Toast.makeText(mContext.get(), "Error desconocido =(", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
-            Debug.registerHandledException(mContext.get(), e);
+            Debug.registerHandledException(e);
         }
     }
 }
