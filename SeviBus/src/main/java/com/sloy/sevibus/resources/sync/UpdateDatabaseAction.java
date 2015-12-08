@@ -40,7 +40,7 @@ public class UpdateDatabaseAction {
     public Observable<Void> update() {
         return Observable.create(subscriber -> {
             try {
-                UpdateDatabaseAction.this.updateData();
+                updateData();
                 subscriber.onCompleted();
             } catch (Exception e) {
                 subscriber.onError(e);
