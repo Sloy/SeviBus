@@ -179,7 +179,7 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
                     return new MiAnuncio(json.getString("enlace"), json.getString("imagen"));
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
-                    Debug.registerHandledException(getActivity(), e);
+                    Debug.registerHandledException(e);
                     return null;
                 }
             }

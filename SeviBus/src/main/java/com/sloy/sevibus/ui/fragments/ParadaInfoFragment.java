@@ -115,7 +115,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         }
 
         obtainLlegadasAction = StuffProvider.getObtainLlegadaAction();
-        analyticsTracker = StuffProvider.getAnalyticsTracker(getActivity());
+        analyticsTracker = StuffProvider.getAnalyticsTracker();
     }
 
     @Override
@@ -170,7 +170,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
             Snackbar.make(getView(), "Quitada favorita", Snackbar.LENGTH_LONG).show();
             updateFavoritaButton();
         } catch (SQLException e) {
-            Debug.registerHandledException(getActivity(), e);
+            Debug.registerHandledException(e);
             Snackbar.make(getView(), "Error desconocido. Estamos en ello.", Snackbar.LENGTH_LONG).show();
         }
     }
@@ -202,8 +202,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                 mLineas = DBQueries.getLineasDeParada(getDBHelper(), parada_numero);
                 Collections.sort(mLineas);
             } catch (SQLException e) {
-                Debug.registerHandledException(getActivity(), e);
-                e.printStackTrace();
+                Debug.registerHandledException(e);
             }
 
             guardaReciente();
@@ -223,8 +222,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                 try {
                     DBQueries.setParadaReciente(getDBHelper(), reciente);
                 } catch (SQLException e) {
-                    e.printStackTrace();
-                    Debug.registerHandledException(getActivity(), e);
+                    Debug.registerHandledException(e);
                 }
                 return null;
             }
@@ -263,8 +261,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                     JSONObject json = new JSONObject(stringBuilder.toString());
                     return new MiAnuncio(json.getString("enlace"), json.getString("imagen"));
                 } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                    Debug.registerHandledException(getActivity(), e);
+                    Debug.registerHandledException(e);
                 }
 
                 return null;
@@ -307,8 +304,8 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                             if (warnings != null && !warnings.isEmpty()) {
                                 res.put(linea.getId(), warnings);
                             }
-                        } catch (SQLException e) {
-                            e.printStackTrace();
+                        } catch (Exception e) {
+                            Debug.registerHandledException(e);
                         }
                     }
                     return res;
@@ -400,7 +397,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                 analyticsTracker.trackTiempoRecibido(llegada.getBusStopNumber(), llegada.getBusLineName(), responseTime, llegada.getDataSource());
             },
             error -> {
-                Debug.registerHandledException(getActivity(), error);
+                Debug.registerHandledException(error);
                 Snackbar.make(getView(), "Se produjo un error", Snackbar.LENGTH_LONG)
                   .setAction("Reintentar", (view) -> updateLlegadas())
                   .show();

@@ -86,7 +86,7 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
 
             favoritasAdapter.setFavoritas(favoritas);
         } catch (Exception e) {
-            Debug.registerHandledException(getActivity(), e);
+            Debug.registerHandledException(e);
             Snackbar.make(getView(), "Ocurrió un error. ¡Estamos en ello!", Snackbar.LENGTH_LONG).show();
         }
     }
@@ -122,7 +122,7 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
             },
             error -> {
                 Snackbar.make(getView(), "Oops ocurrió un error", Snackbar.LENGTH_SHORT);
-                Debug.registerHandledException(getActivity(), error);
+                Debug.registerHandledException(error);
             });
 
     }

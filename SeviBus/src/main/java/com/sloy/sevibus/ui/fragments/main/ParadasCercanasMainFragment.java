@@ -192,7 +192,7 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
     public void updateLocation(Location location) {
         if (location == null) {
             muestraError();
-            Debug.registerHandledException(getActivity(), new NullPointerException("Ubicación nula recibida"));
+            Debug.registerHandledException(new NullPointerException("Ubicación nula recibida"));
             return;
         }
 
@@ -217,7 +217,7 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    Debug.registerHandledException(getActivity(), e);
+                    Debug.registerHandledException(e);
                 }
                 return paradas;
             }

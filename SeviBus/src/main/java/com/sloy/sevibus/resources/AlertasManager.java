@@ -43,7 +43,7 @@ public class AlertasManager {
                 actualizaTweetsTussam(context, dbHelper);
             } catch (IOException | JSONException | SQLException | ParseException e) {
                 Log.e("SeviBus", "Error actualizando tweets de Tussam", e);
-                Debug.registerHandledException(context, e);
+                Debug.registerHandledException(e);
             }
         }
         if (necesitaActualizarSevibus(context)) {
@@ -52,7 +52,7 @@ public class AlertasManager {
                 actualizaTweetsSevibus(context, dbHelper);
             } catch (IOException | JSONException | SQLException | ParseException e) {
                 Log.e("SeviBus", "Error actualizando tweets de Sevibus", e);
-                Debug.registerHandledException(context, e);
+                Debug.registerHandledException(e);
             }
         }
         return DBQueries.getAllTweets(dbHelper);
@@ -65,7 +65,7 @@ public class AlertasManager {
                 actualizaTweetsTussam(context, dbHelper);
             } catch (IOException | JSONException | SQLException | ParseException e) {
                 Log.e("SeviBus", "Error actualizando tweets de Tussam", e);
-                Debug.registerHandledException(context, e);
+                Debug.registerHandledException(e);
             }
         }
         return DBQueries.getTweetsFromTussam(dbHelper);
@@ -78,7 +78,7 @@ public class AlertasManager {
                 actualizaTweetsSevibus(context, dbHelper);
             } catch (IOException | JSONException | SQLException | ParseException e) {
                 Log.e("SeviBus", "Error actualizando tweets de Sevibus", e);
-                Debug.registerHandledException(context, e);
+                Debug.registerHandledException(e);
             }
         }
         return DBQueries.getTweetsFromSevibus(dbHelper);
@@ -91,7 +91,7 @@ public class AlertasManager {
                 actualizaTweetsTussam(context, dbHelper);
             } catch (IOException | JSONException | SQLException | ParseException e) {
                 Log.e("SeviBus", "Error actualizando tweets de Tussam", e);
-                Debug.registerHandledException(context, e);
+                Debug.registerHandledException(e);
             }
         }
         return DBQueries.getLineaWarnings(dbHelper, linea.getId());

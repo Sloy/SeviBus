@@ -114,7 +114,7 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
                     finish();
                 } else {
                     Snackbar.make(getContainerView(), "Opps, ocurrió un error :S", Snackbar.LENGTH_LONG).show();
-                    Debug.registerHandledException(NuevoBonobusActivity.this, new IllegalStateException("Se pulsó Guardar Bonobús con mBonobusConfigurado null"));
+                    Debug.registerHandledException(new IllegalStateException("Se pulsó Guardar Bonobús con mBonobusConfigurado null"));
                 }
             }
         });
@@ -389,7 +389,7 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
             } catch (IOException | ParserConfigurationException | XPathExpressionException | RuntimeException e) {
                 mBonobus.setError(true);
                 Log.w("SeviBus", "Error leyendo el bonobús", e);
-                Debug.registerHandledException(NuevoBonobusActivity.this, e);
+                Debug.registerHandledException(e);
                 return null;
             }
         }

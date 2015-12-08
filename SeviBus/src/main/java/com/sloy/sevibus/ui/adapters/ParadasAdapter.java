@@ -79,7 +79,7 @@ public class ParadasAdapter extends BaseAdapter {
             lineas.setText(sbLineas.toString());
         } else {
             Log.wtf("SeviBus", "¿Una parada sin líneas? ¿Cómo va a ser eso? No puede ser!! :S");
-            Debug.registerHandledException(mContext, new IllegalStateException("La parada " + item.getNumero() + " no parece tener líneas."));
+            Debug.registerHandledException(new IllegalStateException("La parada " + item.getNumero() + " no parece tener líneas."));
         }
 
         return convertView;
