@@ -52,7 +52,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_busqueda);
 
-        analyticsTracker = StuffProvider.getAnalyticsTracker(this);
+        analyticsTracker = StuffProvider.getAnalyticsTracker();
         mListView = (ListView) findViewById(R.id.busqueda_lista);
         mEmptyView = (TextView) findViewById(R.id.busqueda_texto_vacio);
         mIndicadorRecientes = findViewById(R.id.busqueda_indicador_recientes);
@@ -131,7 +131,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
                     paradasByQuery = DBQueries.getParadasByQuery(getDBHelper(), newText, RESULTS_LIMIT);
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    Debug.registerHandledException(BusquedaActivity.this, e);
+                    Debug.registerHandledException(e);
                 }
                 return paradasByQuery;
             }
@@ -179,7 +179,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
             setParadas(paradas);
         } catch (SQLException e) {
             mostrarVacio(null);
-            Debug.registerHandledException(this, e);
+            Debug.registerHandledException(e);
             e.printStackTrace();
         }
     }

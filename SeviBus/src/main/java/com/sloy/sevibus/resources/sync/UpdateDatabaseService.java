@@ -21,7 +21,6 @@ import com.sloy.sevibus.resources.StuffProvider;
 
 import java.util.Random;
 
-import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 public class UpdateDatabaseService extends GcmTaskService {
@@ -42,7 +41,7 @@ public class UpdateDatabaseService extends GcmTaskService {
     public void onCreate() {
         super.onCreate();
         updateDatabaseAction = StuffProvider.getUpdateDatabaseAction(getApplicationContext());
-        analyticsTracker = StuffProvider.getAnalyticsTracker(getApplicationContext());
+        analyticsTracker = StuffProvider.getAnalyticsTracker();
     }
 
     @Override
@@ -61,7 +60,7 @@ public class UpdateDatabaseService extends GcmTaskService {
             (error) -> {
                 notifyTaskRun(error);
                 analyticsTracker.databaseUpdatedSuccessfuly(false);
-                Debug.registerHandledException(getApplicationContext(), error);
+                Debug.registerHandledException(error);
             },
             () -> {
                 notifyTaskRun(null);

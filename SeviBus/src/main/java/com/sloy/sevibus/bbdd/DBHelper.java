@@ -174,7 +174,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             updateManual(sqlParadas, sqlLineas, sqlSecciones, sqlRelaciones, sqlTipoLineas);
         } catch (SQLException e) {
             e.printStackTrace();
-            Debug.registerHandledException(mContext, e);
+            Debug.registerHandledException(e);
         }
     }
 

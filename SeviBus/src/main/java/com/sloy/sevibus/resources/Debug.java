@@ -4,16 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.util.Log;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
 import com.sloy.sevibus.BuildConfig;
-
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
-import io.fabric.sdk.android.Fabric;
 
 public class Debug {
 
@@ -23,8 +17,6 @@ public class Debug {
     public static final String FAKE_LOCATION_KEY = "pref_ubicacion_falsa";
     public static final String REPORTS_KEY = "pref_reports";
 
-    public static final int LITE_MODE_RAM_THRESHOLD = 450;
-
     public static boolean isDebugEnabled(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("debug", Context.MODE_MULTI_PROCESS);
         return BuildConfig.DEBUG || prefs.getBoolean("is_debug", false);
@@ -33,23 +25,6 @@ public class Debug {
     public static void setDebugEnabled(Context context, boolean enabled) {
         SharedPreferences prefs = context.getSharedPreferences("debug", Context.MODE_MULTI_PROCESS);
         prefs.edit().putBoolean("is_debug", enabled).commit();
-    }
-
-    public static void activateReports(Context context) {
-        boolean reportsEnabled = isReportsEnabled(context);
-        if (reportsEnabled) {
-            Fabric.with(context, new Crashlytics(), new Answers());
-        } else {
-            Log.d("Sevibus debug", "Evitando reporte de errores");
-        }
-    }
-
-    public static boolean isReportsEnabled(Context context) {
-        return !isDebugEnabled(context) || isReportsForceEnabled(context);
-    }
-
-    private static boolean isReportsForceEnabled(Context context) {
-        return context.getSharedPreferences("debug", Context.MODE_MULTI_PROCESS).getBoolean(REPORTS_KEY, false);
     }
 
     public static void useFakeLocation(Context context, Location location) {
@@ -68,11 +43,8 @@ public class Debug {
         }
     }
 
-    public static void registerHandledException(Context context, Throwable e) {
-        // Crashlytics
-        if (isReportsEnabled(context)) {
-            Crashlytics.logException(e);
-        }
+    public static void registerHandledException(Throwable e) {
+        StuffProvider.getCrashReportingTool().regiterHandledException(e);
         Log.e("Debug", "Handled Exception", e);
     }
 
@@ -93,18 +65,4 @@ public class Debug {
         }
     }
 
-    public static synchronized int readTotalRam() {
-        int tm = 1000;
-        try {
-            RandomAccessFile reader = new RandomAccessFile("/proc/meminfo", "r");
-            String load = reader.readLine();
-            String[] totrm = load.split(" kB");
-            String[] trm = totrm[0].split(" ");
-            tm = Integer.parseInt(trm[trm.length - 1]);
-            tm = Math.round(tm / 1024);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return tm;
-    }
 }

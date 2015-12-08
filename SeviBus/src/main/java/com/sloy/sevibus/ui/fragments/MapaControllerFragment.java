@@ -296,7 +296,7 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
 
 
         } catch (SQLException e) {
-            Debug.registerHandledException(getActivity(), e);
+            Debug.registerHandledException(e);
             e.printStackTrace();
             Toast.makeText(getActivity(), "Error. Lo sentimos mucho ='(", Toast.LENGTH_SHORT).show();
             return;
@@ -367,7 +367,7 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
                 mLayerManager.addLayer(mCercanasLayer);
             } catch (SQLException e) {
                 e.printStackTrace();
-                Debug.registerHandledException(getActivity(), e);
+                Debug.registerHandledException(e);
             }
         } else {
             if (mCercanasLayer != null) {
@@ -394,7 +394,7 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
                 mLayerManager.addLayer(mFavoritasLayer);
             } catch (SQLException e) {
                 e.printStackTrace();
-                Debug.registerHandledException(getActivity(), e);
+                Debug.registerHandledException(e);
             }
         } else {
             if (mFavoritasLayer != null) {
