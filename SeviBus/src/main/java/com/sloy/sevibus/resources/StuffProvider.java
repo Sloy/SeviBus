@@ -39,9 +39,9 @@ public class StuffProvider {
 
     public static AnalyticsTracker getAnalyticsTracker() {
         if (BuildConfig.DEBUG) {
-            return new AnswersAnalyticsTracker(Answers.getInstance());
-        } else {
             return new EmptyAnalyticsTracker();
+        } else {
+            return new AnswersAnalyticsTracker(Answers.getInstance());
         }
     }
 

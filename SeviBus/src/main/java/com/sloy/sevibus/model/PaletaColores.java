@@ -1,5 +1,7 @@
 package com.sloy.sevibus.model;
 
+import android.support.annotation.Nullable;
+
 public enum PaletaColores {
     RED(0xFFaa0000, 0xFF800000, 0xFFFB8C00),
     ORANGE(0xFFFF9800, 0xFFF57C00, 0xFF009688),
@@ -25,6 +27,7 @@ public enum PaletaColores {
         this.accent = accent;
     }
 
+    @Nullable
     public static PaletaColores fromPrimary(int primary) {
         for (PaletaColores paletaColores : values()) {
             if (paletaColores.primary == primary) {
