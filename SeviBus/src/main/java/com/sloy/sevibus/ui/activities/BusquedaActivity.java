@@ -174,7 +174,11 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
             }
             List<Parada> paradas = new ArrayList<Parada>();
             for (Reciente r : recientes) {
-                paradas.add(r.getParadaAsociada());
+                if (r.getParadaAsociada() != null) {
+                    paradas.add(r.getParadaAsociada());
+                } else {
+                    //TODO delete reciente
+                }
             }
             setParadas(paradas);
         } catch (SQLException e) {
