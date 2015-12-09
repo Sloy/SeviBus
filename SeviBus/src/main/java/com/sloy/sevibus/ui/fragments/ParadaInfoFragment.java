@@ -41,6 +41,7 @@ import com.sloy.sevibus.model.tussam.Reciente;
 import com.sloy.sevibus.resources.AlertasManager;
 import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.LegacyColorConverter;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.TimeTracker;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
@@ -350,34 +351,33 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
     private void colorizeScreenFromFavorita(Favorita fav) {
         PaletaColores paleta = PaletaColores.fromPrimary(fav.getColor());
-        if (paleta != null) {
-            // Toolbar
-            CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) getView().findViewById(R.id.collapsing_toolbar);
-            collapsingToolbar.setContentScrimColor(paleta.primary);
-            collapsingToolbar.setBackgroundColor(paleta.primary);
-            getView().findViewById(R.id.toolbar).setBackgroundColor(paleta.primary);
-
-            // Status bar
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Window window = getActivity().getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(paleta.dark);
-            }
-
-            // FAB
-            favoritaButton.setBackgroundTintList(ColorStateList.valueOf(paleta.accent));
-
-            // Other content
-            ((TextView) getView().findViewById(R.id.parada_info_tiempos_llegadas_title))
-              .setTextColor(paleta.primary);
-
-            analyticsTracker.favoritaColorized(paleta, fav.getParadaAsociada().getNumero());
-        } else {
+        if (paleta == null) {
+            paleta = LegacyColorConverter.paletaFromLegacyColor(fav.getColor());
+            fav.setColor(paleta.primary);
+            DBQueries.updateParadaFavorita(getDBHelper(), fav);
             analyticsTracker.favoritaNotColorized(fav.getParadaAsociada().getNumero());
-            Snackbar.make(getView(), "Actualiza el color de tu favorita y flipa en colores!", Snackbar.LENGTH_INDEFINITE)
-              .setAction("Flipar", v -> onCrearFavoritaClick())
-              .show();
         }
+        // Toolbar
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) getView().findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setContentScrimColor(paleta.primary);
+        collapsingToolbar.setBackgroundColor(paleta.primary);
+        getView().findViewById(R.id.toolbar).setBackgroundColor(paleta.primary);
+
+        // Status bar
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(paleta.dark);
+        }
+
+        // FAB
+        favoritaButton.setBackgroundTintList(ColorStateList.valueOf(paleta.accent));
+
+        // Other content
+        ((TextView) getView().findViewById(R.id.parada_info_tiempos_llegadas_title))
+          .setTextColor(paleta.primary);
+
+        analyticsTracker.favoritaColorized(paleta, fav.getParadaAsociada().getNumero());
 
     }
 
