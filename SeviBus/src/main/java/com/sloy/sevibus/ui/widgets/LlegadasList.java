@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -113,20 +114,29 @@ public class LlegadasList extends LinearLayout {
         }
     }
 
-    public void setLlegadaInfo(String lineaNumero, ArrivalTime llegada) {
+    public void setLlegadaInfo(String lineaNumero, @Nullable ArrivalTime llegada) {
         View vistaLlegada = mLlegadasMap.get(lineaNumero);
 
         if (vistaLlegada==null) {
             //TODO hey, mete log o algo
             return;
         }
-
         TextView tiempo1Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_tiempo_1);
         TextView tiempo2Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_tiempo_2);
         TextView distancia1Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_distancia_1);
         TextView distancia2Text = (TextView) vistaLlegada.findViewById(R.id.item_llegada_distancia_2);
         View progress = vistaLlegada.findViewById(R.id.item_llegada_progress);
         View container = vistaLlegada.findViewById(R.id.item_llegada_container);
+
+        if (llegada == null) {
+            tiempo1Text.setText("Error");
+            tiempo2Text.setText("Sin conexión a Internet o servidor no disponible");
+            distancia1Text.setText("");
+            distancia2Text.setText("");
+            progress.setVisibility(View.GONE);
+            container.setVisibility(VISIBLE);
+            return;
+        }
 
         fillLlegada(tiempo1Text, distancia1Text, llegada.getNextBus());
         fillLlegada(tiempo2Text, distancia2Text, llegada.getSecondBus());
