@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E0E0E0"
+    tools:context="com.sloy.sevibus.ui.activities.LandingActivity">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="172dp"
+        android:background="?colorPrimaryDark"
+        />
+
+
+    <!--<include layout="@layout/landing_card_installing"/>-->
+
+    <!--<include layout="@layout/landing_card_permission"/>-->
+
+    <include layout="@layout/landing_card_signin"/>
+</FrameLayout>
