@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -112,7 +113,7 @@ public class EndpointModule implements DebugModule {
     private void setEndpointAndRelaunch(String endpoint) {
         selectedEndpointPreference.set(endpoint);
         Toast.makeText(activity, "Restarting application...", Toast.LENGTH_SHORT).show();
-        ProcessPhoenix.triggerRebirth(activity);
+        new Handler().postDelayed(() -> ProcessPhoenix.triggerRebirth(activity), 500);
     }
 
     private Endpoint findEndpoint(String url) {
