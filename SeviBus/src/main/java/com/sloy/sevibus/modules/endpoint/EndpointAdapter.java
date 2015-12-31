@@ -47,11 +47,17 @@ public class EndpointAdapter extends BaseAdapter {
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+            convertView = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_2, parent, false);
         }
         Endpoint item = getItem(position);
-        TextView tv = (TextView) convertView.findViewById(android.R.id.text1);
-        tv.setText(item.name());
+        TextView nameTv = (TextView) convertView.findViewById(android.R.id.text1);
+        TextView valueTv = (TextView) convertView.findViewById(android.R.id.text2);
+        nameTv.setText(item.name());
+        if (item.url() != null) {
+            valueTv.setText(item.url());
+        } else {
+            valueTv.setText("<custom url>");
+        }
         return convertView;
     }
 }
