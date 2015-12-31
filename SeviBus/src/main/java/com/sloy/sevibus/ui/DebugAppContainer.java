@@ -45,6 +45,7 @@ public class DebugAppContainer implements AppContainer {
           new SettingsModule(activity)
         );
 
+        debugDrawer.removeAllViews();
         debugDrawer.addView(debugView);
 
 
