@@ -7,7 +7,7 @@
               android:padding="12dp">
 
     <TextView
-        style="@style/Widget.DebugDrawer.Header"
+        style="@style/Widget.DebugDrawer.Base.Header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
@@ -22,7 +22,7 @@
 
         <Spinner
             android:id="@+id/debug_network_endpoint"
-            style="@style/Widget.DebugDrawer.RowValue"
+            style="@style/Widget.DebugDrawer.Base.RowValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>

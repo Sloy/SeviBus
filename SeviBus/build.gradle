@@ -95,6 +95,8 @@ dependencies {
         transitive = true;
     }
 
-    compile 'com.sloydev:debugdrawer:local'
-    compile 'com.jakewharton:process-phoenix:1.0.2'
+    debugCompile 'io.palaima.debugdrawer:debugdrawer-view:0.6.2'
+    debugCompile 'io.palaima.debugdrawer:debugdrawer-commons:0.6.2'
+    releaseCompile 'io.palaima.debugdrawer:debugdrawer-view-no-op:0.6.2'
+    debugCompile 'com.jakewharton:process-phoenix:1.0.2'
 }

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,9 +21,9 @@ import com.sloy.sevibus.R;
 
 import java.util.List;
 
-import io.palaima.debugdrawer.module.DrawerModule;
+import io.palaima.debugdrawer.base.DebugModule;
 
-public class EndpointModule implements DrawerModule {
+public class EndpointModule implements DebugModule {
 
     private final Activity activity;
     private final List<Endpoint> endpoints;
@@ -47,6 +48,7 @@ public class EndpointModule implements DrawerModule {
         this.customEndpointPreference = new StringPreference(sharedPreferences, "custom_endpoint", "http://192.168.1.");
     }
 
+    @NonNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent) {
         View moduleView = inflater.inflate(R.layout.debug_drawer_module_endpoint, parent, false);
@@ -94,6 +96,16 @@ public class EndpointModule implements DrawerModule {
 
     @Override
     public void onClosed() {
+
+    }
+
+    @Override
+    public void onResume() {
+
+    }
+
+    @Override
+    public void onPause() {
 
     }
 
