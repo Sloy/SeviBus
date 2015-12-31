@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.sloy.sevibus.R;
+
 import java.util.List;
 
 public class EndpointAdapter extends BaseAdapter {
@@ -33,6 +35,17 @@ public class EndpointAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.dd_debug_drawer_module_endpoint_spinner_item, parent, false);
+        }
+        Endpoint item = getItem(position);
+        TextView tv = (TextView) convertView.findViewById(android.R.id.text1);
+        tv.setText(item.name());
+        return convertView;
+    }
+
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
         }
