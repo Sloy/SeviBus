@@ -6,7 +6,7 @@ import com.crashlytics.android.answers.Answers;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.bbdd.DBHelper;
-import com.sloy.sevibus.modules.endpoint.EndpointModule;
+import com.sloydev.retrofitendpointmodule.EndpointModule;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.ApiLlegadaDataSource;
@@ -17,7 +17,10 @@ import com.sloy.sevibus.resources.datasource.TussamLlegadaDataSource;
 import com.sloy.sevibus.resources.sync.UpdateDatabaseAction;
 import com.sloy.sevibus.ui.AppContainer;
 import com.sloy.sevibus.ui.DebugAppContainer;
+import com.sloydev.retrofitendpointmodule.SimpleEndpoint;
 
+import retrofit.Endpoint;
+import retrofit.Endpoints;
 import retrofit.RestAdapter;
 
 public class StuffProvider {
@@ -87,11 +90,11 @@ public class StuffProvider {
         return crashReportingToolInstance;
     }
 
-    private static String getEndpoint(Context context) {
+    private static Endpoint getEndpoint(Context context) {
         if (BuildConfig.DEBUG) {
-            return EndpointModule.getSelectedEndpointUrl(context);
+            return EndpointModule.getSelectedEndpoint(context);
         } else {
-            return PRODUCTION_API_ENDPOINT;
+            return Endpoints.newFixedEndpoint(PRODUCTION_API_ENDPOINT);
         }
     }
 

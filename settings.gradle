@@ -1,1 +1,1 @@
-include ':SeviBus'
+include ':SeviBus', ':retrofitendpointmodule'

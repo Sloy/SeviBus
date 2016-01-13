@@ -1,4 +1,4 @@
-package com.sloy.sevibus.modules.endpoint;
+package com.sloydev.retrofitendpointmodule;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,9 +6,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.sloy.sevibus.R;
-
 import java.util.List;
+
+import retrofit.Endpoint;
 
 public class EndpointAdapter extends BaseAdapter {
 
@@ -40,7 +40,7 @@ public class EndpointAdapter extends BaseAdapter {
         }
         Endpoint item = getItem(position);
         TextView tv = (TextView) convertView.findViewById(android.R.id.text1);
-        tv.setText(item.name());
+        tv.setText(item.getName());
         return convertView;
     }
 
@@ -52,9 +52,9 @@ public class EndpointAdapter extends BaseAdapter {
         Endpoint item = getItem(position);
         TextView nameTv = (TextView) convertView.findViewById(android.R.id.text1);
         TextView valueTv = (TextView) convertView.findViewById(android.R.id.text2);
-        nameTv.setText(item.name());
-        if (item.url() != null) {
-            valueTv.setText(item.url());
+        nameTv.setText(item.getName());
+        if (item.getUrl() != null) {
+            valueTv.setText(item.getUrl());
         } else {
             valueTv.setText("<custom url>");
         }

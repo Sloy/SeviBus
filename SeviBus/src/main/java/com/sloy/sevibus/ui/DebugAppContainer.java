@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.sloy.sevibus.R;
-import com.sloy.sevibus.modules.endpoint.Endpoint;
-import com.sloy.sevibus.modules.endpoint.EndpointModule;
+import com.sloydev.retrofitendpointmodule.CustomEndpoint;
+import com.sloydev.retrofitendpointmodule.EndpointModule;
 import com.sloy.sevibus.resources.StuffProvider;
+import com.sloydev.retrofitendpointmodule.SimpleEndpoint;
 
 import java.util.Arrays;
 
@@ -37,9 +38,9 @@ public class DebugAppContainer implements AppContainer {
         debugView = new DebugView(activity);
         debugView.modules(
           new EndpointModule(activity, Arrays.asList(
-            new Endpoint("Production", StuffProvider.PRODUCTION_API_ENDPOINT),
-            new Endpoint("Staging", StuffProvider.STAGING_API_ENDPOINT),
-            Endpoint.CUSTOM
+            new SimpleEndpoint("Production", StuffProvider.PRODUCTION_API_ENDPOINT),
+            new SimpleEndpoint("Staging", StuffProvider.STAGING_API_ENDPOINT),
+            CustomEndpoint.get()
           )),
           new DeviceModule(activity),
           new BuildModule(activity),

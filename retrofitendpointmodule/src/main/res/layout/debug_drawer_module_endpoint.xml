@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:background="?android:attr/actionBarItemBackground"
-            android:src="@drawable/ic_action_search"
+            android:src="@android:drawable/ic_menu_edit"
             android:visibility="gone"/>
     </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.sloy.sevibus.modules.endpoint;
+package com.sloydev.retrofitendpointmodule;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,16 +18,16 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.jakewharton.processphoenix.ProcessPhoenix;
-import com.sloy.sevibus.R;
 
 import java.util.List;
 
 import io.palaima.debugdrawer.base.DebugModule;
+import retrofit.Endpoint;
 
 public class EndpointModule implements DebugModule {
 
     private final Activity activity;
-    private final List<Endpoint> endpoints;
+    private final SelectableEndpoint endpoints;
     private final StringPreference selectedEndpointPreference;
     private final StringPreference customEndpointPreference;
 
@@ -38,20 +38,20 @@ public class EndpointModule implements DebugModule {
         return new StringPreference(preferences, "selected_endpoint").get();
     }
 
-    public EndpointModule(Activity activity, List<Endpoint> endpoints) {
+    public EndpointModule(Activity activity, SelectableEndpoint endpoints) {
         this(activity, endpoints, activity.getSharedPreferences("endpoint_module", Context.MODE_PRIVATE));
     }
 
-    private EndpointModule(Activity activity, List<Endpoint> endpoints, SharedPreferences sharedPreferences) {
+    private EndpointModule(Activity activity, SelectableEndpoint endpoints, SharedPreferences sharedPreferences) {
         this.activity = activity;
         this.endpoints = endpoints;
-        this.selectedEndpointPreference = new StringPreference(sharedPreferences, "selected_endpoint", endpoints.get(0).url());
+        this.selectedEndpointPreference = new StringPreference(sharedPreferences, "selected_endpoint", endpoints.getDefault().getUrl());
         this.customEndpointPreference = new StringPreference(sharedPreferences, "custom_endpoint", "http://192.168.1.");
     }
 
     @NonNull
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
         View moduleView = inflater.inflate(R.layout.debug_drawer_module_endpoint, parent, false);
         endpointView = (Spinner) moduleView.findViewById(R.id.debug_network_endpoint);
         return moduleView;
@@ -59,12 +59,12 @@ public class EndpointModule implements DebugModule {
 
     @Override
     public void onStart() {
-        Endpoint currentEndpoint = findEndpoint(selectedEndpointPreference.get());
+        final Endpoint currentEndpoint = findEndpoint(selectedEndpointPreference.get());
 
         EndpointAdapter endpointAdapter = new EndpointAdapter(endpoints);
         endpointView.setAdapter(endpointAdapter);
 
-        int currentEndpointPosition = endpoints.indexOf(currentEndpoint);
+        final int currentEndpointPosition = endpoints.indexOf(currentEndpoint);
         endpointView.setSelection(currentEndpointPosition);
 
         endpointView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -72,15 +72,16 @@ public class EndpointModule implements DebugModule {
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 Endpoint selected = endpoints.get(position);
                 if (selected != currentEndpoint) {
-                    if (selected == Endpoint.CUSTOM) {
+                    boolean isCustomEndpoint = selected.getUrl() == null;
+                    if (isCustomEndpoint) {
                         Log.d("EndpointModule", "Custom network endpoint selected. Prompting for URL.");
 
                         showCustomEndpointDialog(currentEndpointPosition, customEndpointPreference.get());
                     } else {
-                        setEndpointAndRelaunch(selected.url());
+                        setEndpointAndRelaunch(selected.getUrl());
                     }
                 } else {
-                    Log.d("EndpointModule", "Ignoring re-selection of network endpoint " + selected.name());
+                    Log.d("EndpointModule", "Ignoring re-selection of network endpoint " + selected.getName());
                 }
             }
 
@@ -112,26 +113,31 @@ public class EndpointModule implements DebugModule {
 
     private void setEndpointAndRelaunch(String endpoint) {
         selectedEndpointPreference.set(endpoint);
-        Toast.makeText(activity, "Restarting application...", Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(() -> ProcessPhoenix.triggerRebirth(activity), 500);
+        Toast.makeText(endpointView.getContext(), "Restarting application...", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ProcessPhoenix.triggerRebirth(endpointView.getContext());
+            }
+        }, 500);
     }
 
     private Endpoint findEndpoint(String url) {
         for (Endpoint endpoint : endpoints) {
-            if (endpoint.url() != null && endpoint.url().equals(url)) {
+            if (endpoint.getUrl() != null && endpoint.getUrl().equals(url)) {
                 return endpoint;
             }
         }
-        return Endpoint.CUSTOM;
+        return CustomEndpoint.get();
     }
 
     private void showCustomEndpointDialog(final int originalSelection, String defaultUrl) {
-        View view = LayoutInflater.from(activity).inflate(R.layout.debug_drawer_module_endpoint_custom, null);
+        View view = LayoutInflater.from(endpointView.getContext()).inflate(R.layout.debug_drawer_module_endpoint_custom, null);
         final EditText url = (EditText) view.findViewById(R.id.debug_drawer_network_endpoint_url);
         url.setText(defaultUrl);
         url.setSelection(url.length());
 
-        new AlertDialog.Builder(activity) //
+        new AlertDialog.Builder(endpointView.getContext()) //
           .setTitle("Set Network Endpoint")
           .setView(view)
           .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
