@@ -9,6 +9,8 @@ import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.ApiLlegadaDataSource;
+import com.sloy.sevibus.resources.datasource.DBFavoritaDataSource;
+import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.LlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.SevibusApi;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
@@ -75,5 +77,9 @@ public class StuffProvider {
             }
         }
         return crashReportingToolInstance;
+    }
+
+    public static FavoritaDataSource getFavoritaDataSource(Context context) {
+        return new DBFavoritaDataSource(getDbHelper(context));
     }
 }

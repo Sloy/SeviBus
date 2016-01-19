@@ -127,6 +127,7 @@ public class DBQueries {
 
     }
 
+    @Deprecated
     public static List<Favorita> getParadasFavoritas(DBHelper dbHelper) throws SQLException {
         QueryBuilder<Favorita, Integer> favQb = dbHelper.getDaoFavorita().queryBuilder();
         favQb.orderBy("orden", true);
