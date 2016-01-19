@@ -157,6 +157,7 @@ public class DBQueries {
         });
     }
 
+    @Deprecated
     public static void setNewParadaFavorita(DBHelper dbHelper, Parada parada, String nombrePropio, int color) {
         int count = (int) dbHelper.getDaoFavorita().countOf();
         Favorita fav = new Favorita();

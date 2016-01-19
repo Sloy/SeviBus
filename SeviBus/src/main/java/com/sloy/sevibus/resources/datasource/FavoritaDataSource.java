@@ -10,4 +10,5 @@ public interface FavoritaDataSource {
 
     Observable<List<Favorita>> getFavoritas();
 
+    void saveFavorita(Favorita favorita);
 }

@@ -45,6 +45,7 @@ import com.sloy.sevibus.resources.LegacyColorConverter;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.TimeTracker;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
+import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
 import com.sloy.sevibus.ui.activities.BaseActivity;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 import com.sloy.sevibus.ui.widgets.LlegadasList;
@@ -75,6 +76,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     private static final int AD_NET_READ_TIMEOUT_MILLIS = 10 * 1000;
 
     private ObtainLlegadasAction obtainLlegadasAction;
+    private FavoritaDataSource favoritaDataSource;
 
     private LlegadasList mViewLlegadas;
 
@@ -116,6 +118,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         }
 
         obtainLlegadasAction = StuffProvider.getObtainLlegadaAction();
+        favoritaDataSource = StuffProvider.getFavoritaDataSource(getActivity());
         analyticsTracker = StuffProvider.getAnalyticsTracker();
     }
 
@@ -159,7 +162,12 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     }
 
     private void guardarFavorita(String nombrePropio, int color) {
-        DBQueries.setNewParadaFavorita(getDBHelper(), mParada, nombrePropio, color);
+        Favorita fav = new Favorita();
+        fav.setParadaAsociada(mParada);
+        fav.setNombrePropio(nombrePropio);
+        fav.setColor(color);
+        favoritaDataSource.saveFavorita(fav);
+
         Snackbar.make(getView(), "Favorita guardada", Snackbar.LENGTH_LONG).show();
         updateFavoritaButton();
     }

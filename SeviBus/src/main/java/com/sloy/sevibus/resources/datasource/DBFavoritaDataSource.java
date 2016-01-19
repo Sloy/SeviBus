@@ -28,4 +28,11 @@ public class DBFavoritaDataSource implements FavoritaDataSource {
             return Observable.error(e);
         }
     }
+
+    @Override
+    public void saveFavorita(Favorita favorita) {
+        int count = (int) dbHelper.getDaoFavorita().countOf();
+        favorita.setOrden(count + 1);
+        dbHelper.getDaoFavorita().createOrUpdate(favorita);
+    }
 }
