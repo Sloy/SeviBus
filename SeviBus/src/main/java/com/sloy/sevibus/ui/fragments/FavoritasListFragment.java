@@ -1,6 +1,7 @@
 package com.sloy.sevibus.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,11 +16,12 @@ import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
 import com.sloy.sevibus.ui.activities.ParadaInfoActivity;
 import com.sloy.sevibus.ui.adapters.DragFavoritaCallback;
 import com.sloy.sevibus.ui.adapters.FavoritasAdapter;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
     private RecyclerView list;
     private FavoritasAdapter favoritasAdapter;
     private ItemTouchHelper itemTouchHelper;
+    private FavoritaDataSource favoritaDataSource;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +61,12 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        favoritaDataSource = StuffProvider.getFavoritaDataSource(getActivity());
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         setHasOptionsMenu(true);
@@ -65,16 +74,20 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
     }
 
     private void recargaListaFavoritas() {
-        try {
-            List<Favorita> favoritas = DBQueries.getParadasFavoritas(getDBHelper());
-            if (favoritas.isEmpty()) {
-                emptyIndicator.setVisibility(View.VISIBLE);
-                list.setVisibility(View.GONE);
-            } else {
-                emptyIndicator.setVisibility(View.GONE);
-                list.setVisibility(View.VISIBLE);
-            }
+            //TODO use action
+        favoritaDataSource.getFavoritas()
+              .subscribe(this::showFavoritasInList);
+    }
 
+    private void showFavoritasInList(List<Favorita> favoritas) {
+        if (favoritas.isEmpty()) {
+            emptyIndicator.setVisibility(View.VISIBLE);
+            list.setVisibility(View.GONE);
+        } else {
+            emptyIndicator.setVisibility(View.GONE);
+            list.setVisibility(View.VISIBLE);
+        }
+        try {
             for (Favorita favorita : favoritas) {
                 List<Linea> lineas = DBQueries.getLineasDeParada(getDBHelper(), favorita.getParadaAsociada().getNumero());
                 List<String> numeroLineas = new ArrayList<>(lineas.size());
@@ -83,38 +96,26 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
                 }
                 favorita.getParadaAsociada().setNumeroLineas(numeroLineas);
             }
-
-            favoritasAdapter.setFavoritas(favoritas);
         } catch (Exception e) {
             Debug.registerHandledException(e);
             Snackbar.make(getView(), "Ocurrió un error. ¡Estamos en ello!", Snackbar.LENGTH_LONG).show();
         }
+        favoritasAdapter.setFavoritas(favoritas);
     }
 
-    private void eliminarFavoritaSeleccionada() {
-        //TODO
-//        getDBHelper().getDaoFavorita().delete();
-        Snackbar.make(getView(), "Favorita eliminada", Snackbar.LENGTH_LONG).show();
-        recargaListaFavoritas();
-    }
-
-    private void editarFavoritaSeleccionada() {
-        //TODO
-//        EditarFavoritaDialogFragment.getInstanceEditFavorita(this, fav).show(getFragmentManager(), EditarFavoritaDialogFragment.TAG);
-    }
 
     private void guardarNuevoOrden(List<Favorita> ordered) {
         Observable.create(subscriber -> {
-            try {
-                for (int i = 0; i < ordered.size(); i++) {
-                    Favorita favorita = ordered.get(i);
-                    favorita.setOrden(i);
-                }
-                DBQueries.setParadasFavoritas(getDBHelper(), ordered);
-                subscriber.onCompleted();
-            } catch (SQLException e) {
-                subscriber.onError(e);
-            }
+            Observable.range(0, ordered.size())
+              .zipWith(ordered, (i, fav) -> {
+                  fav.setOrden(i);
+                  return fav;
+              })
+              .toList()
+              .subscribe(favoritas -> {
+                  favoritaDataSource.saveFavoritas(favoritas);
+              });
+            subscriber.onCompleted();
         })
           .subscribeOn(Schedulers.computation())
           .observeOn(AndroidSchedulers.mainThread())
@@ -127,25 +128,25 @@ public class FavoritasListFragment extends BaseDBFragment implements EditarFavor
 
     }
 
+    //TODO nen, esto no se está usando aún
     @Override
     public void onGuardarFavorita(int id, String nombrePropio, int color) {
-        try {
-            Favorita currentFav = DBQueries.getFavoritaById(getDBHelper(), id);
-            if (currentFav == null) {
-                Parada parada = DBQueries.getParadaById(getDBHelper(), id);
-                DBQueries.setNewParadaFavorita(getDBHelper(), parada, nombrePropio, color);
-            } else {
-                currentFav.setNombrePropio(nombrePropio);
-                currentFav.setColor(color);
-                //Guarda
-                DBQueries.updateParadaFavorita(getDBHelper(), currentFav);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // TODO action
+        favoritaDataSource.getFavoritaById(id)
+          .subscribe(current -> {
+              favoritaDataSource.saveFavorita(current.or(() -> createFavorita(id, nombrePropio, color)));
+              Snackbar.make(getView(), "Favorita guardada", Snackbar.LENGTH_LONG).show();
+              recargaListaFavoritas();
+          });
+    }
 
-        Snackbar.make(getView(), "Favorita guardada", Snackbar.LENGTH_LONG).show();
-        recargaListaFavoritas();
+    private Favorita createFavorita(int idParada, String nombrePropio, int color) {
+        Parada parada = DBQueries.getParadaById(getDBHelper(), idParada);
+        Favorita f = new Favorita();
+        f.setParadaAsociada(parada);
+        f.setNombrePropio(nombrePropio);
+        f.setColor(color);
+        return f;
     }
 
 }

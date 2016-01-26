@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -173,15 +174,9 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     }
 
     private void eliminarFavorita() {
-        try {
-            Favorita favCurrent = DBQueries.getFavoritaById(getDBHelper(), mParada.getNumero());
-            getDBHelper().getDaoFavorita().delete(favCurrent);
-            Snackbar.make(getView(), "Quitada favorita", Snackbar.LENGTH_LONG).show();
-            updateFavoritaButton();
-        } catch (SQLException e) {
-            Debug.registerHandledException(e);
-            Snackbar.make(getView(), "Error desconocido. Estamos en ello.", Snackbar.LENGTH_LONG).show();
-        }
+        favoritaDataSource.deleteFavorita(mParada.getNumero());
+        Snackbar.make(getView(), "Quitada favorita", Snackbar.LENGTH_LONG).show();
+        updateFavoritaButton();
     }
 
     @Override
@@ -331,39 +326,23 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     }
 
     private void updateFavoritaButton() {
-        Favorita fav = null;
-        try {
-            fav = DBQueries.getFavoritaById(getDBHelper(), mParada.getNumero());
-        } catch (SQLException e) {
-
-        }
-        final boolean isFavorita = fav != null;
-
-        if (isFavorita) {
-            favoritaButton.setImageResource(R.drawable.ic_fab_star_outline);
-            colorizeScreenFromFavorita(fav);
-        } else {
-            favoritaButton.setImageResource(R.drawable.ic_fab_star);
-        }
-        favoritaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isFavorita) {
-                    onEliminarFavoritaClick();
-                } else {
-                    onCrearFavoritaClick();
-                }
-            }
-        });
+        favoritaDataSource.getFavoritaById(mParada.getNumero())
+          .subscribe(favorita -> {
+              if (favorita.isPresent()) {
+                  colorizeScreenFromFavorita(favorita.get());
+                  favoritaButton.setImageResource(R.drawable.ic_fab_star_outline);
+                  favoritaButton.setOnClickListener(v -> onEliminarFavoritaClick());
+              } else {
+                  favoritaButton.setImageResource(R.drawable.ic_fab_star);
+                  favoritaButton.setOnClickListener(v -> onCrearFavoritaClick());
+              }
+          });
     }
 
     private void colorizeScreenFromFavorita(Favorita fav) {
         PaletaColores paleta = PaletaColores.fromPrimary(fav.getColor());
         if (paleta == null) {
-            paleta = LegacyColorConverter.paletaFromLegacyColor(fav.getColor());
-            fav.setColor(paleta.primary);
-            DBQueries.updateParadaFavorita(getDBHelper(), fav);
-            analyticsTracker.favoritaNotColorized(fav.getParadaAsociada().getNumero());
+            paleta = updateColorPalette(fav);
         }
         // Toolbar
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) getView().findViewById(R.id.collapsing_toolbar);
@@ -387,6 +366,16 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
         analyticsTracker.favoritaColorized(paleta, fav.getParadaAsociada().getNumero());
 
+    }
+
+    @NonNull
+    private PaletaColores updateColorPalette(Favorita fav) {
+        PaletaColores paleta;
+        paleta = LegacyColorConverter.paletaFromLegacyColor(fav.getColor());
+        fav.setColor(paleta.primary);
+        analyticsTracker.favoritaNotColorized(fav.getParadaAsociada().getNumero());
+        favoritaDataSource.saveFavorita(fav);
+        return paleta;
     }
 
     private void updateLlegadas() {

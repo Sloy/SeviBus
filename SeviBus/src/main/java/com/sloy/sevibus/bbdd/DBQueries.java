@@ -7,11 +7,9 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.stmt.Where;
-import com.j256.ormlite.table.TableUtils;
 import com.sloy.sevibus.model.LineaWarning;
 import com.sloy.sevibus.model.TweetHolder;
 import com.sloy.sevibus.model.tussam.Bonobus;
-import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.ParadaSeccion;
@@ -25,7 +23,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 public class DBQueries {
 
@@ -125,51 +122,6 @@ public class DBQueries {
         }
         return res;
 
-    }
-
-    @Deprecated
-    public static List<Favorita> getParadasFavoritas(DBHelper dbHelper) throws SQLException {
-        QueryBuilder<Favorita, Integer> favQb = dbHelper.getDaoFavorita().queryBuilder();
-        favQb.orderBy("orden", true);
-        return favQb.query();
-    }
-
-    public static Favorita getFavoritaById(DBHelper dbHelper, Integer id) throws SQLException {
-        QueryBuilder<Favorita, Integer> favQb = dbHelper.getDaoFavorita().queryBuilder();
-        List<Favorita> res = favQb.where().eq("paradaAsociada_id", id).query();
-        if (res != null && res.size() > 0) {
-            return res.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    public static void setParadasFavoritas(final DBHelper dbHelper, final List<Favorita> favoritasOrdenadas) throws SQLException {
-        TableUtils.clearTable(dbHelper.getConnectionSource(), Favorita.class);
-        dbHelper.getDaoFavorita().callBatchTasks(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                for (Favorita f : favoritasOrdenadas) {
-                    dbHelper.getDaoFavorita().createOrUpdate(f);
-                }
-                return true;
-            }
-        });
-    }
-
-    @Deprecated
-    public static void setNewParadaFavorita(DBHelper dbHelper, Parada parada, String nombrePropio, int color) {
-        int count = (int) dbHelper.getDaoFavorita().countOf();
-        Favorita fav = new Favorita();
-        fav.setParadaAsociada(parada);
-        fav.setNombrePropio(nombrePropio);
-        fav.setColor(color);
-        fav.setOrden(count + 1);
-        dbHelper.getDaoFavorita().createOrUpdate(fav);
-    }
-
-    public static void updateParadaFavorita(DBHelper dbHelper, Favorita updatedFavorita) {
-        dbHelper.getDaoFavorita().update(updatedFavorita);
     }
 
     public static List<Parada> getParadasByQuery(DBHelper dbHelper, String query, long limit) throws SQLException {
