@@ -1,29 +1,28 @@
 package com.sloy.sevibus.ui.fragments.main;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.sloy.sevibus.R;
-import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.StuffProvider;
-import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
+import com.sloy.sevibus.resources.actions.ObtainFavoritasAction;
 import com.sloy.sevibus.ui.activities.IMainController;
 import com.sloy.sevibus.ui.activities.ParadaInfoActivity;
 import com.sloy.sevibus.ui.fragments.BaseDBFragment;
-import java.sql.SQLException;
+
 import java.util.List;
 
 public class FavoritasMainFragment extends BaseDBFragment {
 
     private TextView mMensaje;
     private View mContenido;
-    private FavoritaDataSource favoritaDataSource;
+    private ObtainFavoritasAction obtainFavoritasAction;
 
     public static FavoritasMainFragment getInstance() {
         return new FavoritasMainFragment();
@@ -69,14 +68,14 @@ public class FavoritasMainFragment extends BaseDBFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        favoritaDataSource = StuffProvider.getFavoritaDataSource(getActivity());
+        obtainFavoritasAction = StuffProvider.getObtainFavoritasAction(getActivity());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         muestraCargando();
-        favoritaDataSource.getFavoritas()
+        obtainFavoritasAction.getFavoritas()
           .limit(4)
           .subscribe(favoritas -> muestraFavoritas(favoritas),
             throwable -> {

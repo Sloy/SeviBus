@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -42,11 +41,12 @@ import com.sloy.sevibus.model.tussam.Reciente;
 import com.sloy.sevibus.resources.AlertasManager;
 import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.Debug;
-import com.sloy.sevibus.resources.LegacyColorConverter;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.TimeTracker;
+import com.sloy.sevibus.resources.actions.DeleteFavoritaAction;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
-import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
+import com.sloy.sevibus.resources.actions.ObtainSingleFavoritaAction;
+import com.sloy.sevibus.resources.actions.SaveFavoritaAction;
 import com.sloy.sevibus.ui.activities.BaseActivity;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 import com.sloy.sevibus.ui.widgets.LlegadasList;
@@ -77,7 +77,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     private static final int AD_NET_READ_TIMEOUT_MILLIS = 10 * 1000;
 
     private ObtainLlegadasAction obtainLlegadasAction;
-    private FavoritaDataSource favoritaDataSource;
+    private SaveFavoritaAction saveFavoritaAction;
 
     private LlegadasList mViewLlegadas;
 
@@ -91,6 +91,8 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
     private Map<String, ArrivalTime> mLlegadas;
     private AnalyticsTracker analyticsTracker;
+    private ObtainSingleFavoritaAction obtainSingleFavoritaAction;
+    private DeleteFavoritaAction deleteFavoritaAction;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -119,7 +121,9 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         }
 
         obtainLlegadasAction = StuffProvider.getObtainLlegadaAction();
-        favoritaDataSource = StuffProvider.getFavoritaDataSource(getActivity());
+        obtainSingleFavoritaAction = StuffProvider.getObtainSingleFavoritaAction(getActivity());
+        saveFavoritaAction = StuffProvider.getSaveFavoritaAction(getActivity());
+        deleteFavoritaAction = StuffProvider.getDeleteFavoritaAction(getActivity());
         analyticsTracker = StuffProvider.getAnalyticsTracker();
     }
 
@@ -163,18 +167,16 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     }
 
     private void guardarFavorita(String nombrePropio, int color) {
-        Favorita fav = new Favorita();
-        fav.setParadaAsociada(mParada);
-        fav.setNombrePropio(nombrePropio);
-        fav.setColor(color);
-        favoritaDataSource.saveFavorita(fav);
-
+        saveFavoritaAction.saveFavorita(mParada.getNumero(), nombrePropio, color)
+          .subscribe();
         Snackbar.make(getView(), "Favorita guardada", Snackbar.LENGTH_LONG).show();
         updateFavoritaButton();
     }
 
     private void eliminarFavorita() {
-        favoritaDataSource.deleteFavorita(mParada.getNumero());
+        deleteFavoritaAction
+          .deleteFavorita(mParada.getNumero())
+          .subscribe();
         Snackbar.make(getView(), "Quitada favorita", Snackbar.LENGTH_LONG).show();
         updateFavoritaButton();
     }
@@ -326,7 +328,8 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     }
 
     private void updateFavoritaButton() {
-        favoritaDataSource.getFavoritaById(mParada.getNumero())
+        obtainSingleFavoritaAction
+          .obtainFavorita(mParada.getNumero())
           .subscribe(favorita -> {
               if (favorita.isPresent()) {
                   colorizeScreenFromFavorita(favorita.get());
@@ -341,9 +344,6 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
     private void colorizeScreenFromFavorita(Favorita fav) {
         PaletaColores paleta = PaletaColores.fromPrimary(fav.getColor());
-        if (paleta == null) {
-            paleta = updateColorPalette(fav);
-        }
         // Toolbar
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) getView().findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setContentScrimColor(paleta.primary);
@@ -366,16 +366,6 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
         analyticsTracker.favoritaColorized(paleta, fav.getParadaAsociada().getNumero());
 
-    }
-
-    @NonNull
-    private PaletaColores updateColorPalette(Favorita fav) {
-        PaletaColores paleta;
-        paleta = LegacyColorConverter.paletaFromLegacyColor(fav.getColor());
-        fav.setColor(paleta.primary);
-        analyticsTracker.favoritaNotColorized(fav.getParadaAsociada().getNumero());
-        favoritaDataSource.saveFavorita(fav);
-        return paleta;
     }
 
     private void updateLlegadas() {

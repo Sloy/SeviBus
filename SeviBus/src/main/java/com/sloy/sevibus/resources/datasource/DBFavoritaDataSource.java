@@ -1,14 +1,11 @@
 package com.sloy.sevibus.resources.datasource;
 
-import com.google.common.base.Optional;
 import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.table.TableUtils;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.model.tussam.Favorita;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import rx.Observable;
 
@@ -22,67 +19,70 @@ public class DBFavoritaDataSource implements FavoritaDataSource {
 
     @Override
     public Observable<List<Favorita>> getFavoritas() {
-        try {
-            QueryBuilder<Favorita, Integer> favQb = dbHelper.getDaoFavorita().queryBuilder();
-            favQb.orderBy("orden", true);
-            List<Favorita> favoritas = favQb.query();
-            return Observable.defer(() -> Observable.just(favoritas));
-        } catch (SQLException e) {
-            return Observable.error(e);
-        }
-    }
-
-    @Override
-    public void saveFavorita(Favorita favorita) {
-        int count = (int) dbHelper.getDaoFavorita().countOf();
-        favorita.setOrden(count + 1);
-        dbHelper.getDaoFavorita().createOrUpdate(favorita);
-    }
-
-    @Override
-    public Observable<Optional<Favorita>> getFavoritaById(Integer idParada) {
-        try {
-            QueryBuilder<Favorita, Integer> favoriteQuery = dbHelper.getDaoFavorita().queryBuilder();
-            List<Favorita> queryResult = favoriteQuery.where().eq("paradaAsociada_id", idParada).query();
-
-            Optional<Favorita> result;
-            if (queryResult != null && queryResult.size() > 0) {
-                result = Optional.of(queryResult.get(0));
-            } else {
-                result = Optional.absent();
+        return Observable.defer(() -> {
+            try {
+                QueryBuilder<Favorita, Integer> favQb = dbHelper.getDaoFavorita().queryBuilder();
+                favQb.orderBy("orden", true);
+                List<Favorita> favoritas = favQb.query();
+                return Observable.defer(() -> Observable.just(favoritas));
+            } catch (SQLException e) {
+                return Observable.error(e);
             }
-            return Observable.defer(() -> Observable.just(result));
-        } catch (SQLException e) {
-            return Observable.error(e);
-        }
+        });
     }
 
     @Override
-    public void deleteFavorita(Integer idParada) {
-        getFavoritaById(idParada)
-          .subscribe(current -> {
-              if (current.isPresent()) {
-                  dbHelper.getDaoFavorita().delete(current.get());
+    public Observable<Void> saveFavorita(Favorita favorita) {
+        return Observable.just(favorita)
+          .map(this::withCalculatedOrder)
+          .map(favorita1 -> dbHelper.getDaoFavorita().createOrUpdate(favorita))
+          .flatMap(status -> Observable.empty());
+    }
+
+    @Override
+    public Observable<Favorita> getFavoritaById(Integer numeroParada) {
+        return Observable.just(numeroParada)
+          .flatMap(idParada -> {
+              try {
+                  QueryBuilder<Favorita, Integer> favoriteQuery = dbHelper.getDaoFavorita().queryBuilder();
+                  List<Favorita> queryResult = favoriteQuery.where().eq("paradaAsociada_id", idParada).query();
+
+                  if (queryResult != null && queryResult.size() > 0) {
+                      return Observable.just(queryResult.get(0));
+                  } else {
+                      return Observable.empty();
+                  }
+              } catch (SQLException e) {
+                  return Observable.error(e);
               }
           });
     }
 
     @Override
-    public void deleteAll() {
-        try {
-            TableUtils.clearTable(dbHelper.getConnectionSource(), Favorita.class);
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
-        }
+    public Observable<Void> deleteFavorita(Integer idParada) {
+        return getFavoritaById(idParada)
+          .flatMap(favorita -> {
+              dbHelper.getDaoFavorita().delete(favorita);
+              return Observable.empty();
+          });
     }
 
     @Override
-    public void saveFavoritas(List<Favorita> favoritas) {
-        dbHelper.getDaoFavorita().callBatchTasks(() -> {
-            for (Favorita f : favoritas) {
-                dbHelper.getDaoFavorita().createOrUpdate(f);
-            }
-            return true;
+    public Observable<Void> saveFavoritas(List<Favorita> favoritas) {
+        return Observable.defer(() -> {
+            dbHelper.getDaoFavorita().callBatchTasks(() -> {
+                for (Favorita f : favoritas) {
+                    dbHelper.getDaoFavorita().createOrUpdate(f);
+                }
+                return true;
+            });
+            return Observable.empty();
         });
+    }
+
+    private Favorita withCalculatedOrder(Favorita favorita) {
+        int count = (int) dbHelper.getDaoFavorita().countOf();
+        favorita.setOrden(count + 1);
+        return favorita;
     }
 }

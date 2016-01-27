@@ -6,7 +6,12 @@ import com.crashlytics.android.answers.Answers;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.bbdd.DBHelper;
+import com.sloy.sevibus.resources.actions.DeleteFavoritaAction;
+import com.sloy.sevibus.resources.actions.ObtainFavoritasAction;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
+import com.sloy.sevibus.resources.actions.ObtainSingleFavoritaAction;
+import com.sloy.sevibus.resources.actions.ReorderFavoritasAction;
+import com.sloy.sevibus.resources.actions.SaveFavoritaAction;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.ApiLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.DBFavoritaDataSource;
@@ -77,6 +82,26 @@ public class StuffProvider {
             }
         }
         return crashReportingToolInstance;
+    }
+
+    public static ObtainFavoritasAction getObtainFavoritasAction(Context context) {
+        return new ObtainFavoritasAction(getFavoritaDataSource(context));
+    }
+
+    public static ObtainSingleFavoritaAction getObtainSingleFavoritaAction(Context context) {
+        return new ObtainSingleFavoritaAction(getFavoritaDataSource(context));
+    }
+
+    public static DeleteFavoritaAction getDeleteFavoritaAction(Context context) {
+        return new DeleteFavoritaAction(getFavoritaDataSource(context));
+    }
+
+    public static SaveFavoritaAction getSaveFavoritaAction(Context context) {
+        return new SaveFavoritaAction(getFavoritaDataSource(context), getDbHelper(context));
+    }
+
+    public static ReorderFavoritasAction getReorderFavoritasAction(Context context) {
+        return new ReorderFavoritasAction(getFavoritaDataSource(context));
     }
 
     public static FavoritaDataSource getFavoritaDataSource(Context context) {

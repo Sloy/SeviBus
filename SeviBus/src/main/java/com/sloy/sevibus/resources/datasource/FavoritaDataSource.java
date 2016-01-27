@@ -1,6 +1,5 @@
 package com.sloy.sevibus.resources.datasource;
 
-import com.google.common.base.Optional;
 import com.sloy.sevibus.model.tussam.Favorita;
 
 import java.util.List;
@@ -11,13 +10,11 @@ public interface FavoritaDataSource {
 
     Observable<List<Favorita>> getFavoritas();
 
-    void saveFavorita(Favorita favorita);
+    Observable<Void> saveFavorita(Favorita favorita);
 
-    Observable<Optional<Favorita>> getFavoritaById(Integer idParada);
+    Observable<Favorita> getFavoritaById(Integer idParada);
 
-    void deleteFavorita(Integer idParada);
+    Observable<Void> deleteFavorita(Integer idParada);
 
-    void deleteAll();
-
-    void saveFavoritas(List<Favorita> favoritas);
+    Observable<Void> saveFavoritas(List<Favorita> favoritas);
 }
