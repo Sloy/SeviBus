@@ -3,6 +3,7 @@ package com.sloy.sevibus.resources;
 import android.content.Context;
 
 import com.crashlytics.android.answers.Answers;
+import com.firebase.client.Firebase;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.bbdd.DBHelper;
@@ -19,6 +20,7 @@ import com.sloy.sevibus.resources.datasource.ApiLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.DBFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.LineaDataSource;
+import com.sloy.sevibus.resources.datasource.FirebaseFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.LlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.SevibusApi;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
@@ -108,7 +110,12 @@ public class StuffProvider {
     }
 
     public static FavoritaDataSource getFavoritaDataSource(Context context) {
-        return new DBFavoritaDataSource(getDbHelper(context));
+//        return new DBFavoritaDataSource(getDbHelper(context));
+        return new FirebaseFavoritaDataSource(getFirebase());
+    }
+
+    public static Firebase getFirebase() {
+        return new Firebase("https://sevibus.firebaseio.com/");
     }
 
     public static ObtainCercanasAction getObtainCercanasAction(Context context) {
