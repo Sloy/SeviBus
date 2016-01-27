@@ -34,7 +34,6 @@ public class DBFavoritaDataSource implements FavoritaDataSource {
     @Override
     public Observable<Void> saveFavorita(Favorita favorita) {
         return Observable.just(favorita)
-          .map(this::withCalculatedOrder)
           .map(favorita1 -> dbHelper.getDaoFavorita().createOrUpdate(favorita))
           .flatMap(status -> Observable.empty());
     }
@@ -80,9 +79,4 @@ public class DBFavoritaDataSource implements FavoritaDataSource {
         });
     }
 
-    private Favorita withCalculatedOrder(Favorita favorita) {
-        int count = (int) dbHelper.getDaoFavorita().countOf();
-        favorita.setOrden(count + 1);
-        return favorita;
-    }
 }

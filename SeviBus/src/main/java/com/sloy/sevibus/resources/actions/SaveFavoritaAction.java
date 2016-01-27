@@ -20,18 +20,24 @@ public class SaveFavoritaAction {
 
     public Observable<Void> saveFavorita(int idParada, String nombrePropio, int color) {
         return favoritaLocalDataSource.getFavoritaById(idParada)
-          .switchIfEmpty(Observable.defer(() -> createFavorita(idParada, nombrePropio, color)))
+          .switchIfEmpty(createFavorita(idParada, nombrePropio, color))
           .single()
           .flatMap(favoritaLocalDataSource::saveFavorita);
     }
 
     private Observable<Favorita> createFavorita(int idParada, String nombrePropio, int color) {
-        Parada parada = DBQueries.getParadaById(dbHelper, idParada);
-        Favorita f = new Favorita();
-        f.setParadaAsociada(parada);
-        f.setNombrePropio(nombrePropio);
-        f.setColor(color);
-        return Observable.just(f);
+        return favoritaLocalDataSource.getFavoritas()
+          .flatMap(Observable::from)
+          .last()
+          .map(ultima -> {
+              Parada parada = DBQueries.getParadaById(dbHelper, idParada);
+              Favorita f = new Favorita();
+              f.setParadaAsociada(parada);
+              f.setNombrePropio(nombrePropio);
+              f.setColor(color);
+              f.setOrden(ultima.getOrden() + 1);
+              return f;
+          });
     }
 
 }
