@@ -66,6 +66,8 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
     }
     lintOptions {
         abortOnError false
@@ -109,6 +111,7 @@ dependencies {
         transitive = true;
     }
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.firebase:firebase-client-android:2.5.0'
 
 
     testCompile 'junit:junit:4.12'
