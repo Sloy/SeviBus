@@ -24,7 +24,7 @@ public class DBFavoritaDataSource implements FavoritaDataSource {
                 QueryBuilder<Favorita, Integer> favQb = dbHelper.getDaoFavorita().queryBuilder();
                 favQb.orderBy("orden", true);
                 List<Favorita> favoritas = favQb.query();
-                return Observable.defer(() -> Observable.just(favoritas));
+                return Observable.just(favoritas);
             } catch (SQLException e) {
                 return Observable.error(e);
             }
@@ -40,21 +40,20 @@ public class DBFavoritaDataSource implements FavoritaDataSource {
 
     @Override
     public Observable<Favorita> getFavoritaById(Integer numeroParada) {
-        return Observable.just(numeroParada)
-          .flatMap(idParada -> {
-              try {
-                  QueryBuilder<Favorita, Integer> favoriteQuery = dbHelper.getDaoFavorita().queryBuilder();
-                  List<Favorita> queryResult = favoriteQuery.where().eq("paradaAsociada_id", idParada).query();
+        return Observable.defer(() -> {
+            try {
+                QueryBuilder<Favorita, Integer> favoriteQuery = dbHelper.getDaoFavorita().queryBuilder();
+                List<Favorita> queryResult = favoriteQuery.where().eq("paradaAsociada_id", numeroParada).query();
 
-                  if (queryResult != null && queryResult.size() > 0) {
-                      return Observable.just(queryResult.get(0));
-                  } else {
-                      return Observable.empty();
-                  }
-              } catch (SQLException e) {
-                  return Observable.error(e);
-              }
-          });
+                if (queryResult != null && queryResult.size() > 0) {
+                    return Observable.just(queryResult.get(0));
+                } else {
+                    return Observable.empty();
+                }
+            } catch (SQLException e) {
+                return Observable.error(e);
+            }
+        });
     }
 
     @Override
