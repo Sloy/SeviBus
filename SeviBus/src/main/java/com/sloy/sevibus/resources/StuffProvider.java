@@ -106,7 +106,7 @@ public class StuffProvider {
     }
 
     public static ReorderFavoritasAction getReorderFavoritasAction(Context context) {
-        return new ReorderFavoritasAction(getLocalFavoritaDataSource(context));
+        return new ReorderFavoritasAction(getLocalFavoritaDataSource(context), getRemoteFavoritaDataSource());
     }
 
     public static FavoritaDataSource getLocalFavoritaDataSource(Context context) {

@@ -9,17 +9,20 @@ import rx.Observable;
 
 public class ReorderFavoritasAction {
 
-    private final FavoritaDataSource favoritaDataSource;
+    private final FavoritaDataSource favoritaLocalDataSource;
+    private final FavoritaDataSource favoritaRemoteDataSource;
 
-    public ReorderFavoritasAction(FavoritaDataSource favoritaDataSource) {
-        this.favoritaDataSource = favoritaDataSource;
+    public ReorderFavoritasAction(FavoritaDataSource favoritaLocalDataSource, FavoritaDataSource favoritaRemoteDataSource) {
+        this.favoritaLocalDataSource = favoritaLocalDataSource;
+        this.favoritaRemoteDataSource = favoritaRemoteDataSource;
     }
 
     public Observable<Void> setNewOrder(List<Favorita> ordered) {
         return Observable.range(0, ordered.size())
           .zipWith(ordered, (i, fav) -> updateOrder(fav, i))
           .toList()
-          .flatMap(favoritaDataSource::saveFavoritas)
+          .flatMap(favoritaLocalDataSource::saveFavoritas)
+          .flatMap(favoritaRemoteDataSource::saveFavoritas)
           .flatMap(__ -> Observable.empty());
     }
 
