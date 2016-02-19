@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath 'me.tatarka:gradle-retrolambda:3.2.3'
         classpath 'io.fabric.tools:gradle:1.+'
+        classpath "com.fernandocejas.frodo:frodo-plugin:0.8.1"
     }
 }
 
@@ -18,6 +19,7 @@ repositories {
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
+apply plugin: 'com.fernandocejas.frodo'
 
 
 def myVersionCode = 75
