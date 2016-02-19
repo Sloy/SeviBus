@@ -98,7 +98,7 @@ public class StuffProvider {
     }
 
     public static DeleteFavoritaAction getDeleteFavoritaAction(Context context) {
-        return new DeleteFavoritaAction(getLocalFavoritaDataSource(context));
+        return new DeleteFavoritaAction(getLocalFavoritaDataSource(context), getRemoteFavoritaDataSource());
     }
 
     public static SaveFavoritaAction getSaveFavoritaAction(Context context) {

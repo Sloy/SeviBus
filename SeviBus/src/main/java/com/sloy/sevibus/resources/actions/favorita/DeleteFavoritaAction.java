@@ -6,14 +6,18 @@ import rx.Observable;
 
 public class DeleteFavoritaAction {
 
-    private final FavoritaDataSource favoritaDataSource;
+    private final FavoritaDataSource favoritaLocalDataSource;
+    private final FavoritaDataSource favoritaRemoteDataSource;
 
-    public DeleteFavoritaAction(FavoritaDataSource favoritaDataSource) {
-        this.favoritaDataSource = favoritaDataSource;
+    public DeleteFavoritaAction(FavoritaDataSource favoritaLocalDataSource, FavoritaDataSource favoritaRemoteDataSource) {
+        this.favoritaLocalDataSource = favoritaLocalDataSource;
+        this.favoritaRemoteDataSource = favoritaRemoteDataSource;
     }
 
     public Observable<Void> deleteFavorita(Integer numeroParada) {
-        return favoritaDataSource.deleteFavorita(numeroParada)
+        return Observable.just(numeroParada)
+          .flatMap(favoritaLocalDataSource::deleteFavorita)
+          .flatMap(favoritaRemoteDataSource::deleteFavorita)
           .flatMap(__ -> Observable.empty());
     }
 
