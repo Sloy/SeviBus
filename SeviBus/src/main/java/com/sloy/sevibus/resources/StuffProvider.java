@@ -90,27 +90,29 @@ public class StuffProvider {
     }
 
     public static ObtainFavoritasAction getObtainFavoritasAction(Context context) {
-        return new ObtainFavoritasAction(getFavoritaDataSource(context));
+        return new ObtainFavoritasAction(getLocalFavoritaDataSource(context), getRemoteFavoritaDataSource());
     }
 
     public static ObtainSingleFavoritaAction getObtainSingleFavoritaAction(Context context) {
-        return new ObtainSingleFavoritaAction(getFavoritaDataSource(context));
+        return new ObtainSingleFavoritaAction(getLocalFavoritaDataSource(context));
     }
 
     public static DeleteFavoritaAction getDeleteFavoritaAction(Context context) {
-        return new DeleteFavoritaAction(getFavoritaDataSource(context));
+        return new DeleteFavoritaAction(getLocalFavoritaDataSource(context));
     }
 
     public static SaveFavoritaAction getSaveFavoritaAction(Context context) {
-        return new SaveFavoritaAction(getFavoritaDataSource(context), getDbHelper(context));
+        return new SaveFavoritaAction(getLocalFavoritaDataSource(context), getDbHelper(context));
     }
 
     public static ReorderFavoritasAction getReorderFavoritasAction(Context context) {
-        return new ReorderFavoritasAction(getFavoritaDataSource(context));
+        return new ReorderFavoritasAction(getLocalFavoritaDataSource(context));
     }
 
-    public static FavoritaDataSource getFavoritaDataSource(Context context) {
-//        return new DBFavoritaDataSource(getDbHelper(context));
+    public static FavoritaDataSource getLocalFavoritaDataSource(Context context) {
+        return new DBFavoritaDataSource(getDbHelper(context));
+    }
+    public static FavoritaDataSource getRemoteFavoritaDataSource() {
         return new FirebaseFavoritaDataSource(getFirebase());
     }
 
