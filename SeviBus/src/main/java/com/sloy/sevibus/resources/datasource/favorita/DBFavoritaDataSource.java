@@ -1,4 +1,4 @@
-package com.sloy.sevibus.resources.datasource;
+package com.sloy.sevibus.resources.datasource.favorita;
 
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.sloy.sevibus.bbdd.DBHelper;

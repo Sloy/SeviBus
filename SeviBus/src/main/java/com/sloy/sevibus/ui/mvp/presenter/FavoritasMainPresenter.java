@@ -1,7 +1,7 @@
 package com.sloy.sevibus.ui.mvp.presenter;
 
 import com.sloy.sevibus.model.tussam.Favorita;
-import com.sloy.sevibus.resources.actions.ObtainFavoritasAction;
+import com.sloy.sevibus.resources.actions.favorita.ObtainFavoritasAction;
 
 import java.util.List;
 

@@ -2,7 +2,8 @@ package com.sloy.sevibus.resources.actions;
 
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Parada;
-import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
+import com.sloy.sevibus.resources.actions.favorita.SaveFavoritaAction;
+import com.sloy.sevibus.resources.datasource.favorita.FavoritaDataSource;
 
 import org.junit.Before;
 import org.junit.Test;

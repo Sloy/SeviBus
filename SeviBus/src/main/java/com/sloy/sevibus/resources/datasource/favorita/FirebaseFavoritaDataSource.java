@@ -1,4 +1,4 @@
-package com.sloy.sevibus.resources.datasource;
+package com.sloy.sevibus.resources.datasource.favorita;
 
 import android.util.Log;
 

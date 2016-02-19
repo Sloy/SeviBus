@@ -1,4 +1,4 @@
-package com.sloy.sevibus.resources.datasource;
+package com.sloy.sevibus.resources.datasource.llegada;
 
 import android.support.annotation.NonNull;
 import android.util.Log;

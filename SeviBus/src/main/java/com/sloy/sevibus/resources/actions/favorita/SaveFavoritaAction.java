@@ -1,10 +1,10 @@
-package com.sloy.sevibus.resources.actions;
+package com.sloy.sevibus.resources.actions.favorita;
 
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Parada;
-import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
+import com.sloy.sevibus.resources.datasource.favorita.FavoritaDataSource;
 
 import rx.Observable;
 

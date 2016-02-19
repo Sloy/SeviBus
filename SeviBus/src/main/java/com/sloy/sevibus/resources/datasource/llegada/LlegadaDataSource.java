@@ -1,4 +1,4 @@
-package com.sloy.sevibus.resources.datasource;
+package com.sloy.sevibus.resources.datasource.llegada;
 
 import com.sloy.sevibus.model.ArrivalTime;
 import com.sloy.sevibus.resources.exceptions.ServerErrorException;
