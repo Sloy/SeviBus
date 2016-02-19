@@ -3,10 +3,11 @@ package com.sloy.sevibus.resources.actions;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Favorita;
-import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
 
 import rx.Observable;
+
+import static rx.observables.MathObservable.max;
 
 public class SaveFavoritaAction {
 
@@ -21,23 +22,30 @@ public class SaveFavoritaAction {
     public Observable<Void> saveFavorita(int idParada, String nombrePropio, int color) {
         return favoritaLocalDataSource.getFavoritaById(idParada)
           .switchIfEmpty(createFavorita(idParada, nombrePropio, color))
-          .single()
           .flatMap(favoritaLocalDataSource::saveFavorita);
     }
 
     private Observable<Favorita> createFavorita(int idParada, String nombrePropio, int color) {
-        return favoritaLocalDataSource.getFavoritas()
-          .flatMap(Observable::from)
-          .last()
-          .map(ultima -> {
-              Parada parada = DBQueries.getParadaById(dbHelper, idParada);
+        Observable<Integer> maxOrderObservable = max(
+          favoritaLocalDataSource.getFavoritas()
+            .flatMap(Observable::from)
+            .map(Favorita::getOrden)
+            .switchIfEmpty(Observable.just(0)));
+
+        Observable<Favorita> newFavoritaObservable = Observable.just(idParada)
+          .map(id -> DBQueries.getParadaById(dbHelper, id))
+          .map(parada -> {
               Favorita f = new Favorita();
               f.setParadaAsociada(parada);
               f.setNombrePropio(nombrePropio);
               f.setColor(color);
-              f.setOrden(ultima.getOrden() + 1);
               return f;
           });
+
+        return Observable.zip(maxOrderObservable, newFavoritaObservable, (maxOrder, newFavorita) -> {
+            newFavorita.setOrden(maxOrder + 1);
+            return newFavorita;
+        });
     }
 
 }
