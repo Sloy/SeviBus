@@ -1,18 +1,24 @@
 package com.sloy.sevibus.ui.fragments;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.android.gms.common.SignInButton;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.ui.LoginController;
 import com.sloy.sevibus.ui.activities.BusquedaActivity;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloy.sevibus.ui.mvp.presenter.FavoritasMainPresenter;
@@ -21,8 +27,20 @@ import com.sloy.sevibus.ui.mvp.presenter.ParadasCercanasMainPresenter;
 import com.sloy.sevibus.ui.mvp.view.FavoritasMainViewContainer;
 import com.sloy.sevibus.ui.mvp.view.LineasCercanasViewContainer;
 import com.sloy.sevibus.ui.mvp.view.ParadasCercanasMainViewContainer;
+import com.squareup.picasso.Picasso;
 
 public class MainPageFragment extends BaseDBFragment {
+
+    private static final int RC_SIGN_IN = 42;
+
+    private SignInButton signInButton;
+    private LoginController loginController;
+
+    private Button signOutButton;
+    private View userProfile;
+    private TextView userEmail;
+    private TextView userName;
+    private ImageView userPhoto;
 
     private FavoritasMainPresenter favoritasPresenter;
     private ParadasCercanasMainPresenter cercanasPresenter;
@@ -38,6 +56,12 @@ public class MainPageFragment extends BaseDBFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main_home, container, false);
+        signInButton = (SignInButton) v.findViewById(R.id.sign_in_button);
+        signOutButton = ((Button) v.findViewById(R.id.sign_out_button));
+        userProfile = v.findViewById(R.id.user_profile);
+        userEmail = ((TextView) v.findViewById(R.id.user_email));
+        userName = ((TextView) v.findViewById(R.id.user_name));
+        userPhoto = ((ImageView) v.findViewById(R.id.user_photo));
         return v;
     }
 
@@ -63,6 +87,9 @@ public class MainPageFragment extends BaseDBFragment {
 
         LineasCercanasViewContainer lineasCercanasView = new LineasCercanasViewContainer(view.findViewById(R.id.fragment_main_lineas_cercanas));
         lineasCercanasPresenter.initialize(lineasCercanasView);
+
+        loginController = new LoginController(StuffProvider.getFirebase());
+        setupLogin();
     }
 
     @Override
@@ -81,6 +108,40 @@ public class MainPageFragment extends BaseDBFragment {
         lineasCercanasPresenter.pause();
     }
 
+    private void setupLogin() {
+        signInButton.setVisibility(View.VISIBLE);
+        userProfile.setVisibility(View.GONE);
+
+        loginController.initGoogleApi(getActivity());
+
+        signInButton.setSize(SignInButton.SIZE_WIDE);
+        signInButton.setOnClickListener(v -> {
+            startActivityForResult(loginController.loginIntent(), RC_SIGN_IN);
+        });
+
+        signOutButton.setOnClickListener(v -> {
+            loginController.logout();
+            signInButton.setVisibility(View.VISIBLE);
+            userProfile.setVisibility(View.GONE);
+        });
+    }
+
+    private void handleSignInResult(Intent data) {
+        loginController.handleSignInResult(getActivity().getApplicationContext(), data)
+          .subscribe(sevibusUser -> {
+                signInButton.setVisibility(View.GONE);
+                userProfile.setVisibility(View.VISIBLE);
+
+                userName.setText(sevibusUser.getName());
+                userEmail.setText(sevibusUser.getEmail());
+                Picasso.with(getActivity()).load(sevibusUser.getPhotoUrl()).into(userPhoto);
+            },
+            throwable -> {
+                Log.e("Login", "Error!!");
+            });
+
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
@@ -94,5 +155,13 @@ public class MainPageFragment extends BaseDBFragment {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            handleSignInResult(data);
+        }
     }
 }

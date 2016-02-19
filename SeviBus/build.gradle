@@ -9,7 +9,7 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.+'
         classpath "com.fernandocejas.frodo:frodo-plugin:0.8.1"
         classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
-
+        classpath 'com.google.gms:google-services:2.0.0-alpha5'
     }
 }
 
@@ -23,6 +23,7 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 apply plugin: 'com.fernandocejas.frodo'
 apply plugin: 'com.github.triplet.play'
+apply plugin: 'com.google.gms.google-services'
 
 
 def myVersionCode = 82
@@ -81,9 +82,10 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.1.0'
     compile 'com.android.support:percent:23.1.0'
 
-    compile 'com.google.android.gms:play-services-location:8.1.0'
-    compile 'com.google.android.gms:play-services-maps:8.1.0'
-    compile 'com.google.android.gms:play-services-gcm:8.1.0'
+    compile 'com.google.android.gms:play-services-location:8.3.0'
+    compile 'com.google.android.gms:play-services-maps:8.3.0'
+    compile 'com.google.android.gms:play-services-gcm:8.3.0'
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
 
     compile 'io.reactivex:rxjava:1.0.16'
     compile 'io.reactivex:rxjava-math:1.0.0'
