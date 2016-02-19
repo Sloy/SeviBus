@@ -14,7 +14,7 @@ public class EmptyFavoritaDataSource implements FavoritaDataSource {
     }
 
     @Override
-    public Observable<Void> saveFavorita(Favorita favorita) {
+    public Observable<Favorita> saveFavorita(Favorita favorita) {
         return Observable.empty();
     }
 
@@ -24,12 +24,12 @@ public class EmptyFavoritaDataSource implements FavoritaDataSource {
     }
 
     @Override
-    public Observable<Void> deleteFavorita(Integer idParada) {
+    public Observable<Integer> deleteFavorita(Integer idParada) {
         return Observable.empty();
     }
 
     @Override
-    public Observable<Void> saveFavoritas(List<Favorita> favoritas) {
+    public Observable<List<Favorita>> saveFavoritas(List<Favorita> favoritas) {
         return Observable.empty();
     }
 }

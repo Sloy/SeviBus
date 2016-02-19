@@ -32,10 +32,10 @@ public class DBFavoritaDataSource implements FavoritaDataSource {
     }
 
     @Override
-    public Observable<Void> saveFavorita(Favorita favorita) {
+    public Observable<Favorita> saveFavorita(Favorita favorita) {
         return Observable.just(favorita)
           .map(favorita1 -> dbHelper.getDaoFavorita().createOrUpdate(favorita))
-          .flatMap(status -> Observable.empty());
+          .flatMap(__ -> Observable.just(favorita));
     }
 
     @Override
@@ -57,16 +57,16 @@ public class DBFavoritaDataSource implements FavoritaDataSource {
     }
 
     @Override
-    public Observable<Void> deleteFavorita(Integer idParada) {
+    public Observable<Integer> deleteFavorita(Integer idParada) {
         return getFavoritaById(idParada)
           .flatMap(favorita -> {
               dbHelper.getDaoFavorita().delete(favorita);
-              return Observable.empty();
+              return Observable.just(idParada);
           });
     }
 
     @Override
-    public Observable<Void> saveFavoritas(List<Favorita> favoritas) {
+    public Observable<List<Favorita>> saveFavoritas(List<Favorita> favoritas) {
         return Observable.defer(() -> {
             dbHelper.getDaoFavorita().callBatchTasks(() -> {
                 for (Favorita f : favoritas) {
@@ -74,7 +74,7 @@ public class DBFavoritaDataSource implements FavoritaDataSource {
                 }
                 return true;
             });
-            return Observable.empty();
+            return Observable.just(favoritas);
         });
     }
 

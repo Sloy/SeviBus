@@ -23,7 +23,8 @@ public class SaveFavoritaAction {
     public Observable<Void> saveFavorita(int idParada, String nombrePropio, int color) {
         return favoritaLocalDataSource.getFavoritaById(idParada)
           .switchIfEmpty(createFavorita(idParada, nombrePropio, color))
-          .flatMap(favoritaLocalDataSource::saveFavorita);
+          .flatMap(favoritaLocalDataSource::saveFavorita)
+          .flatMap(__ -> Observable.empty());
     }
 
     private Observable<Favorita> createFavorita(int idParada, String nombrePropio, int color) {

@@ -19,7 +19,8 @@ public class ReorderFavoritasAction {
         return Observable.range(0, ordered.size())
           .zipWith(ordered, (i, fav) -> updateOrder(fav, i))
           .toList()
-          .flatMap(favoritaDataSource::saveFavoritas);
+          .flatMap(favoritaDataSource::saveFavoritas)
+          .flatMap(__ -> Observable.empty());
     }
 
     private Favorita updateOrder(Favorita fav, int order) {

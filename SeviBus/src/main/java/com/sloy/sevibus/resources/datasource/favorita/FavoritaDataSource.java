@@ -10,11 +10,11 @@ public interface FavoritaDataSource {
 
     Observable<List<Favorita>> getFavoritas();
 
-    Observable<Void> saveFavorita(Favorita favorita);
+    Observable<Favorita> saveFavorita(Favorita favorita);
 
     Observable<Favorita> getFavoritaById(Integer idParada);
 
-    Observable<Void> deleteFavorita(Integer idParada);
+    Observable<Integer> deleteFavorita(Integer idParada);
 
-    Observable<Void> saveFavoritas(List<Favorita> favoritas);
+    Observable<List<Favorita>> saveFavoritas(List<Favorita> favoritas);
 }

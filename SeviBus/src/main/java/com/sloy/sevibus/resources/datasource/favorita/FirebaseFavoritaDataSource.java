@@ -60,12 +60,12 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
     }
 
     @Override
-    public Observable<Void> saveFavorita(Favorita favorita) {
+    public Observable<Favorita> saveFavorita(Favorita favorita) {
         return Observable.defer(() -> {
             String paradaKey = favorita.getParadaAsociada().getNumero().toString();
             firebaseFavoritas.child(paradaKey)
               .setValue(favorita);
-            return Observable.empty();
+            return Observable.just(favorita);
         });
     }
 
@@ -78,17 +78,19 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
     }
 
     @Override
-    public Observable<Void> deleteFavorita(Integer idParada) {
+    public Observable<Integer> deleteFavorita(Integer idParada) {
         return Observable.defer(() -> {
             firebaseFavoritas.child(idParada.toString())
               .removeValue();
-            return Observable.empty();
+            return Observable.just(idParada);
         });
     }
 
     @Override
-    public Observable<Void> saveFavoritas(List<Favorita> favoritas) {
+    public Observable<List<Favorita>> saveFavoritas(List<Favorita> favoritas) {
         return Observable.from(favoritas)
-          .flatMap(this::saveFavorita);
+          .flatMap(this::saveFavorita)
+          .flatMap(__ -> Observable.just(favoritas));
     }
+
 }

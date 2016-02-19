@@ -13,7 +13,8 @@ public class DeleteFavoritaAction {
     }
 
     public Observable<Void> deleteFavorita(Integer numeroParada) {
-        return favoritaDataSource.deleteFavorita(numeroParada);
+        return favoritaDataSource.deleteFavorita(numeroParada)
+          .flatMap(__ -> Observable.empty());
     }
 
 }
