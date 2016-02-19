@@ -93,4 +93,13 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
           .flatMap(__ -> Observable.just(favoritas));
     }
 
+    @Override
+    public Observable<List<Favorita>> replaceFavoritas(List<Favorita> favoritas) {
+        return getFavoritas()
+          .flatMap(Observable::from)
+          .map(favorita -> favorita.getParadaAsociada().getNumero())
+          .flatMap(this::deleteFavorita)
+          .flatMap(__ -> saveFavoritas(favoritas));
+    }
+
 }

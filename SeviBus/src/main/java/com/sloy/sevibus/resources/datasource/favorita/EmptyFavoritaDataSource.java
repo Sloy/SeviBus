@@ -32,4 +32,9 @@ public class EmptyFavoritaDataSource implements FavoritaDataSource {
     public Observable<List<Favorita>> saveFavoritas(List<Favorita> favoritas) {
         return Observable.empty();
     }
+
+    @Override
+    public Observable<List<Favorita>> replaceFavoritas(List<Favorita> favoritas) {
+        return Observable.empty();
+    }
 }

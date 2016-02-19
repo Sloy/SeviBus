@@ -1,6 +1,7 @@
 package com.sloy.sevibus.resources.datasource.favorita;
 
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.table.TableUtils;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.model.tussam.Favorita;
 
@@ -69,6 +70,20 @@ public class DBFavoritaDataSource implements FavoritaDataSource {
     public Observable<List<Favorita>> saveFavoritas(List<Favorita> favoritas) {
         return Observable.defer(() -> {
             dbHelper.getDaoFavorita().callBatchTasks(() -> {
+                for (Favorita f : favoritas) {
+                    dbHelper.getDaoFavorita().createOrUpdate(f);
+                }
+                return true;
+            });
+            return Observable.just(favoritas);
+        });
+    }
+
+    @Override
+    public Observable<List<Favorita>> replaceFavoritas(List<Favorita> favoritas) {
+        return Observable.defer(() -> {
+            dbHelper.getDaoFavorita().callBatchTasks(() -> {
+                TableUtils.clearTable(dbHelper.getConnectionSource(), Favorita.class);
                 for (Favorita f : favoritas) {
                     dbHelper.getDaoFavorita().createOrUpdate(f);
                 }

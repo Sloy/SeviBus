@@ -21,7 +21,7 @@ public class ObtainFavoritasAction {
         return Observable.concat(
           favoritaLocalDataSource.getFavoritas(),
           favoritaRemoteDataSource.getFavoritas()
-            .flatMap(favoritaLocalDataSource::saveFavoritas)
+            .flatMap(favoritaLocalDataSource::replaceFavoritas)
         );
     }
 }

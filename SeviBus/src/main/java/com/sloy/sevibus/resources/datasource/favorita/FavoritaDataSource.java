@@ -17,4 +17,6 @@ public interface FavoritaDataSource {
     Observable<Integer> deleteFavorita(Integer idParada);
 
     Observable<List<Favorita>> saveFavoritas(List<Favorita> favoritas);
+
+    Observable<List<Favorita>> replaceFavoritas(List<Favorita> favoritas);
 }
