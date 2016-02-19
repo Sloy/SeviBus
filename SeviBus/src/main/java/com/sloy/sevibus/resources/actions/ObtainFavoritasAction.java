@@ -21,7 +21,12 @@ public class ObtainFavoritasAction {
         return Observable.concat(
           favoritaLocalDataSource.getFavoritas(),
           favoritaRemoteDataSource.getFavoritas()
+            .doOnNext(this::updateLocalFavoritas)
         );
+    }
+
+    private void updateLocalFavoritas(List<Favorita> favoritas) {
+        favoritaLocalDataSource.saveFavoritas(favoritas).subscribe();
     }
 
 }
