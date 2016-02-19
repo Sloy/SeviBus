@@ -13,10 +13,12 @@ import static rx.observables.MathObservable.max;
 public class SaveFavoritaAction {
 
     private final FavoritaDataSource favoritaLocalDataSource;
+    private final FavoritaDataSource favoritaRemoteDataSource;
     private final DBHelper dbHelper; //TODO use parada datasource!!!
 
-    public SaveFavoritaAction(FavoritaDataSource favoritaLocalDataSource, DBHelper dbHelper) {
+    public SaveFavoritaAction(FavoritaDataSource favoritaLocalDataSource, FavoritaDataSource favoritaRemoteDataSource, DBHelper dbHelper) {
         this.favoritaLocalDataSource = favoritaLocalDataSource;
+        this.favoritaRemoteDataSource = favoritaRemoteDataSource;
         this.dbHelper = dbHelper;
     }
 
@@ -24,6 +26,7 @@ public class SaveFavoritaAction {
         return favoritaLocalDataSource.getFavoritaById(idParada)
           .switchIfEmpty(createFavorita(idParada, nombrePropio, color))
           .flatMap(favoritaLocalDataSource::saveFavorita)
+          .flatMap(favoritaRemoteDataSource::saveFavorita)
           .flatMap(__ -> Observable.empty());
     }
 

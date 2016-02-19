@@ -27,7 +27,9 @@ public class SaveFavoritaActionTest {
     private static final int STUB_COLOR = 0;
 
     @Mock
-    FavoritaDataSource favoritaDataSource;
+    FavoritaDataSource favoritaLocalDataSource;
+    @Mock
+    FavoritaDataSource favoritaRemoteDataSource;
 
     @Captor
     ArgumentCaptor<Favorita> favoritaCaptor;
@@ -37,7 +39,7 @@ public class SaveFavoritaActionTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        saveFavoritaAction = new TestableSaveFavoritaAction(favoritaDataSource);
+        saveFavoritaAction = new TestableSaveFavoritaAction(favoritaLocalDataSource, favoritaRemoteDataSource);
     }
 
     @Test
@@ -49,7 +51,7 @@ public class SaveFavoritaActionTest {
         saveFavoritaAction.saveFavorita(PARADA_ID, STUB_NAME, STUB_COLOR)
           .subscribe();
 
-        verify(favoritaDataSource).saveFavorita(favoritaCaptor.capture());
+        verify(favoritaLocalDataSource).saveFavorita(favoritaCaptor.capture());
         assertThat(favoritaCaptor.getValue().getOrden())
           .isEqualTo(1);
 
@@ -64,21 +66,21 @@ public class SaveFavoritaActionTest {
         saveFavoritaAction.saveFavorita(PARADA_ID, STUB_NAME, STUB_COLOR)
           .subscribe();
 
-        verify(favoritaDataSource).saveFavorita(favoritaCaptor.capture());
+        verify(favoritaLocalDataSource).saveFavorita(favoritaCaptor.capture());
         assertThat(favoritaCaptor.getValue().getOrden())
           .isEqualTo(4);
     }
 
     private void givenThereAreFavoritas(Favorita... favoritas) {
-        when(favoritaDataSource.getFavoritas()).thenReturn(Observable.just(asList(favoritas)));
+        when(favoritaLocalDataSource.getFavoritas()).thenReturn(Observable.just(asList(favoritas)));
     }
 
     private void givenFavoritaDoesntExist() {
-        when(favoritaDataSource.getFavoritaById(PARADA_ID)).thenReturn(Observable.empty());
+        when(favoritaLocalDataSource.getFavoritaById(PARADA_ID)).thenReturn(Observable.empty());
     }
 
     private void givenThereAreNoFavoritas() {
-        when(favoritaDataSource.getFavoritas()).thenReturn(Observable.just(emptyList()));
+        when(favoritaLocalDataSource.getFavoritas()).thenReturn(Observable.just(emptyList()));
     }
 
     private Favorita favoritaWithOrder(int orden) {
@@ -91,8 +93,8 @@ public class SaveFavoritaActionTest {
 
         private Parada stubParada;
 
-        public TestableSaveFavoritaAction(FavoritaDataSource favoritaLocalDataSource) {
-            super(favoritaLocalDataSource, null);
+        public TestableSaveFavoritaAction(FavoritaDataSource favoritaLocalDataSource, FavoritaDataSource favoritaRemoteDataSource) {
+            super(favoritaLocalDataSource, favoritaRemoteDataSource, null);
         }
 
         public void setStubParada(Parada stubParada) {

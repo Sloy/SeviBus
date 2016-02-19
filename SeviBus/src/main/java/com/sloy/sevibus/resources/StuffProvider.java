@@ -102,7 +102,7 @@ public class StuffProvider {
     }
 
     public static SaveFavoritaAction getSaveFavoritaAction(Context context) {
-        return new SaveFavoritaAction(getLocalFavoritaDataSource(context), getDbHelper(context));
+        return new SaveFavoritaAction(getLocalFavoritaDataSource(context), getRemoteFavoritaDataSource(), getDbHelper(context));
     }
 
     public static ReorderFavoritasAction getReorderFavoritasAction(Context context) {
