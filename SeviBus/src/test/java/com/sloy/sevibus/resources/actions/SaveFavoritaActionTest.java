@@ -9,13 +9,11 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import java.util.Collections;
 
 import rx.Observable;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -56,12 +54,36 @@ public class SaveFavoritaActionTest {
 
     }
 
+    @Test
+    public void saves_favorita_with_order_4_when_last_order_is_3_and_there_are_2_favoritas() throws Exception {
+        givenFavoritaDoesntExist();
+        givenThereAreFavoritas(favoritaWithOrder(1), favoritaWithOrder(3));
+        saveFavoritaAction.setStubParada(new Parada(PARADA_ID, "", 0.0, 0.0));
+
+        saveFavoritaAction.saveFavorita(PARADA_ID, STUB_NAME, STUB_COLOR)
+          .subscribe();
+
+        verify(favoritaDataSource).saveFavorita(favoritaCaptor.capture());
+        assertThat(favoritaCaptor.getValue().getOrden())
+          .isEqualTo(4);
+    }
+
+    private void givenThereAreFavoritas(Favorita... favoritas) {
+        when(favoritaDataSource.getFavoritas()).thenReturn(Observable.just(asList(favoritas)));
+    }
+
     private void givenFavoritaDoesntExist() {
         when(favoritaDataSource.getFavoritaById(PARADA_ID)).thenReturn(Observable.empty());
     }
 
     private void givenThereAreNoFavoritas() {
         when(favoritaDataSource.getFavoritas()).thenReturn(Observable.just(emptyList()));
+    }
+
+    private Favorita favoritaWithOrder(int orden) {
+        Favorita fav3 = new Favorita();
+        fav3.setOrden(orden);
+        return fav3;
     }
 
     private static class TestableSaveFavoritaAction extends SaveFavoritaAction {
