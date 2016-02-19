@@ -3,6 +3,7 @@ package com.sloy.sevibus.resources.actions;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Favorita;
+import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
 
 import rx.Observable;
@@ -33,7 +34,7 @@ public class SaveFavoritaAction {
             .switchIfEmpty(Observable.just(0)));
 
         Observable<Favorita> newFavoritaObservable = Observable.just(idParada)
-          .map(id -> DBQueries.getParadaById(dbHelper, id))
+          .map(this::getParadaById)
           .map(parada -> {
               Favorita f = new Favorita();
               f.setParadaAsociada(parada);
@@ -46,6 +47,10 @@ public class SaveFavoritaAction {
             newFavorita.setOrden(maxOrder + 1);
             return newFavorita;
         });
+    }
+
+    protected Parada getParadaById(Integer id) {
+        return DBQueries.getParadaById(dbHelper, id);
     }
 
 }
