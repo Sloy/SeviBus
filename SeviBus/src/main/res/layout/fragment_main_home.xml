@@ -65,7 +65,7 @@
             </LinearLayout>
 
         </FrameLayout>
-        
+
         <include
             android:id="@+id/fragment_main_favoritas"
             layout="@layout/fragment_main_favoritas"
