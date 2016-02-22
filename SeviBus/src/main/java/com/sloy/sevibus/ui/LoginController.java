@@ -109,6 +109,7 @@ public class LoginController implements GoogleApiClient.OnConnectionFailedListen
         Log.d("authData", new Gson().toJson(authData));
         Map<String, Object> data = authData.getProviderData();
         SevibusUser user = new SevibusUser();
+        user.setId((String) authData.getAuth().get("uid"));
         user.setEmail((String) data.get("email"));
         user.setName((String) data.get("displayName"));
         user.setPhotoUrl((String) data.get("profileImageURL"));
