@@ -3,6 +3,7 @@ package com.sloy.sevibus.ui.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +19,11 @@ import com.google.android.gms.common.SignInButton;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.actions.user.LogInAction;
+import com.sloy.sevibus.resources.actions.user.LogOutAction;
+import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.ui.LoginController;
+import com.sloy.sevibus.ui.SevibusUser;
 import com.sloy.sevibus.ui.activities.BusquedaActivity;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloy.sevibus.ui.mvp.presenter.FavoritasMainPresenter;
@@ -32,6 +37,10 @@ import com.squareup.picasso.Picasso;
 public class MainPageFragment extends BaseDBFragment {
 
     private static final int RC_SIGN_IN = 42;
+
+    private ObtainUserAction obtainUserAction;
+    private LogInAction logInAction;
+    private LogOutAction logOutAction;
 
     private SignInButton signInButton;
     private LoginController loginController;
@@ -88,6 +97,9 @@ public class MainPageFragment extends BaseDBFragment {
         LineasCercanasViewContainer lineasCercanasView = new LineasCercanasViewContainer(view.findViewById(R.id.fragment_main_lineas_cercanas));
         lineasCercanasPresenter.initialize(lineasCercanasView);
 
+        obtainUserAction = StuffProvider.getObtainUserAction(getActivity());
+        logInAction = StuffProvider.getLoginAction(getActivity());
+        logOutAction = StuffProvider.getLogoutAction(getActivity());
         loginController = new LoginController(StuffProvider.getFirebase());
         setupLogin();
     }
@@ -109,9 +121,6 @@ public class MainPageFragment extends BaseDBFragment {
     }
 
     private void setupLogin() {
-        signInButton.setVisibility(View.VISIBLE);
-        userProfile.setVisibility(View.GONE);
-
         loginController.initGoogleApi(getActivity());
 
         signInButton.setSize(SignInButton.SIZE_WIDE);
@@ -121,25 +130,43 @@ public class MainPageFragment extends BaseDBFragment {
 
         signOutButton.setOnClickListener(v -> {
             loginController.logout();
+            logOutAction.logOut().subscribe();
             signInButton.setVisibility(View.VISIBLE);
             userProfile.setVisibility(View.GONE);
         });
+
+        obtainUserAction.obtainUser()
+          .subscribe(optionalUser -> {
+              if (optionalUser.isPresent()) {
+                  showUserProfile(optionalUser.get());
+              } else {
+                  signInButton.setVisibility(View.VISIBLE);
+                  userProfile.setVisibility(View.GONE);
+              }
+          });
     }
 
     private void handleSignInResult(Intent data) {
         loginController.handleSignInResult(getActivity().getApplicationContext(), data)
-          .subscribe(sevibusUser -> {
-                signInButton.setVisibility(View.GONE);
-                userProfile.setVisibility(View.VISIBLE);
-
-                userName.setText(sevibusUser.getName());
-                userEmail.setText(sevibusUser.getEmail());
-                Picasso.with(getActivity()).load(sevibusUser.getPhotoUrl()).into(userPhoto);
+          .flatMap(user -> logInAction.logIn(user))
+          .subscribe((sevibusUser) -> {
+                showUserProfile(sevibusUser);
+                Snackbar.make(getView(), "Sincronizando favoritas...", Snackbar.LENGTH_SHORT).show();
+                favoritasPresenter.update();
             },
             throwable -> {
                 Log.e("Login", "Error!!");
             });
 
+    }
+
+    private void showUserProfile(SevibusUser sevibusUser) {
+        signInButton.setVisibility(View.GONE);
+        userProfile.setVisibility(View.VISIBLE);
+
+        userName.setText(sevibusUser.getName());
+        userEmail.setText(sevibusUser.getEmail());
+        Picasso.with(getActivity()).load(sevibusUser.getPhotoUrl()).into(userPhoto);
     }
 
     @Override
