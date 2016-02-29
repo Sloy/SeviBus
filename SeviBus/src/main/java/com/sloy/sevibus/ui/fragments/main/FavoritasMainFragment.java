@@ -1,25 +1,28 @@
 package com.sloy.sevibus.ui.fragments.main;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.sloy.sevibus.R;
-import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.actions.ObtainFavoritasAction;
 import com.sloy.sevibus.ui.activities.IMainController;
 import com.sloy.sevibus.ui.activities.ParadaInfoActivity;
 import com.sloy.sevibus.ui.fragments.BaseDBFragment;
-import java.sql.SQLException;
+
 import java.util.List;
 
 public class FavoritasMainFragment extends BaseDBFragment {
 
     private TextView mMensaje;
     private View mContenido;
+    private ObtainFavoritasAction obtainFavoritasAction;
 
     public static FavoritasMainFragment getInstance() {
         return new FavoritasMainFragment();
@@ -63,32 +66,22 @@ public class FavoritasMainFragment extends BaseDBFragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        obtainFavoritasAction = StuffProvider.getObtainFavoritasAction(getActivity());
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         muestraCargando();
-        new AsyncTask<Void, Void, List<Favorita>>(){
-
-            @Override
-            protected List<Favorita> doInBackground(Void... params) {
-                List<Favorita> paradasFavoritas = null;
-                try {
-                    paradasFavoritas = DBQueries.getParadasFavoritas(getDBHelper());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    Debug.registerHandledException(e);
-                }
-                return paradasFavoritas;
-            }
-
-            @Override
-            protected void onPostExecute(List<Favorita> favoritas) {
-                if (favoritas!=null && favoritas.size() > 0) {
-                    muestraFavoritas(favoritas);
-                } else {
-                    muestraNoDatos();
-                }
-            }
-        }.execute();
+        obtainFavoritasAction.getFavoritas()
+          .limit(4)
+          .subscribe(favoritas -> muestraFavoritas(favoritas),
+            throwable -> {
+                //TODO mostrar error
+                Debug.registerHandledException(throwable);
+            });
     }
 
     private void muestraCargando() {
@@ -104,6 +97,10 @@ public class FavoritasMainFragment extends BaseDBFragment {
     }
 
     private void muestraFavoritas(List<Favorita> favoritas) {
+        if (favoritas == null || favoritas.isEmpty()) {
+            muestraNoDatos();
+            return;
+        }
         mMensaje.setVisibility(View.GONE);
         mContenido.setVisibility(View.VISIBLE);
 
