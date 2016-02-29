@@ -121,15 +121,13 @@ public class MainPageFragment extends BaseDBFragment {
     }
 
     private void setupLogin() {
-        loginController.initGoogleApi(getActivity());
-
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(v -> {
-            startActivityForResult(loginController.loginIntent(), RC_SIGN_IN);
+            startActivityForResult(loginController.loginIntent(((LocationProviderActivity) getActivity()).getGoogleApiClient()), RC_SIGN_IN);
         });
 
         signOutButton.setOnClickListener(v -> {
-            loginController.logout();
+            loginController.logout(((LocationProviderActivity) getActivity()).getGoogleApiClient());
             logOutAction.logOut().subscribe();
             signInButton.setVisibility(View.VISIBLE);
             userProfile.setVisibility(View.GONE);

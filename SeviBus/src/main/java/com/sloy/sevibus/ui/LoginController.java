@@ -2,7 +2,6 @@ package com.sloy.sevibus.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.firebase.client.AuthData;
@@ -12,7 +11,6 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -28,30 +26,17 @@ import rx.schedulers.Schedulers;
 public class LoginController implements GoogleApiClient.OnConnectionFailedListener {
 
     private final Firebase firebase;
-    private GoogleApiClient mGoogleApiClient;
 
     public LoginController(Firebase firebase) {
         this.firebase = firebase;
     }
 
-    public void initGoogleApi(FragmentActivity activity) {
-        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-          .requestEmail()
-          .requestIdToken("952975778259-4tdh0qdnn97a6epq4sj27p3dms1802it.apps.googleusercontent.com")
-          .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(activity)
-          .enableAutoManage(activity, this)
-          .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
-          .build();
+    public Intent loginIntent(GoogleApiClient googleApiClient) {
+        return Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
     }
 
-    public Intent loginIntent() {
-        return Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-    }
-
-    public void logout() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+    public void logout(GoogleApiClient googleApiClient) {
+        Auth.GoogleSignInApi.signOut(googleApiClient);
     }
 
     public Observable<SevibusUser> handleSignInResult(Context context, Intent data) {
