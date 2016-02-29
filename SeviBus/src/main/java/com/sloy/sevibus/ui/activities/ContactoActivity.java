@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.R;
 
 public class ContactoActivity extends BaseToolbarActivity {
@@ -114,7 +115,7 @@ public class ContactoActivity extends BaseToolbarActivity {
     private void enviar() {
         StringBuilder texto = new StringBuilder(mMensaje.getText().toString().trim());
         texto.append("\n\n=====================");
-        texto.append("\n Versión: " + getString(R.string.app_version));
+        texto.append("\n Versión: " + BuildConfig.VERSION_NAME);
         texto.append("\n Base de datos: " + getSharedPreferences("datos", Context.MODE_MULTI_PROCESS).getInt("data_version", 0));
         if (mDeviceInfo.isChecked()) {
             texto.append("\n\nInformación del dispositivo");

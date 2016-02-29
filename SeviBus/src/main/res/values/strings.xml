@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_version">3.4</string>
-
     <!-- Info de Parada -->
     <string name="parada_info_titulo">Parada %d</string>
     <string name="title_activity_paradas_de_linea">Paradas</string>
