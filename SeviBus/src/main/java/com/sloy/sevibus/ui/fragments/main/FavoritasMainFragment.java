@@ -1,5 +1,6 @@
 package com.sloy.sevibus.ui.fragments.main;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,101 +10,109 @@ import android.widget.TextView;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Favorita;
-import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.actions.ObtainFavoritasAction;
 import com.sloy.sevibus.ui.activities.IMainController;
 import com.sloy.sevibus.ui.activities.ParadaInfoActivity;
 import com.sloy.sevibus.ui.fragments.BaseDBFragment;
+import com.sloy.sevibus.ui.mvp.presenter.FavoritasMainPresenter;
 
 import java.util.List;
 
-public class FavoritasMainFragment extends BaseDBFragment {
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    private TextView mMensaje;
-    private View mContenido;
-    private ObtainFavoritasAction obtainFavoritasAction;
+public class FavoritasMainFragment extends BaseDBFragment implements FavoritasMainPresenter.View {
+
+
+    private FavoritasMainPresenter presenter;
+
+    @Bind(R.id.main_favoritas_contenido)
+    View contenido;
+    @Bind(R.id.main_favoritas_mensaje)
+    TextView mMensaje;
+    @Bind(R.id.favoritas_main_1)
+    View mFav1;
+    @Bind(R.id.favoritas_main_2)
+    View mFav2;
+    @Bind(R.id.favoritas_main_3)
+    View mFav3;
+    @Bind(R.id.favoritas_main_4)
+    View mFav4;
 
     public static FavoritasMainFragment getInstance() {
         return new FavoritasMainFragment();
     }
 
-    private View mFav1, mFav2, mFav3, mFav4;
-    private View mButtonMas;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_main_favoritas, container, false);
-
-        mMensaje = (TextView) v.findViewById(R.id.main_favoritas_mensaje);
-        mContenido = v.findViewById(R.id.main_favoritas_contenido);
-
-        mButtonMas = v.findViewById(R.id.main_favoritas_boton_mas);
-        mFav1 = v.findViewById(R.id.favoritas_main_1);
-        mFav2 = v.findViewById(R.id.favoritas_main_2);
-        mFav3 = v.findViewById(R.id.favoritas_main_3);
-        mFav4 = v.findViewById(R.id.favoritas_main_4);
-
-        View.OnClickListener favListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Integer parada = (Integer) v.getTag();
-                startActivity(ParadaInfoActivity.getIntent(getActivity(), parada));
-            }
-        };
-        mFav1.setOnClickListener(favListener);
-        mFav2.setOnClickListener(favListener);
-        mFav3.setOnClickListener(favListener);
-        mFav4.setOnClickListener(favListener);
-
-        mButtonMas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((IMainController)getActivity()).abrirFavoritas();
-            }
-        });
-        return v;
+        return inflater.inflate(R.layout.fragment_main_favoritas, container, false);
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        obtainFavoritasAction = StuffProvider.getObtainFavoritasAction(getActivity());
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        presenter = new FavoritasMainPresenter(StuffProvider.getObtainFavoritasAction(getActivity()));
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        ButterKnife.bind(this, view);
+        presenter.initialize(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        muestraCargando();
-        obtainFavoritasAction.getFavoritas()
-          .limit(4)
-          .subscribe(favoritas -> muestraFavoritas(favoritas),
-            throwable -> {
-                //TODO mostrar error
-                Debug.registerHandledException(throwable);
-            });
+        presenter.update();
     }
 
-    private void muestraCargando() {
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
+    }
+
+
+    @OnClick({R.id.favoritas_main_1, R.id.favoritas_main_2, R.id.favoritas_main_3, R.id.favoritas_main_4})
+    public void onFavoritaClicked(View v) {
+        Integer parada = (Integer) v.getTag();
+        startActivity(ParadaInfoActivity.getIntent(getActivity(), parada));
+    }
+
+    @OnClick(R.id.main_favoritas_boton_mas)
+    public void onMasClicked() {
+        ((IMainController) getActivity()).abrirFavoritas();
+    }
+
+    @Override
+    public void showLoading() {
         mMensaje.setText(R.string.favoritas_main_cargando);
         mMensaje.setVisibility(View.VISIBLE);
-        mContenido.setVisibility(View.GONE);
     }
 
-    private void muestraNoDatos() {
+    @Override
+    public void hideLoading() {
+        mMensaje.setText("");
+        mMensaje.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showEmpty() {
         mMensaje.setText(R.string.favoritas_main_empty);
         mMensaje.setVisibility(View.VISIBLE);
-        mContenido.setVisibility(View.GONE);
     }
 
-    private void muestraFavoritas(List<Favorita> favoritas) {
-        if (favoritas == null || favoritas.isEmpty()) {
-            muestraNoDatos();
-            return;
-        }
+    @Override
+    public void hideEmpty() {
+        mMensaje.setText("");
         mMensaje.setVisibility(View.GONE);
-        mContenido.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void showFavoritas(List<Favorita> favoritas) {
+        contenido.setVisibility(View.VISIBLE);
         Favorita fav1 = null, fav2 = null, fav3 = null, fav4 = null;
         int count = favoritas.size();
         if (count >= 1) {
@@ -123,6 +132,11 @@ public class FavoritasMainFragment extends BaseDBFragment {
         bindViewFavorita(fav2, mFav2);
         bindViewFavorita(fav3, mFav3);
         bindViewFavorita(fav4, mFav4);
+    }
+
+    @Override
+    public void hideFavoritas() {
+        contenido.setVisibility(View.GONE);
     }
 
     private void bindViewFavorita(Favorita fav, View v) {
