@@ -15,25 +15,29 @@ import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.ui.activities.HomeActivity;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloy.sevibus.ui.fragments.BaseDBFragment;
-import com.sloy.sevibus.ui.fragments.MainPageFragment;
 import com.sloy.sevibus.ui.fragments.MapContainerFragment;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParadasCercanasMainFragment extends BaseDBFragment implements ILocationSensitiveFragment {
+import rx.Subscription;
+
+public class ParadasCercanasMainFragment extends BaseDBFragment {
 
     private View mContenido;
     private TextView mMensaje;
-    private MainPageFragment mMainPage;
     private List<Integer> mDistanciasTmp;
+    private Subscription locationSubscription;
+    private LocationProvider locationProvider;
 
     public interface ParadasCercanasMainClickListener {
         void onParadaCercanaClick(int idParada);
+
         void onParadaCercanaMas();
     }
 
@@ -44,10 +48,6 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
     private View mParada1View, mParada2View, mParada3View, mParada4View;
     private View mButtonMas;
     private View.OnClickListener mParadaListener;
-
-    public void setMainPage(MainPageFragment fragment) {
-        mMainPage = fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,6 +84,7 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        locationProvider = ((LocationProviderActivity) getActivity()).getLocationProvider();
         muestraCargando();
         setupMapa();
 
@@ -113,16 +114,17 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
 
     }
 
-        @Override
+    @Override
     public void onStart() {
         super.onStart();
-        ((LocationProviderActivity)getActivity()).suscribeForUpdates(this);
+        locationSubscription = locationProvider.observe()
+          .subscribe(this::onLocationUpdated);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        ((LocationProviderActivity)getActivity()).unsuscribe(this);
+        locationSubscription.unsubscribe();
     }
 
     private void muestraCargando() {
@@ -170,7 +172,7 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
 
         bindView(p1, d1, mParada1View);
         bindView(p2, d2, mParada2View);
-        bindView(p3, d3,  mParada3View);
+        bindView(p3, d3, mParada3View);
         bindView(p4, d4, mParada4View);
     }
 
@@ -178,7 +180,7 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
         if (p != null) {
             ((TextView) v.findViewById(R.id.item_parada_numero)).setText(p.getNumero().toString());
             ((TextView) v.findViewById(R.id.item_parada_nombre)).setText(p.getDescripcion());
-            ((TextView) v.findViewById(R.id.item_parada_distancia)).setText(dist+"m");
+            ((TextView) v.findViewById(R.id.item_parada_distancia)).setText(dist + "m");
             v.setTag(p.getNumero());
             v.setOnClickListener(mParadaListener);
             v.setVisibility(View.VISIBLE);
@@ -188,14 +190,7 @@ public class ParadasCercanasMainFragment extends BaseDBFragment implements ILoca
     }
 
 
-    @Override
-    public void updateLocation(Location location) {
-        if (location == null) {
-            muestraError();
-            Debug.registerHandledException(new NullPointerException("Ubicación nula recibida"));
-            return;
-        }
-
+    private void onLocationUpdated(Location location) {
         final double latitud = location.getLatitude();
         final double longitud = location.getLongitude();
 

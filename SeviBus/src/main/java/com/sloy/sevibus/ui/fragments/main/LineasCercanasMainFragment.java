@@ -12,6 +12,7 @@ import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloy.sevibus.ui.fragments.BaseDBFragment;
 import com.sloy.sevibus.ui.widgets.LineaBadge;
@@ -19,10 +20,14 @@ import com.sloy.sevibus.ui.widgets.LineaBadge;
 import java.sql.SQLException;
 import java.util.List;
 
-public class LineasCercanasMainFragment extends BaseDBFragment implements ILocationSensitiveFragment{
+import rx.Subscription;
+
+public class LineasCercanasMainFragment extends BaseDBFragment {
 
     private TextView mMensaje;
     private View mContenido;
+    private LocationProvider locationProvider;
+    private Subscription locationSubscription;
 
     public interface LineasCercanasMainClickListener {
         void onLineaCercanaClick(int idParada);
@@ -71,6 +76,7 @@ public class LineasCercanasMainFragment extends BaseDBFragment implements ILocat
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        locationProvider = ((LocationProviderActivity) getActivity()).getLocationProvider();
         muestraCargando();
     }
 
@@ -78,15 +84,15 @@ public class LineasCercanasMainFragment extends BaseDBFragment implements ILocat
     @Override
     public void onStart() {
         super.onStart();
-        ((LocationProviderActivity)getActivity()).suscribeForUpdates(this);
+        locationSubscription = locationProvider.observe()
+          .subscribe(this::onLocationUpdated);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        ((LocationProviderActivity)getActivity()).unsuscribe(this);
+        locationSubscription.unsubscribe();
     }
-
 
     private void muestraCargando() {
         mMensaje.setText(R.string.lineas_cercanas_cargando);
@@ -143,8 +149,7 @@ public class LineasCercanasMainFragment extends BaseDBFragment implements ILocat
         }
     }
 
-    @Override
-    public void updateLocation(Location location) {
+    public void onLocationUpdated(Location location) {
         if (location == null) {
             muestraError();
             Debug.registerHandledException(new NullPointerException("Ubicación nula recibida"));

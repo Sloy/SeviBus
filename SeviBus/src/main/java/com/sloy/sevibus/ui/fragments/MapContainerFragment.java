@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -15,17 +16,21 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.ui.activities.HomeActivity;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
-import com.sloy.sevibus.ui.fragments.main.ILocationSensitiveFragment;
 
-public class MapContainerFragment extends BaseDBFragment implements ILocationSensitiveFragment {
+import rx.Subscription;
+
+public class MapContainerFragment extends BaseDBFragment {
 
     private static final String SHOW_INTERFACE = "show_interface";
 
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
     private boolean mShowInterface = true;
+    private LocationProvider locationProvider;
+    private Subscription locationSubscription;
 
     public static MapContainerFragment getInstance(boolean showInterface) {
         Bundle arguments = new Bundle();
@@ -64,7 +69,8 @@ public class MapContainerFragment extends BaseDBFragment implements ILocationSen
         if (mMap != null) {
             showMapControls(mShowInterface);
             asociarOpciones(true);
-            ((LocationProviderActivity) getActivity()).suscribeForUpdates(this);
+            locationSubscription = locationProvider.observe()
+              .subscribe(this::onLocationUpdated);
         }
     }
 
@@ -77,12 +83,15 @@ public class MapContainerFragment extends BaseDBFragment implements ILocationSen
             showMapControls(false);
             mShowInterface = true;
         }
-        ((LocationProviderActivity)getActivity()).unsuscribe(this);
+        if (locationSubscription != null) {
+            locationSubscription.unsubscribe();
+        }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        locationProvider = ((LocationProviderActivity) getActivity()).getLocationProvider();
         if (getArguments() != null) {
             mShowInterface = getArguments().getBoolean(SHOW_INTERFACE, true);
         }
@@ -113,8 +122,7 @@ public class MapContainerFragment extends BaseDBFragment implements ILocationSen
         }
     }
 
-    @Override
-    public void updateLocation(Location location) {
+    public void onLocationUpdated(Location location) {
         if (location != null && !mShowInterface) {
             LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15));

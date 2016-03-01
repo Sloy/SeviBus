@@ -122,7 +122,6 @@ public class MainPageFragment extends BaseDBFragment {
         if (f == null) {
             f = ParadasCercanasMainFragment.getInstance();
         }
-        ((ParadasCercanasMainFragment) f).setMainPage(this);
         if (f.isAdded()) {
             trans.attach(f);
         } else {

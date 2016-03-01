@@ -11,16 +11,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.LocationProvider;
-import com.sloy.sevibus.ui.fragments.main.ILocationSensitiveFragment;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class LocationProviderActivity extends BaseToolbarActivity
   implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
-    private List<ILocationSensitiveFragment> fragmentsToNotify;
+    public static final int RESOLUTION_REQUEST_CODE = 600613;
 
     public GoogleApiClient getGoogleApiClient() {
         return googleApiClient;
@@ -39,7 +35,6 @@ public class LocationProviderActivity extends BaseToolbarActivity
           .addApi(LocationServices.API)
           .build();
 
-        fragmentsToNotify = new LinkedList<>();
         locationProvider = new LocationProvider();
     }
 
@@ -63,24 +58,8 @@ public class LocationProviderActivity extends BaseToolbarActivity
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (lastLocation != null) {
             Debug.useFakeLocation(this, lastLocation);
-            onLocationUpdated(lastLocation);
+            locationProvider.sendNewLocation(lastLocation);
         }
-    }
-
-    private void onLocationUpdated(Location location) {
-        for (ILocationSensitiveFragment f : fragmentsToNotify) {
-            f.updateLocation(location);
-        }
-        locationProvider.sendNewLocation(location);
-    }
-
-    public void suscribeForUpdates(ILocationSensitiveFragment fragment) {
-        fragmentsToNotify.add(fragment);
-//        requestNewLocation();
-    }
-
-    public void unsuscribe(ILocationSensitiveFragment fragment) {
-        fragmentsToNotify.remove(fragment);
     }
 
     @Override
@@ -98,7 +77,7 @@ public class LocationProviderActivity extends BaseToolbarActivity
     public void onConnectionFailed(ConnectionResult connectionResult) {
         if (connectionResult.hasResolution()) {
             try {
-                connectionResult.startResolutionForResult(this, 1);
+                connectionResult.startResolutionForResult(this, RESOLUTION_REQUEST_CODE);
             } catch (IntentSender.SendIntentException e) {
                 e.printStackTrace();
             }
