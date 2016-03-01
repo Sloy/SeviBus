@@ -16,10 +16,9 @@
         android:paddingTop="16dp"
         >
 
-        <FrameLayout
+        <include
             android:id="@+id/fragment_main_favoritas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            layout="@layout/fragment_main_favoritas"
             />
 
         <FrameLayout

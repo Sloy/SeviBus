@@ -1,20 +1,13 @@
-package com.sloy.sevibus.ui.fragments.main;
+package com.sloy.sevibus.ui.mvp.view;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import android.app.Activity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Favorita;
-import com.sloy.sevibus.resources.StuffProvider;
-import com.sloy.sevibus.resources.actions.ObtainFavoritasAction;
 import com.sloy.sevibus.ui.activities.IMainController;
 import com.sloy.sevibus.ui.activities.ParadaInfoActivity;
-import com.sloy.sevibus.ui.fragments.BaseDBFragment;
 import com.sloy.sevibus.ui.mvp.presenter.FavoritasMainPresenter;
 
 import java.util.List;
@@ -23,10 +16,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FavoritasMainFragment extends BaseDBFragment implements FavoritasMainPresenter.View {
+public class FavoritasMainViewContainer implements FavoritasMainPresenter.View {
 
 
-    private FavoritasMainPresenter presenter;
+    private final Activity activity;
 
     @Bind(R.id.main_favoritas_contenido)
     View contenido;
@@ -41,49 +34,20 @@ public class FavoritasMainFragment extends BaseDBFragment implements FavoritasMa
     @Bind(R.id.favoritas_main_4)
     View mFav4;
 
-    public static FavoritasMainFragment getInstance() {
-        return new FavoritasMainFragment();
+    public FavoritasMainViewContainer(FavoritasMainPresenter presenter, View contentView) {
+        ButterKnife.bind(this, contentView);
+        activity = ((Activity) contentView.getContext());
     }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main_favoritas, container, false);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        presenter = new FavoritasMainPresenter(StuffProvider.getObtainFavoritasAction(getActivity()));
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.bind(this, view);
-        presenter.initialize(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.update();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        presenter.pause();
-    }
-
 
     @OnClick({R.id.favoritas_main_1, R.id.favoritas_main_2, R.id.favoritas_main_3, R.id.favoritas_main_4})
     public void onFavoritaClicked(View v) {
         Integer parada = (Integer) v.getTag();
-        startActivity(ParadaInfoActivity.getIntent(getActivity(), parada));
+        activity.startActivity(ParadaInfoActivity.getIntent(activity, parada));
     }
 
     @OnClick(R.id.main_favoritas_boton_mas)
     public void onMasClicked() {
-        ((IMainController) getActivity()).abrirFavoritas();
+        ((IMainController) activity).abrirFavoritas();
     }
 
     @Override
