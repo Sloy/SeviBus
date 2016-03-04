@@ -11,7 +11,7 @@ INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(14, '14', 'Plaza D
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(15, '15', 'Ponce de Leon-San Diego', 3, '#000d6f');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(16, '16', 'Pza.Jeron. Cordoba-Valdezorras', 3, '#000d6f');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(20, '20', 'Ponce de Leon-Pgno.San Pablo', 4, '#000d6f');
-INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(21, '21', 'Prado-Poligono S. Pablo', 4, '#000d6f');
+INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(21, '21', 'Plaza Armas-Poligono S. Pablo', 4, '#000d6f');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(22, '22', 'Prado-Sevilla Este', 4, '#000d6f');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(24, '24', 'Ponce de Leon-Palmete', 4, '#000d6f');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(25, '25', 'Prado-Rochelambert', 4, '#000d6f');
@@ -23,7 +23,7 @@ INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(30, '30', 'Prado-L
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(31, '31', 'Prado-Poligono Sur', 5, '#000d6f');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(32, '32', 'Plaza del - Duque-Poligono Sur', 5, '#000d6f');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(34, '34', 'Prado-Los Bermejales', 5, '#000d6f');
-INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(37, '37', 'Prado - Bellavista', 5, '#000d6f');
+INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(37, '37', 'Pta.Jerez - Bellavista', 5, '#000d6f');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(38, '38', 'Prado - Univ.Pablo Olavide', 5, '#000d6f');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(125, '38A', 'Prado - Pitamo - Upo', 5, '#000d6f');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(39, '39', 'Los Arcos-Hacienda San Antonio', 4, '#000d6f');
@@ -39,14 +39,14 @@ INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(104, 'A4', 'Prado 
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(105, 'A5', 'Prado - Poligono Sur', 9, '#000000');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(106, 'A6', 'Prado - Bellavista', 9, '#000000');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(107, 'A7', 'Circular Nocturno', 9, '#000000');
-INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(110, 'A8', 'Prado - Parque Alcosa', 7, '#000000');
+INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(110, 'A8', 'Prado - Parque Alcosa', 9, '#000000');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(87, 'B3', 'Gran Plaza-Santa Clara', 7, '#84c6e3');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(119, 'B4', 'San Bernardo-Torreblanca', 7, '#84c6e3');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(81, 'C1', 'Isla de La Cartuja-Prado', 1, '#008431');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(82, 'C2', 'Isla de La Cartuja-Prado', 1, '#008431');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(83, 'C3', 'Barqueta-Prado', 1, '#008431');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(84, 'C4', 'Barqueta-Prado', 1, '#008431');
-INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(121, 'C5', 'Plaza Duque-Plaza S. Francisco', 1, '#008431');
+INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(121, 'C5', 'Plaza Duque-Puerta Jerez', 1, '#008431');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(108, 'C6A', 'Circular Macarena Norte', 1, '#008431');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(109, 'C6B', 'Circular Macarena Norte', 1, '#008431');
 INSERT INTO linea (id, numero, nombre, tipo_id, color) VALUES(100, 'EA', 'Especial -  Aeropuerto', 7, '#84c6e3');
