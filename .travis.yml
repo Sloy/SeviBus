@@ -1,0 +1,36 @@
+language: android
+
+jdk:
+- oraclejdk8
+
+sudo: true
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+env:
+  global:
+    - TERM=dumb
+
+android:
+  components:
+    - build-tools-22.0.1
+    - android-23
+    - extra-google-m2repository
+    - extra-android-m2repository
+
+  licenses:
+    - android-sdk-license-5be876d5
+
+before_script:
+
+script:
+  ./gradlew build
+
+after_success:
