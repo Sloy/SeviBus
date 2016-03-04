@@ -242,8 +242,13 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
     }
 
     private void applyConfig() {
-        mCheckCercanas.setChecked(mCurrentConfig.mostrarCercanas);
         // Hago diferenciación si isChecked es igual o no a la configuración, porque si ya estaba activo necesito llamar a mano al metodo setMostrar_(), ya que el setCheck no lo hará
+        if (mCheckCercanas.isChecked() == mCurrentConfig.mostrarCercanas) {
+            setMostrarCercanas(mCurrentConfig.mostrarCercanas);
+        } else {
+            mCheckCercanas.setChecked(mCurrentConfig.mostrarCercanas);
+        }
+
         if (mCheckFavoritas.isChecked() == mCurrentConfig.mostrarFavoritas) {
             setMostrarFavoritas(mCurrentConfig.mostrarFavoritas);
         } else {
