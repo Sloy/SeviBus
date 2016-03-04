@@ -22,8 +22,8 @@ apply plugin: 'io.fabric'
 apply plugin: 'com.fernandocejas.frodo'
 
 
-def myVersionCode = 75
-def myVersionName = "3.6.2"
+def myVersionCode = 76
+def myVersionName = "3.6.3"
 
 android {
     signingConfigs {
