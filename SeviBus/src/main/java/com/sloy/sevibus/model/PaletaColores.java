@@ -1,6 +1,6 @@
 package com.sloy.sevibus.model;
 
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 public enum PaletaColores {
     RED(0xFFaa0000, 0xFF800000, 0xFFFB8C00),
@@ -27,13 +27,13 @@ public enum PaletaColores {
         this.accent = accent;
     }
 
-    @Nullable
+    @NonNull
     public static PaletaColores fromPrimary(int primary) {
         for (PaletaColores paletaColores : values()) {
             if (paletaColores.primary == primary) {
                 return paletaColores;
             }
         }
-        return null;
+        return RED;
     }
 }

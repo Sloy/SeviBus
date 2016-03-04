@@ -34,6 +34,8 @@ import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.BusLocation;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.actions.ObtainFavoritasAction;
 import com.sloy.sevibus.resources.exceptions.ServerErrorException;
 import com.sloy.sevibus.resources.maputils.BusesLayer;
 import com.sloy.sevibus.resources.maputils.CercanasLayer;
@@ -43,9 +45,12 @@ import com.sloy.sevibus.resources.maputils.LayerManager;
 import com.sloy.sevibus.resources.maputils.LineaLayer;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloy.sevibus.ui.fragments.main.ILocationSensitiveFragment;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
 
 public class MapaControllerFragment extends BaseDBFragment implements ILocationSensitiveFragment, LoaderManager.LoaderCallbacks<List<BusLocation>> {
 
@@ -74,6 +79,8 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
 
     private Handler mHandler;
     private Runnable mRunnableUpdateBuses;
+
+    private ObtainFavoritasAction obtainFavoritasAction;
 
     public static Drawable colorearTodo(Drawable drawable, int color) {
         drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
@@ -166,6 +173,7 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
             mCurrentConfig = new ConfigWraper();
         }
 
+        obtainFavoritasAction = StuffProvider.getObtainFavoritasAction(getActivity());
         mHandler = new Handler();
 
         mRunnableUpdateBuses = new Runnable() {
@@ -234,8 +242,13 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
     }
 
     private void applyConfig() {
-        mCheckCercanas.setChecked(mCurrentConfig.mostrarCercanas);
         // Hago diferenciación si isChecked es igual o no a la configuración, porque si ya estaba activo necesito llamar a mano al metodo setMostrar_(), ya que el setCheck no lo hará
+        if (mCheckCercanas.isChecked() == mCurrentConfig.mostrarCercanas) {
+            setMostrarCercanas(mCurrentConfig.mostrarCercanas);
+        } else {
+            mCheckCercanas.setChecked(mCurrentConfig.mostrarCercanas);
+        }
+
         if (mCheckFavoritas.isChecked() == mCurrentConfig.mostrarFavoritas) {
             setMostrarFavoritas(mCurrentConfig.mostrarFavoritas);
         } else {
@@ -384,18 +397,17 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
             return;
         }
         if (mostrar) {
-            try {
-                List<Favorita> favoritas = DBQueries.getParadasFavoritas(getDBHelper());
-                ArrayList<Parada> paradas = new ArrayList<Parada>();
-                for (Favorita f : favoritas) {
-                    paradas.add(f.getParadaAsociada());
-                }
-                mFavoritasLayer = new FavoritasLayer(paradas, getActivity(), getDBHelper());
-                mLayerManager.addLayer(mFavoritasLayer);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                Debug.registerHandledException(e);
-            }
+            obtainFavoritasAction.getFavoritas()
+              .flatMap(Observable::from)
+              .map(Favorita::getParadaAsociada)
+              .toList()
+              .subscribe(paradas -> {
+                  if (mFavoritasLayer != null) {
+                      mLayerManager.removeLayer(mFavoritasLayer);
+                  }
+                  mFavoritasLayer = new FavoritasLayer(paradas, getActivity(), getDBHelper());
+                  mLayerManager.addLayer(mFavoritasLayer);
+              });
         } else {
             if (mFavoritasLayer != null) {
                 mLayerManager.removeLayer(mFavoritasLayer);

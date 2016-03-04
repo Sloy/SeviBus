@@ -41,10 +41,12 @@ import com.sloy.sevibus.model.tussam.Reciente;
 import com.sloy.sevibus.resources.AlertasManager;
 import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.Debug;
-import com.sloy.sevibus.resources.LegacyColorConverter;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.TimeTracker;
+import com.sloy.sevibus.resources.actions.DeleteFavoritaAction;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
+import com.sloy.sevibus.resources.actions.ObtainSingleFavoritaAction;
+import com.sloy.sevibus.resources.actions.SaveFavoritaAction;
 import com.sloy.sevibus.ui.activities.BaseActivity;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 import com.sloy.sevibus.ui.widgets.LlegadasList;
@@ -75,6 +77,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     private static final int AD_NET_READ_TIMEOUT_MILLIS = 10 * 1000;
 
     private ObtainLlegadasAction obtainLlegadasAction;
+    private SaveFavoritaAction saveFavoritaAction;
 
     private LlegadasList mViewLlegadas;
 
@@ -88,6 +91,8 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
     private Map<String, ArrivalTime> mLlegadas;
     private AnalyticsTracker analyticsTracker;
+    private ObtainSingleFavoritaAction obtainSingleFavoritaAction;
+    private DeleteFavoritaAction deleteFavoritaAction;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,6 +121,9 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         }
 
         obtainLlegadasAction = StuffProvider.getObtainLlegadaAction();
+        obtainSingleFavoritaAction = StuffProvider.getObtainSingleFavoritaAction(getActivity());
+        saveFavoritaAction = StuffProvider.getSaveFavoritaAction(getActivity());
+        deleteFavoritaAction = StuffProvider.getDeleteFavoritaAction(getActivity());
         analyticsTracker = StuffProvider.getAnalyticsTracker();
     }
 
@@ -159,21 +167,18 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     }
 
     private void guardarFavorita(String nombrePropio, int color) {
-        DBQueries.setNewParadaFavorita(getDBHelper(), mParada, nombrePropio, color);
+        saveFavoritaAction.saveFavorita(mParada.getNumero(), nombrePropio, color)
+          .subscribe();
         Snackbar.make(getView(), "Favorita guardada", Snackbar.LENGTH_LONG).show();
         updateFavoritaButton();
     }
 
     private void eliminarFavorita() {
-        try {
-            Favorita favCurrent = DBQueries.getFavoritaById(getDBHelper(), mParada.getNumero());
-            getDBHelper().getDaoFavorita().delete(favCurrent);
-            Snackbar.make(getView(), "Quitada favorita", Snackbar.LENGTH_LONG).show();
-            updateFavoritaButton();
-        } catch (SQLException e) {
-            Debug.registerHandledException(e);
-            Snackbar.make(getView(), "Error desconocido. Estamos en ello.", Snackbar.LENGTH_LONG).show();
-        }
+        deleteFavoritaAction
+          .deleteFavorita(mParada.getNumero())
+          .subscribe();
+        Snackbar.make(getView(), "Quitada favorita", Snackbar.LENGTH_LONG).show();
+        updateFavoritaButton();
     }
 
     @Override
@@ -323,40 +328,22 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     }
 
     private void updateFavoritaButton() {
-        Favorita fav = null;
-        try {
-            fav = DBQueries.getFavoritaById(getDBHelper(), mParada.getNumero());
-        } catch (SQLException e) {
-
-        }
-        final boolean isFavorita = fav != null;
-
-        if (isFavorita) {
-            favoritaButton.setImageResource(R.drawable.ic_fab_star_outline);
-            colorizeScreenFromFavorita(fav);
-        } else {
-            favoritaButton.setImageResource(R.drawable.ic_fab_star);
-        }
-        favoritaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isFavorita) {
-                    onEliminarFavoritaClick();
-                } else {
-                    onCrearFavoritaClick();
-                }
-            }
-        });
+        obtainSingleFavoritaAction
+          .obtainFavorita(mParada.getNumero())
+          .subscribe(favorita -> {
+              if (favorita.isPresent()) {
+                  colorizeScreenFromFavorita(favorita.get());
+                  favoritaButton.setImageResource(R.drawable.ic_fab_star_outline);
+                  favoritaButton.setOnClickListener(v -> onEliminarFavoritaClick());
+              } else {
+                  favoritaButton.setImageResource(R.drawable.ic_fab_star);
+                  favoritaButton.setOnClickListener(v -> onCrearFavoritaClick());
+              }
+          });
     }
 
     private void colorizeScreenFromFavorita(Favorita fav) {
         PaletaColores paleta = PaletaColores.fromPrimary(fav.getColor());
-        if (paleta == null) {
-            paleta = LegacyColorConverter.paletaFromLegacyColor(fav.getColor());
-            fav.setColor(paleta.primary);
-            DBQueries.updateParadaFavorita(getDBHelper(), fav);
-            analyticsTracker.favoritaNotColorized(fav.getParadaAsociada().getNumero());
-        }
         // Toolbar
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) getView().findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setContentScrimColor(paleta.primary);
