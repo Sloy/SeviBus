@@ -105,7 +105,7 @@ public class DBQueries {
 
     public static List<Parada> getParadasCercanas(DBHelper dbHelper, double latitud, double longitud, boolean orderByDistance) throws SQLException {
 
-        double margen = 0.003;
+        double margen = 0.005;
 
         double maxLatitud = latitud + margen;
         double minLatitud = latitud - margen;
