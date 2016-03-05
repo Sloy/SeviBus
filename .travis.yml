@@ -30,8 +30,8 @@ android:
 
 before_install:
 - openssl aes-256-cbc -K $encrypted_f41832db9087_key -iv $encrypted_f41832db9087_iv
-  -in signing.properties.enc -out SeviBus/signing.properties -d
-  -in fabric.properties.enc -out SeviBus/fabric.properties -d
+  -in secrets.tar.enc -out secrets.tar -d
+- tar xvf secrets.tar SeviBus/
 
 before_script:
 
