@@ -38,6 +38,7 @@ android {
         targetSdkVersion 22
         versionCode myVersionCode
         versionName myVersionName
+        archivesBaseName = "SeviBus-" + versionName
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
