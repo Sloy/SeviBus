@@ -1,0 +1,59 @@
+language: android
+
+jdk:
+- oraclejdk8
+
+sudo: true
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+env:
+  global:
+    - TERM=dumb
+
+android:
+  components:
+    - build-tools-22.0.1
+    - android-23
+    - extra-google-m2repository
+    - extra-android-m2repository
+
+  licenses:
+    - android-sdk-license-5be876d5
+
+before_install:
+- openssl aes-256-cbc -K $encrypted_f41832db9087_key -iv $encrypted_f41832db9087_iv
+  -in secrets.tar.enc -out secrets.tar -d
+- tar xvf secrets.tar SeviBus/
+
+before_script:
+
+script:
+  ./gradlew build
+
+after_success:
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: LLl81X419p3G7rMcNzwxsMzxjwJI1ssQpfm/j4JzsBiwSRyZjoJBxams75eF7h+zUbvEx5xzc7wsdo0uYIwfhqqIC7DvZPMJLH9j/T9XMsLKvT8UKaUbFvXDRpoOqrl8IyxOac0LYlqM3PjIy/NLda4jz1DiuW+nPMp4qTtN6EGq2ZBKc9LHcWk/jr005YgraywnfuByuzjF/tLc96jWmm9WdLVsuMxT2qZoCTCBVN+xQ34M1Q1AxUUvYbtNt/K+HpUaUa8qRUtbIDCSM68PhhqqycmHWzV9YF3EWvTKnRMvyoWpokx6u/0IE2Ogco/J1VVYP0S1meqvQPVCTy1+tFJ//y3PSeLl347gigykOIFsm6Wt2OQROoupGtMHuEPYhsjEVDKoARqQRp69pjlYF2tmS33yTJEkOib2N5zjOwn0syd7kunOUATwHELjhUC2KZn9Z5CQH9OZ2dywN2n6DhN7yViUAvuVdvtV37odRGw4Qk+6bFvEXJpMlWRdjikPirq3poHQI2mMsFZpOl+3VH768iR/SICgQMa9XhSzCcsSLlFQcXQU3xGHporiais7M9MbaHAc/2CmqAigbIQ/+MHMGd1AdITNJLtflNXAogdkVlH7Iev88ZurbIkQClH1KM273l3yJn/SzkAxvW1R8m91sScrXl2UK/SRAINwwQI=
+    file_glob: true
+    file:
+      - SeviBus/build/outputs/apk/SeviBus-*release.apk
+    skip_cleanup: true
+    on:
+      tags: true
+
+  - provider: script
+    script:
+      ./gradlew publishApkRelease
+    skip_cleanup: true
+    on:
+      tags: true

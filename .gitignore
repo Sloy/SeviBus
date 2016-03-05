@@ -84,3 +84,6 @@ crashlytics.properties
 crashlytics-build.properties
 
 fabric.properties
+signing.properties
+secrets.tar
+gplay-secret.json

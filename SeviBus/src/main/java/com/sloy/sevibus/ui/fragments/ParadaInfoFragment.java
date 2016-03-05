@@ -384,6 +384,9 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                 analyticsTracker.trackTiempoRecibido(llegada.getBusStopNumber(), llegada.getBusLineName(), responseTime, llegada.getDataSource());
             },
             error -> {
+                if (!isAdded()) {
+                    return;
+                }
                 Debug.registerHandledException(error);
                 Snackbar.make(getView(), "Se produjo un error", Snackbar.LENGTH_LONG)
                   .setAction("Reintentar", (view) -> updateLlegadas())
