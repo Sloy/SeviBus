@@ -54,5 +54,6 @@ deploy:
   - provider: script
     script:
       ./gradlew publishApkRelease
+    skip_cleanup: true
     on:
       tags: true
