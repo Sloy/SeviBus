@@ -8,6 +8,8 @@ buildscript {
         classpath 'me.tatarka:gradle-retrolambda:3.2.3'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath "com.fernandocejas.frodo:frodo-plugin:0.8.1"
+        classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
+
     }
 }
 
@@ -20,6 +22,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 apply plugin: 'com.fernandocejas.frodo'
+apply plugin: 'com.github.triplet.play'
 
 
 def myVersionCode = 76
@@ -105,6 +108,13 @@ dependencies {
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'org.mockito:mockito-core:1.10.19'
 }
+
+play {
+    jsonFile = file('gplay-secret.json')
+    track = 'alpha'
+//    userFraction = 0.005
+}
+
 
 def (releaseKeystorePassword, releaseKeyAlias, releaseKeyPassword) = signingConfigFromFile()
 if (releaseKeystorePassword != null && releaseKeyAlias != null && releaseKeyPassword != null) {
