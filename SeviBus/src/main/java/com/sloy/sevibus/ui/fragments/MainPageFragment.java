@@ -72,6 +72,9 @@ public class MainPageFragment extends BaseDBFragment {
             boolean hasChangelog = !cl.getChangeLog(false).isEmpty();
             if (hasChangelog) {
                 new Handler().postDelayed(() -> {
+                    if (!isAdded() || getView() == null) {
+                        return;
+                    }
                     //noinspection ResourceType
                     Snackbar.make(getView(), "SeviBus se ha actualizado!", NEW_VERSION_SNACKBAR_DURATION)
                       .setAction("Ver cambios", v -> {
