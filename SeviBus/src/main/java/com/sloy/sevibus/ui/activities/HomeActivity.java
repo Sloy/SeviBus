@@ -222,8 +222,6 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
     private void doReplaceFragment(String fname, Bundle extras) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-
         Fragment current = getSupportFragmentManager().findFragmentById(R.id.main_container);
         if (current != null) {
             transaction.detach(current);
