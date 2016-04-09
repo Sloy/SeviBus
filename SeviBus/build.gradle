@@ -59,6 +59,10 @@ android {
             signingConfig = signingConfigs.release
         }
     }
+    productFlavors {
+        sevilla {}
+        barna {}
+    }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
     }

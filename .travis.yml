@@ -53,7 +53,7 @@ deploy:
 
   - provider: script
     script:
-      ./gradlew publishApkRelease
+      ./gradlew publishApkSevillaRelease
     skip_cleanup: true
     on:
       tags: true
