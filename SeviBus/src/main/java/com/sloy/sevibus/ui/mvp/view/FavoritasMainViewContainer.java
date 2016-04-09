@@ -34,7 +34,7 @@ public class FavoritasMainViewContainer implements FavoritasMainPresenter.View {
     @Bind(R.id.favoritas_main_4)
     View mFav4;
 
-    public FavoritasMainViewContainer(FavoritasMainPresenter presenter, View contentView) {
+    public FavoritasMainViewContainer(View contentView) {
         ButterKnife.bind(this, contentView);
         activity = ((Activity) contentView.getContext());
     }
