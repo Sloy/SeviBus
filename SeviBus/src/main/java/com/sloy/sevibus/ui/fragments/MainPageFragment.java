@@ -1,7 +1,6 @@
 package com.sloy.sevibus.ui.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,13 +18,17 @@ import android.view.ViewGroup;
 
 import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.R;
+import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.actions.ObtainCercanasAction;
 import com.sloy.sevibus.ui.activities.BusquedaActivity;
+import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 import com.sloy.sevibus.ui.fragments.main.LineasCercanasMainFragment;
-import com.sloy.sevibus.ui.fragments.main.ParadasCercanasMainFragment;
 import com.sloy.sevibus.ui.mvp.presenter.FavoritasMainPresenter;
+import com.sloy.sevibus.ui.mvp.presenter.ParadasCercanasMainPresenter;
 import com.sloy.sevibus.ui.mvp.view.FavoritasMainViewContainer;
+import com.sloy.sevibus.ui.mvp.view.ParadasCercanasMainViewContainer;
 
 import de.cketti.library.changelog.ChangeLog;
 
@@ -38,6 +41,7 @@ public class MainPageFragment extends BaseDBFragment {
     private static final int NEW_VERSION_SNACKBAR_DURATION = 10000;
 
     private FavoritasMainPresenter favoritasPresenter;
+    private ParadasCercanasMainPresenter cercanasPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,8 @@ public class MainPageFragment extends BaseDBFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         favoritasPresenter = new FavoritasMainPresenter(StuffProvider.getObtainFavoritasAction(getActivity()));
+        LocationProvider locationProvider = ((LocationProviderActivity) getActivity()).getLocationProvider();
+        cercanasPresenter = new ParadasCercanasMainPresenter(locationProvider, new ObtainCercanasAction(getDBHelper()));
     }
 
     @Override
@@ -61,19 +67,24 @@ public class MainPageFragment extends BaseDBFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        favoritasPresenter.initialize(new FavoritasMainViewContainer(favoritasPresenter, view.findViewById(R.id.fragment_main_favoritas)));
+        favoritasPresenter.initialize(new FavoritasMainViewContainer(view.findViewById(R.id.fragment_main_favoritas)));
+        ParadasCercanasMainViewContainer paradasCercanasView = new ParadasCercanasMainViewContainer(view.findViewById(R.id.fragment_main_paradas_cercanas));
+        cercanasPresenter.initialize(paradasCercanasView);
+        paradasCercanasView.setupMapa(getChildFragmentManager());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         favoritasPresenter.update();
+        cercanasPresenter.update();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         favoritasPresenter.pause();
+        cercanasPresenter.pause();
     }
 
     @Override
@@ -85,7 +96,6 @@ public class MainPageFragment extends BaseDBFragment {
     private void setupUI() {
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction trans = fm.beginTransaction();
-        setupParadasCercanas(fm, trans);
         setupLineasCercanas(fm, trans);
         trans.commit();
         setupNewVersion();
@@ -117,17 +127,6 @@ public class MainPageFragment extends BaseDBFragment {
         prefs.edit().putInt(PREF_SHOW_NEW_VERSION_LATEST_SEEN, currentVersion).apply();
     }
 
-    private void setupParadasCercanas(FragmentManager fm, FragmentTransaction trans) {
-        Fragment f = fm.findFragmentByTag(FRAG_PARADAS_CERCANAS);
-        if (f == null) {
-            f = ParadasCercanasMainFragment.getInstance();
-        }
-        if (f.isAdded()) {
-            trans.attach(f);
-        } else {
-            trans.add(R.id.fragment_main_paradas_cercanas, f, FRAG_PARADAS_CERCANAS);
-        }
-    }
 
     private void setupLineasCercanas(FragmentManager fm, FragmentTransaction trans) {
         Fragment f = fm.findFragmentByTag(FRAG_LINEAS_CERCANAS);

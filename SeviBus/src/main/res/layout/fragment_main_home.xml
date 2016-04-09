@@ -22,21 +22,15 @@
             />
 
         <FrameLayout
-            android:id="@+id/fragment_main_firstrun"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-
-        <FrameLayout
             android:id="@+id/fragment_main_newversion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
 
-        <FrameLayout
+
+        <include
             android:id="@+id/fragment_main_paradas_cercanas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            layout="@layout/fragment_main_paradas_cercanas"
             />
 
         <FrameLayout

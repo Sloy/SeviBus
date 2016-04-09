@@ -31,9 +31,9 @@ import com.sloy.sevibus.ui.fragments.MainPageFragment;
 import com.sloy.sevibus.ui.fragments.MapContainerFragment;
 import com.sloy.sevibus.ui.fragments.MapaControllerFragment;
 import com.sloy.sevibus.ui.fragments.main.LineasCercanasMainFragment;
-import com.sloy.sevibus.ui.fragments.main.ParadasCercanasMainFragment;
+import com.sloy.sevibus.ui.mvp.view.ParadasCercanasMainViewContainer;
 
-public class HomeActivity extends LocationProviderActivity implements IMainController, InitialFragment.ApplicationReadyListener, ListaLineasFragment.LineaSelectedListener, ParadasCercanasMainFragment.ParadasCercanasMainClickListener, LineasCercanasMainFragment.LineasCercanasMainClickListener {
+public class HomeActivity extends LocationProviderActivity implements IMainController, InitialFragment.ApplicationReadyListener, ListaLineasFragment.LineaSelectedListener, ParadasCercanasMainViewContainer.ParadasCercanasMainClickListener, LineasCercanasMainFragment.LineasCercanasMainClickListener {
 
 
     public static final String EXTRA_DRAWER_ID = "drawer_position";
