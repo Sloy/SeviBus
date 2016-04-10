@@ -57,7 +57,6 @@ public class LocationProviderActivity extends BaseToolbarActivity
     private void requestNewLocation() {
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (lastLocation != null) {
-            Debug.useFakeLocation(this, lastLocation);
             locationProvider.sendNewLocation(lastLocation);
         }
     }

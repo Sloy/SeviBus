@@ -27,6 +27,7 @@ public class Debug {
         prefs.edit().putBoolean("is_debug", enabled).commit();
     }
 
+    @Deprecated
     public static void useFakeLocation(Context context, Location location) {
         boolean forceFakeLocation = context.getSharedPreferences("debug", Context.MODE_MULTI_PROCESS).getBoolean(FAKE_LOCATION_KEY, false);
         if (BuildConfig.FLAVOR.equals("sevilla") && forceFakeLocation && isDebugEnabled(context)) {
@@ -36,6 +37,7 @@ public class Debug {
         }
     }
 
+    @Deprecated
     public static void setUseFakeLocationProvider(Context context, GoogleMap map) {
         boolean forceFakeLocation = context.getSharedPreferences("debug", Context.MODE_MULTI_PROCESS).getBoolean(FAKE_LOCATION_KEY, false);
         if (BuildConfig.FLAVOR.equals("sevilla") && forceFakeLocation && isDebugEnabled(context)) {

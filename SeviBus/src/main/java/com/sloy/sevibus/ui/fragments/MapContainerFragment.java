@@ -52,7 +52,6 @@ public class MapContainerFragment extends BaseDBFragment {
             mMap = mMapFragment.getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
-                Debug.setUseFakeLocationProvider(getActivity(), mMap);
                 // The Map is verified. It is now safe to manipulate the map.
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 mMap.setMyLocationEnabled(true);
