@@ -1,5 +1,6 @@
 package com.sloy.sevibus.ui.mvp.presenter;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.sloy.sevibus.model.ParadaCercana;
@@ -31,7 +32,22 @@ public class ParadasCercanasMainPresenter implements Presenter<ParadasCercanasMa
     @Override
     public void update() {
         locationSubscription = locationProvider.observe()
-          .flatMap((location) -> obtainCercanasAction.obtainCercanas(location).toList())
+          .subscribe(locationOptional -> {
+              if (locationOptional.isPresent()) {
+                  obtainParadasCercanas(locationOptional.get());
+              } else {
+                  view.showError();
+                  view.hideLoading();
+              }
+          },throwable -> {
+              view.showError();
+              view.hideLoading();
+          });
+    }
+
+    private void obtainParadasCercanas(Location location) {
+        obtainCercanasAction.obtainCercanas(location)
+          .toList()
           .subscribe(paradas -> {
                 view.hideLoading();
                 if (paradas.isEmpty()) {

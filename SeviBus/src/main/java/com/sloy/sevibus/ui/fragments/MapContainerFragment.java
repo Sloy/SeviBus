@@ -14,6 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.common.base.Optional;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.LocationProvider;
@@ -68,7 +69,7 @@ public class MapContainerFragment extends BaseDBFragment {
         if (mMap != null) {
             showMapControls(mShowInterface);
             asociarOpciones(true);
-            locationSubscription = locationProvider.observe()
+            locationSubscription = locationProvider.observeAvailable()
               .subscribe(this::onLocationUpdated);
         }
     }

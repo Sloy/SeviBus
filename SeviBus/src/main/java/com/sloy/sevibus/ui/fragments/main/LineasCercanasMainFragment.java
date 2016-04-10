@@ -84,7 +84,7 @@ public class LineasCercanasMainFragment extends BaseDBFragment {
     @Override
     public void onStart() {
         super.onStart();
-        locationSubscription = locationProvider.observe()
+        locationSubscription = locationProvider.observeAvailable()
           .subscribe(this::onLocationUpdated);
     }
 

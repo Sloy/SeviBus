@@ -215,7 +215,7 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
         if (mCurrentConfig.mostrarBuses) {
             comienzaSeguimientoBuses();
         }
-        locationSubscription = locationProvider.observe()
+        locationSubscription = locationProvider.observeAvailable()
           .subscribe(this::onLocationUpdated);
     }
 

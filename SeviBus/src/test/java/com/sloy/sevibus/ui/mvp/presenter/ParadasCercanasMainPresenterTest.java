@@ -2,6 +2,7 @@ package com.sloy.sevibus.ui.mvp.presenter;
 
 import android.location.Location;
 
+import com.google.common.base.Optional;
 import com.sloy.sevibus.model.ParadaCercana;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.LocationProvider;
@@ -45,7 +46,7 @@ public class ParadasCercanasMainPresenterTest {
 
     @Test
     public void shows_paradas_when_updated_with_cercanas_available() throws Exception {
-        when(locationProvider.observe()).thenReturn(Observable.just(new Location("test")));
+        when(locationProvider.observe()).thenReturn(aLocation());
         when(obtainCercanasAction.obtainCercanas(any(Location.class))).thenReturn(Observable.just(paradaCercana()));
 
         presenter.initialize(view);
@@ -58,7 +59,7 @@ public class ParadasCercanasMainPresenterTest {
 
     @Test
     public void shows_empty_when_updated_with_no_cercanas() throws Exception {
-        when(locationProvider.observe()).thenReturn(Observable.just(new Location("test")));
+        when(locationProvider.observe()).thenReturn(aLocation());
         when(obtainCercanasAction.obtainCercanas(any(Location.class))).thenReturn(Observable.empty());
 
         presenter.initialize(view);
@@ -71,7 +72,7 @@ public class ParadasCercanasMainPresenterTest {
 
     @Test
     public void shows_error_when_updated_and_error_occurrs_retrieving_cercanas() throws Exception {
-        when(locationProvider.observe()).thenReturn(Observable.just(new Location("test")));
+        when(locationProvider.observe()).thenReturn(aLocation());
         when(obtainCercanasAction.obtainCercanas(any(Location.class))).thenReturn(Observable.error(new RuntimeException()));
 
         presenter.initialize(view);
@@ -93,8 +94,24 @@ public class ParadasCercanasMainPresenterTest {
         verify(view).showError();
     }
 
+    @Test
+    public void shows_error_when_updated_and_location_is_abstent() throws Exception {
+        when(locationProvider.observe()).thenReturn(Observable.just(Optional.absent()));
+        when(obtainCercanasAction.obtainCercanas(any(Location.class))).thenReturn(Observable.empty());
+
+        presenter.initialize(view);
+        presenter.update();
+
+        verify(view).showError();
+        verify(view).hideLoading();
+    }
+
     private ParadaCercana paradaCercana() {
         return new ParadaCercana(new Parada(), 0);
+    }
+
+    private Observable<Optional<Location>> aLocation() {
+        return Observable.just(Optional.of(new Location("test")));
     }
 
 }
