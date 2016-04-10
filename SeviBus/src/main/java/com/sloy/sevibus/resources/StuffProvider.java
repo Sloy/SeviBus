@@ -7,7 +7,9 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.resources.actions.DeleteFavoritaAction;
+import com.sloy.sevibus.resources.actions.ObtainCercanasAction;
 import com.sloy.sevibus.resources.actions.ObtainFavoritasAction;
+import com.sloy.sevibus.resources.actions.ObtainLineasCercanasAction;
 import com.sloy.sevibus.resources.actions.ObtainLlegadasAction;
 import com.sloy.sevibus.resources.actions.ObtainSingleFavoritaAction;
 import com.sloy.sevibus.resources.actions.ReorderFavoritasAction;
@@ -16,6 +18,7 @@ import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.ApiLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.DBFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
+import com.sloy.sevibus.resources.datasource.LineaDataSource;
 import com.sloy.sevibus.resources.datasource.LlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.SevibusApi;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
@@ -106,5 +109,13 @@ public class StuffProvider {
 
     public static FavoritaDataSource getFavoritaDataSource(Context context) {
         return new DBFavoritaDataSource(getDbHelper(context));
+    }
+
+    public static ObtainCercanasAction getObtainCercanasAction(Context context) {
+        return new ObtainCercanasAction(getDbHelper(context));
+    }
+
+    public static ObtainLineasCercanasAction getObtainLineasCercanasAction(Context context) {
+        return new ObtainLineasCercanasAction(new LineaDataSource(getDbHelper(context)),getObtainCercanasAction(context));
     }
 }

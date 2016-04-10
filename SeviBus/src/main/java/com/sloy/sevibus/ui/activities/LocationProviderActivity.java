@@ -10,80 +10,71 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.sloy.sevibus.resources.Debug;
-import com.sloy.sevibus.ui.fragments.main.ILocationSensitiveFragment;
-import java.util.LinkedList;
-import java.util.List;
+import com.sloy.sevibus.resources.LocationProvider;
 
 public class LocationProviderActivity extends BaseToolbarActivity
-    implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+  implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
-    private List<ILocationSensitiveFragment> mFragmentsToNotify;
-    private GoogleApiClient mGoogleApiClient;
+    public static final int RESOLUTION_REQUEST_CODE = 600613;
+
+    public GoogleApiClient getGoogleApiClient() {
+        return googleApiClient;
+    }
+
+    private GoogleApiClient googleApiClient;
+
+    private LocationProvider locationProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-            .addConnectionCallbacks(this)
-            .addOnConnectionFailedListener(this)
-            .addApi(LocationServices.API)
-            .build();
+        googleApiClient = new GoogleApiClient.Builder(this)
+          .enableAutoManage(this, this)
+          .addConnectionCallbacks(this)
+          .addApi(LocationServices.API)
+          .build();
 
-        mFragmentsToNotify = new LinkedList<ILocationSensitiveFragment>();
+        locationProvider = new LocationProvider();
     }
 
     @Override
     protected void onPause() {
-        mGoogleApiClient.disconnect();
+        googleApiClient.disconnect();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        mGoogleApiClient.connect();
+        googleApiClient.connect();
         super.onResume();
     }
 
-    public void suscribeForUpdates(ILocationSensitiveFragment fragment) {
-        mFragmentsToNotify.add(fragment);
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-            if (lastLocation != null) {
-                Debug.useFakeLocation(this, lastLocation);
-                fragment.updateLocation(lastLocation);
-            }
-        }
+    public LocationProvider getLocationProvider() {
+        return locationProvider;
     }
 
-    public void unsuscribe(ILocationSensitiveFragment fragment) {
-        mFragmentsToNotify.remove(fragment);
+    private void requestNewLocation() {
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        locationProvider.sendNewLocation(lastLocation);
     }
 
     @Override
     public void onConnected(Bundle bundle) {
         Log.d("Sevibus Location", "onConnected()");
-            Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-            if (currentLocation != null) {
-                Debug.useFakeLocation(this, currentLocation);
-                for (ILocationSensitiveFragment f : mFragmentsToNotify) {
-                    f.updateLocation(currentLocation);
-                }
-            } else {
-                Log.w("SeviBus", "LocationProviderActivity#onConnected(): Recibida localización nula");
-            }
+        requestNewLocation();
     }
 
-    @Override public void onConnectionSuspended(int i) {
+    @Override
+    public void onConnectionSuspended(int i) {
         /* no-op */
     }
 
-    @Override public void onConnectionFailed(ConnectionResult connectionResult) {
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
         if (connectionResult.hasResolution()) {
             try {
-                connectionResult.startResolutionForResult(this, 1);
+                connectionResult.startResolutionForResult(this, RESOLUTION_REQUEST_CODE);
             } catch (IntentSender.SendIntentException e) {
                 e.printStackTrace();
             }
@@ -92,9 +83,11 @@ public class LocationProviderActivity extends BaseToolbarActivity
         }
     }
 
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            mGoogleApiClient.connect();
+            googleApiClient.connect();
         }
     }
 }
