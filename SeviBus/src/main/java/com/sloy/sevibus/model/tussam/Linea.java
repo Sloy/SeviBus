@@ -32,13 +32,14 @@ public class Linea implements Comparable<Linea>{
     public Linea() {
     }
 
-    public Linea(Integer macro, String label, String nombre, String color, Collection<Seccion> secciones) {
+    public Linea(Integer macro, String label, String nombre, String color, Collection<Seccion> secciones, TipoLinea tipo) {
         super();
         this.id = macro;
         this.numero = label;
         this.nombre = nombre;
         this.color = color;
         this.trayectos = secciones;
+        this.tipo = tipo;
     }
 
     public int getId() {
@@ -80,7 +81,7 @@ public class Linea implements Comparable<Linea>{
         if (compTipo != 0) {
             return compTipo;
         } else {
-            return this.tipo.getNombre().compareTo(another.getTipo().getNombre());
+            return this.getNombre().compareTo(another.getNombre());
         }
     }
 

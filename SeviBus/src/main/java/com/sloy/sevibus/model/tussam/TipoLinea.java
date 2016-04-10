@@ -11,6 +11,14 @@ public class TipoLinea implements Comparable<TipoLinea> {
     @DatabaseField
     private String nombre;
 
+    public TipoLinea() {
+    }
+
+    public TipoLinea(Integer id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
     public int getId() {
         return id;
     }

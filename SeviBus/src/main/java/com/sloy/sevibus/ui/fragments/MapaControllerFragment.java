@@ -34,6 +34,7 @@ import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.BusLocation;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.actions.ObtainFavoritasAction;
 import com.sloy.sevibus.resources.exceptions.ServerErrorException;
@@ -44,15 +45,15 @@ import com.sloy.sevibus.resources.maputils.Layer;
 import com.sloy.sevibus.resources.maputils.LayerManager;
 import com.sloy.sevibus.resources.maputils.LineaLayer;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
-import com.sloy.sevibus.ui.fragments.main.ILocationSensitiveFragment;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscription;
 
-public class MapaControllerFragment extends BaseDBFragment implements ILocationSensitiveFragment, LoaderManager.LoaderCallbacks<List<BusLocation>> {
+public class MapaControllerFragment extends BaseDBFragment implements LoaderManager.LoaderCallbacks<List<BusLocation>> {
 
     private static final String LOADER_EXTRA_LINEA = "linea";
     private static final long TIEMPO_ACTUALIZACION_BUSES = 30 * 1000;
@@ -81,6 +82,8 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
     private Runnable mRunnableUpdateBuses;
 
     private ObtainFavoritasAction obtainFavoritasAction;
+    private LocationProvider locationProvider;
+    private Subscription locationSubscription;
 
     public static Drawable colorearTodo(Drawable drawable, int color) {
         drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
@@ -167,6 +170,7 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        locationProvider = ((LocationProviderActivity) getActivity()).getLocationProvider();
         if (savedInstanceState != null) {
             mCurrentConfig = ConfigWraper.fromBundle(savedInstanceState.getBundle(ConfigWraper.OPCIONES_KEY));
         } else {
@@ -208,18 +212,19 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
     @Override
     public void onStart() {
         super.onStart();
-        ((LocationProviderActivity) getActivity()).suscribeForUpdates(this);
         if (mCurrentConfig.mostrarBuses) {
             comienzaSeguimientoBuses();
         }
+        locationSubscription = locationProvider.observeAvailable()
+          .subscribe(this::onLocationUpdated);
     }
 
 
     @Override
     public void onStop() {
         super.onStop();
-        ((LocationProviderActivity) getActivity()).unsuscribe(this);
         detieneSeguimientoBuses();
+        locationSubscription.unsubscribe();
     }
 
     @Override
@@ -518,8 +523,7 @@ public class MapaControllerFragment extends BaseDBFragment implements ILocationS
         }
     }
 
-    @Override
-    public void updateLocation(Location location) {
+    public void onLocationUpdated(Location location) {
         mLastKnownLocation = location;
         mCheckCercanas.setEnabled(true);
         if (mCheckCercanas.isChecked()) {
