@@ -20,7 +20,6 @@ import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.StuffProvider;
-import com.sloy.sevibus.resources.actions.ObtainCercanasAction;
 import com.sloy.sevibus.ui.activities.BusquedaActivity;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
@@ -55,7 +54,7 @@ public class MainPageFragment extends BaseDBFragment {
         super.onAttach(context);
         favoritasPresenter = new FavoritasMainPresenter(StuffProvider.getObtainFavoritasAction(getActivity()));
         LocationProvider locationProvider = ((LocationProviderActivity) getActivity()).getLocationProvider();
-        cercanasPresenter = new ParadasCercanasMainPresenter(locationProvider, new ObtainCercanasAction(getDBHelper()));
+        cercanasPresenter = new ParadasCercanasMainPresenter(locationProvider, StuffProvider.getObtainCercanasAction(context));
     }
 
     @Override
