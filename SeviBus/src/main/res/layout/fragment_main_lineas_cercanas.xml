@@ -38,6 +38,7 @@
             android:id="@+id/main_lineas_cercanas_contenido"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <include

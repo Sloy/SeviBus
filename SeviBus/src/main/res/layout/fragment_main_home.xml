@@ -33,10 +33,9 @@
             layout="@layout/fragment_main_paradas_cercanas"
             />
 
-        <FrameLayout
+        <include
             android:id="@+id/fragment_main_lineas_cercanas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            layout="@layout/fragment_main_lineas_cercanas"
             />
     </LinearLayout>
 </ScrollView>
