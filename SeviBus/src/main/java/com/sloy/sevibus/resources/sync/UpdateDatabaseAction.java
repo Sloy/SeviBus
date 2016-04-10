@@ -3,6 +3,7 @@ package com.sloy.sevibus.resources.sync;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
@@ -40,7 +41,9 @@ public class UpdateDatabaseAction {
     public Observable<Void> update() {
         return Observable.create(subscriber -> {
             try {
-                updateData();
+                if (BuildConfig.FLAVOR.equals("sevilla")) {
+                    updateData();
+                }
                 subscriber.onCompleted();
             } catch (Exception e) {
                 subscriber.onError(e);

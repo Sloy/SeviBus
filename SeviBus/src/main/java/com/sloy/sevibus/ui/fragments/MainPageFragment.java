@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,27 +18,46 @@ import android.view.ViewGroup;
 
 import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.R;
+import com.sloy.sevibus.resources.LocationProvider;
+import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.ui.activities.BusquedaActivity;
+import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
-import com.sloy.sevibus.ui.fragments.main.FavoritasMainFragment;
-import com.sloy.sevibus.ui.fragments.main.LineasCercanasMainFragment;
-import com.sloy.sevibus.ui.fragments.main.ParadasCercanasMainFragment;
+import com.sloy.sevibus.ui.mvp.presenter.FavoritasMainPresenter;
+import com.sloy.sevibus.ui.mvp.presenter.LineasCercanasPresenter;
+import com.sloy.sevibus.ui.mvp.presenter.ParadasCercanasMainPresenter;
+import com.sloy.sevibus.ui.mvp.view.FavoritasMainViewContainer;
+import com.sloy.sevibus.ui.mvp.view.LineasCercanasViewContainer;
+import com.sloy.sevibus.ui.mvp.view.ParadasCercanasMainViewContainer;
 
 import de.cketti.library.changelog.ChangeLog;
 
 public class MainPageFragment extends BaseDBFragment {
 
-    private static final String FRAG_FAVORITAS = "f_favoritas";
     private static final String FRAG_PARADAS_CERCANAS = "f_p_cercanas";
     private static final String FRAG_LINEAS_CERCANAS = "f_l_cercanas";
 
     private static final String PREF_SHOW_NEW_VERSION_LATEST_SEEN = "newversion_last_seen";
     private static final int NEW_VERSION_SNACKBAR_DURATION = 10000;
 
+    private FavoritasMainPresenter favoritasPresenter;
+    private ParadasCercanasMainPresenter cercanasPresenter;
+    private LineasCercanasPresenter lineasCercanasPresenter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        favoritasPresenter = new FavoritasMainPresenter(StuffProvider.getObtainFavoritasAction(getActivity()));
+        LocationProvider locationProvider = ((LocationProviderActivity) getActivity()).getLocationProvider();
+        cercanasPresenter = new ParadasCercanasMainPresenter(locationProvider, StuffProvider.getObtainCercanasAction(context));
+        lineasCercanasPresenter = new LineasCercanasPresenter(locationProvider, StuffProvider.getObtainLineasCercanasAction(context));
     }
 
     @Override
@@ -47,18 +67,41 @@ public class MainPageFragment extends BaseDBFragment {
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        favoritasPresenter.initialize(new FavoritasMainViewContainer(view.findViewById(R.id.fragment_main_favoritas)));
+
+        ParadasCercanasMainViewContainer paradasCercanasView = new ParadasCercanasMainViewContainer(view.findViewById(R.id.fragment_main_paradas_cercanas));
+        cercanasPresenter.initialize(paradasCercanasView);
+        paradasCercanasView.setupMapa(getChildFragmentManager());
+
+        LineasCercanasViewContainer lineasCercanasView = new LineasCercanasViewContainer(view.findViewById(R.id.fragment_main_lineas_cercanas));
+        lineasCercanasPresenter.initialize(lineasCercanasView);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        favoritasPresenter.update();
+        cercanasPresenter.update();
+        lineasCercanasPresenter.update();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        favoritasPresenter.pause();
+        cercanasPresenter.pause();
+        lineasCercanasPresenter.pause();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupUI();
     }
 
     private void setupUI() {
-        FragmentManager fm = getChildFragmentManager();
-        FragmentTransaction trans = fm.beginTransaction();
-        setupFavoritas(fm, trans);
-        setupParadasCercanas(fm, trans);
-        setupLineasCercanas(fm, trans);
-        trans.commit();
         setupNewVersion();
     }
 
@@ -86,43 +129,6 @@ public class MainPageFragment extends BaseDBFragment {
         }
 
         prefs.edit().putInt(PREF_SHOW_NEW_VERSION_LATEST_SEEN, currentVersion).apply();
-    }
-
-    private void setupFavoritas(FragmentManager fm, FragmentTransaction trans) {
-        Fragment f = fm.findFragmentByTag(FRAG_FAVORITAS);
-        if (f == null) {
-            f = FavoritasMainFragment.getInstance();
-        }
-        if (f.isAdded()) {
-            trans.attach(f);
-        } else {
-            trans.add(R.id.fragment_main_favoritas, f, FRAG_FAVORITAS);
-        }
-    }
-
-    private void setupParadasCercanas(FragmentManager fm, FragmentTransaction trans) {
-        Fragment f = fm.findFragmentByTag(FRAG_PARADAS_CERCANAS);
-        if (f == null) {
-            f = ParadasCercanasMainFragment.getInstance();
-        }
-        ((ParadasCercanasMainFragment) f).setMainPage(this);
-        if (f.isAdded()) {
-            trans.attach(f);
-        } else {
-            trans.add(R.id.fragment_main_paradas_cercanas, f, FRAG_PARADAS_CERCANAS);
-        }
-    }
-
-    private void setupLineasCercanas(FragmentManager fm, FragmentTransaction trans) {
-        Fragment f = fm.findFragmentByTag(FRAG_LINEAS_CERCANAS);
-        if (f == null) {
-            f = LineasCercanasMainFragment.getInstance();
-        }
-        if (f.isAdded()) {
-            trans.attach(f);
-        } else {
-            trans.add(R.id.fragment_main_lineas_cercanas, f, FRAG_LINEAS_CERCANAS);
-        }
     }
 
     @Override
