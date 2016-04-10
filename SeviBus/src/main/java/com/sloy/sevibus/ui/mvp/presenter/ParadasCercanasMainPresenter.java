@@ -36,12 +36,12 @@ public class ParadasCercanasMainPresenter implements Presenter<ParadasCercanasMa
               if (locationOptional.isPresent()) {
                   obtainParadasCercanas(locationOptional.get());
               } else {
-                  view.showError();
                   view.hideLoading();
+                  view.showError();
               }
           },throwable -> {
-              view.showError();
               view.hideLoading();
+              view.showError();
           });
     }
 
