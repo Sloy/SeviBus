@@ -16,57 +16,7 @@
         android:paddingTop="16dp"
         >
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/sign_in_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone"/>
-
-            <LinearLayout
-                android:id="@+id/user_profile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/user_photo"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:layout_marginRight="16dp"
-                    android:scaleType="centerCrop"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/user_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Rafa Vázquez"/>
-
-                    <TextView
-                        android:id="@+id/user_email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="rafa.vazsan@gmail.com"/>
-
-                    <Button
-                        android:id="@+id/sign_out_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Log out"/>
-                </LinearLayout>
-            </LinearLayout>
-
-        </FrameLayout>
+        <include layout="@layout/fragment_main_login"/>
 
         <include
             android:id="@+id/fragment_main_favoritas"

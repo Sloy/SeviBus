@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,7 +44,8 @@ public class MainPageFragment extends BaseDBFragment {
     private SignInButton signInButton;
     private LoginController loginController;
 
-    private Button signOutButton;
+    private TextView signOutButton;
+    private View loginForm;
     private View userProfile;
     private TextView userEmail;
     private TextView userName;
@@ -66,7 +66,8 @@ public class MainPageFragment extends BaseDBFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main_home, container, false);
         signInButton = (SignInButton) v.findViewById(R.id.sign_in_button);
-        signOutButton = ((Button) v.findViewById(R.id.sign_out_button));
+        signOutButton = (TextView) v.findViewById(R.id.sign_out_button);
+        loginForm = v.findViewById(R.id.login_form);
         userProfile = v.findViewById(R.id.user_profile);
         userEmail = ((TextView) v.findViewById(R.id.user_email));
         userName = ((TextView) v.findViewById(R.id.user_name));
@@ -121,7 +122,7 @@ public class MainPageFragment extends BaseDBFragment {
     }
 
     private void setupLogin() {
-        signInButton.setSize(SignInButton.SIZE_WIDE);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(v -> {
             startActivityForResult(loginController.loginIntent(((LocationProviderActivity) getActivity()).getGoogleApiClient()), RC_SIGN_IN);
         });
@@ -129,7 +130,7 @@ public class MainPageFragment extends BaseDBFragment {
         signOutButton.setOnClickListener(v -> {
             loginController.logout(((LocationProviderActivity) getActivity()).getGoogleApiClient());
             logOutAction.logOut().subscribe();
-            signInButton.setVisibility(View.VISIBLE);
+            loginForm.setVisibility(View.VISIBLE);
             userProfile.setVisibility(View.GONE);
         });
 
@@ -138,7 +139,7 @@ public class MainPageFragment extends BaseDBFragment {
               if (optionalUser.isPresent()) {
                   showUserProfile(optionalUser.get());
               } else {
-                  signInButton.setVisibility(View.VISIBLE);
+                  loginForm.setVisibility(View.VISIBLE);
                   userProfile.setVisibility(View.GONE);
               }
           });
@@ -159,7 +160,7 @@ public class MainPageFragment extends BaseDBFragment {
     }
 
     private void showUserProfile(SevibusUser sevibusUser) {
-        signInButton.setVisibility(View.GONE);
+        loginForm.setVisibility(View.GONE);
         userProfile.setVisibility(View.VISIBLE);
 
         userName.setText(sevibusUser.getName());
