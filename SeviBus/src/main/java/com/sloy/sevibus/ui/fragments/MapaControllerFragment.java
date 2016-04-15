@@ -32,6 +32,7 @@ import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
+import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.BusLocation;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.LocationProvider;
@@ -84,6 +85,7 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
     private ObtainFavoritasAction obtainFavoritasAction;
     private LocationProvider locationProvider;
     private Subscription locationSubscription;
+    private AnalyticsTracker analyticsTracker;
 
     public static Drawable colorearTodo(Drawable drawable, int color) {
         drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
@@ -115,6 +117,7 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
                     @Override
                     public void onLineaSelecteded(Linea linea) {
                         addLinea(linea);
+                        analyticsTracker.lineaAddedToMap(linea, mLineasMostradas.size());
                     }
                 });
                 dialog.show(getChildFragmentManager(), "dialog");
@@ -170,6 +173,7 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        analyticsTracker = StuffProvider.getAnalyticsTracker();
         locationProvider = ((LocationProviderActivity) getActivity()).getLocationProvider();
         if (savedInstanceState != null) {
             mCurrentConfig = ConfigWraper.fromBundle(savedInstanceState.getBundle(ConfigWraper.OPCIONES_KEY));
