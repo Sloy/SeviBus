@@ -7,6 +7,7 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.answers.SearchEvent;
 import com.sloy.sevibus.model.PaletaColores;
+import com.sloy.sevibus.model.tussam.Linea;
 
 public class AnswersAnalyticsTracker implements AnalyticsTracker {
 
@@ -61,6 +62,14 @@ public class AnswersAnalyticsTracker implements AnalyticsTracker {
             .putCustomAttribute("Color paleta", "legacy")
             .putCustomAttribute("Parada", String.valueOf(numeroParada))
             .putCustomAttribute("Versión OS", String.valueOf(Build.VERSION.SDK_INT))
+        );
+    }
+
+    @Override
+    public void lineaAddedToMap(Linea linea, int totalCount) {
+        answers.logCustom(new CustomEvent("Añade línea al mapa")
+          .putCustomAttribute("Total count", Integer.toString(totalCount))
+          .putCustomAttribute("Linea", linea.getNumero())
         );
     }
 
