@@ -115,11 +115,13 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
             ((GradientDrawable) background).setColor(favorita.getColor());
 
             StringBuilder sbLineas = new StringBuilder();
-            for (String linea : parada.getNumeroLineas()) {
-                sbLineas.append(linea);
-                sbLineas.append("  ");
+            if (!parada.getNumeroLineas().isEmpty()) {
+                for (String linea : parada.getNumeroLineas()) {
+                    sbLineas.append(linea);
+                    sbLineas.append("  ");
+                }
+                sbLineas.setLength(sbLineas.length() - 2);
             }
-            sbLineas.setLength(sbLineas.length() - 2);
             lineas.setText(sbLineas.toString());
 
             itemView.setOnClickListener(v -> onFavoritaClickListener.onFavoritaClick(favorita));
