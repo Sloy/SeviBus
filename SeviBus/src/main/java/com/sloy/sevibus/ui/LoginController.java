@@ -2,6 +2,7 @@ package com.sloy.sevibus.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.firebase.client.AuthData;
@@ -40,12 +41,10 @@ public class LoginController implements GoogleApiClient.OnConnectionFailedListen
     }
 
     public Observable<SevibusUser> handleSignInResult(Context context, Intent data) {
-        GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-        if (!result.isSuccess()) {
-            //TODO mejora esto
-            return Observable.error(new Exception("Oops"));
-        }
-        return Observable.just(result.getSignInAccount())
+        return Observable.just(data)
+          .map(Auth.GoogleSignInApi::getSignInResultFromIntent)
+          .flatMap(this::successOrFail)
+          .map(GoogleSignInResult::getSignInAccount)
           .map(GoogleSignInAccount::getEmail)
           .flatMap(email -> getOauthToken(context, email))
           .flatMap(this::autenticateFirebase)
@@ -105,5 +104,10 @@ public class LoginController implements GoogleApiClient.OnConnectionFailedListen
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d("LOGIN", "onConnectionFailed");
+    }
+
+    @NonNull
+    private Observable<GoogleSignInResult> successOrFail(GoogleSignInResult signInResult) {
+        return signInResult.isSuccess() ? Observable.just(signInResult) : Observable.error(new Exception("Oops"));
     }
 }
