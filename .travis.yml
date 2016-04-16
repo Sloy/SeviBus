@@ -28,6 +28,9 @@ android:
   licenses:
     - android-sdk-license-5be876d5
 
+notifications:
+  slack: sevibus:4beIQklwr0L7yEvXDBGymaDx
+
 before_install:
 - openssl aes-256-cbc -K $encrypted_f41832db9087_key -iv $encrypted_f41832db9087_iv
   -in secrets.tar.enc -out secrets.tar -d

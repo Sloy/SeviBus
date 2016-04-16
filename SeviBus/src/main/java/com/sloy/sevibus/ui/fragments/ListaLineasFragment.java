@@ -65,7 +65,10 @@ public class ListaLineasFragment extends BaseDBFragment {
                     List<Linea> todasLineas = DBQueries.getTodasLineas(getDBHelper());
                     for (Linea l : todasLineas) {
                         TipoLinea tipo = l.getTipo();
-                        if (tipo != null && lineasOrganizadas.containsKey(tipo)) {
+                        if (tipo == null) {
+                            return false;
+                        }
+                        if (lineasOrganizadas.containsKey(tipo)) {
                             lineasOrganizadas.get(tipo).add(l);
                         } else {
                             List<Linea> nuevaListaLineas = new ArrayList<Linea>();
