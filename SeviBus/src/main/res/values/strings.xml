@@ -16,6 +16,7 @@
     <string name="paradas_cercanas_cargando">Buscando paradas cercanas a tu posición...</string>
     <string name="lineas_cercanas_cargando">Buscando líneas cercanas a tu posición...</string>
     <string name="lineas_cercanas_empty">No encontramos líneas cercanas a tu posición. ¿Estás fuera de Sevilla?</string>
+    <string name="favoritas_main_error">Ocurrió un error cargando las favoritas :(</string>
     <string name="favoritas_main_empty">Guarda tus paradas favoritas y aparecerán aquí</string>
     <string name="favoritas_main_cargando">Cargando paradas favoritas...</string>
     <string name="search_hint">Nº o nombre</string>

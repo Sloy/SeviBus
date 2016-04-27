@@ -42,6 +42,8 @@ public class FavoritasMainPresenter implements Presenter<FavoritasMainPresenter.
                   view.hideEmpty();
                   view.showFavoritas(favoritas);
               }
+          }, error -> {
+              view.showError();
           });
     }
 
@@ -58,6 +60,8 @@ public class FavoritasMainPresenter implements Presenter<FavoritasMainPresenter.
         void showFavoritas(List<Favorita> favoritas);
 
         void hideFavoritas();
+
+        void showError();
     }
 
 }
