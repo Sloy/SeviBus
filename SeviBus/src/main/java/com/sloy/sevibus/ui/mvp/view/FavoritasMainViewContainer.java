@@ -104,7 +104,7 @@ public class FavoritasMainViewContainer implements FavoritasMainPresenter.View {
     }
 
     private void bindViewFavorita(Favorita fav, View v) {
-        if (fav != null) {
+        if (fav != null && fav.getParadaAsociada() != null) {
             Integer numero = fav.getParadaAsociada().getNumero();
             TextView text = (TextView) v.findViewById(R.id.favoritas_main_numero);
             View color = v.findViewById(R.id.favoritas_main_color);
