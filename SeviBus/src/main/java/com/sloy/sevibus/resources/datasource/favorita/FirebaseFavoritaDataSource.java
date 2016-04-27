@@ -80,6 +80,7 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
           .flatMap(Observable::from)
           .map(favorita -> favorita.getParadaAsociada().getNumero())
           .flatMap(this::deleteFavorita)
+          .defaultIfEmpty(0)
           .flatMap(__ -> saveFavoritas(favoritas));
     }
 
