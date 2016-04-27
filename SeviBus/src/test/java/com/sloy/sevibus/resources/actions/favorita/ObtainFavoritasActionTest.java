@@ -9,17 +9,19 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static rx.Observable.*;
+import static rx.Observable.empty;
+import static rx.Observable.just;
 
 public class ObtainFavoritasActionTest {
 
@@ -81,6 +83,15 @@ public class ObtainFavoritasActionTest {
         obtainFavoritasAction.getFavoritas().toBlocking().subscribe();
 
         verify(localDataSource).replaceFavoritas(remoteFavs);
+    }
+
+    @Test
+    public void dont_replace_local_when_remote_returns_empty_list() throws Exception {
+        when(remoteDataSource.getFavoritas()).thenReturn(just(emptyList()));
+
+        obtainFavoritasAction.getFavoritas().toBlocking().subscribe();
+
+        verify(localDataSource, never()).replaceFavoritas(anyListOf(Favorita.class));
     }
 
     public static <E> List<E> toList(Observable<E> observable) {
