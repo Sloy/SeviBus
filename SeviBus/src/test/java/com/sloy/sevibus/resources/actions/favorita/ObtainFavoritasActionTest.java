@@ -40,6 +40,7 @@ public class ObtainFavoritasActionTest {
         when(localDataSource.getFavoritas()).thenReturn(empty());
         when(remoteDataSource.getFavoritas()).thenReturn(empty());
         when(localDataSource.replaceFavoritas(anyListOf(Favorita.class))).then(i -> just(i.getArgumentAt(0, Favorita.class)));
+        when(remoteDataSource.replaceFavoritas(anyListOf(Favorita.class))).then(i -> just(i.getArgumentAt(0, Favorita.class)));
     }
 
     @Test
@@ -92,6 +93,17 @@ public class ObtainFavoritasActionTest {
         obtainFavoritasAction.getFavoritas().toBlocking().subscribe();
 
         verify(localDataSource, never()).replaceFavoritas(anyListOf(Favorita.class));
+    }
+
+    @Test
+    public void replace_remote_with_loca_when_remote_returns_emtpy_list() throws Exception {
+        List<Favorita> localFavs = singletonList(new Favorita());
+        when(localDataSource.getFavoritas()).thenReturn(just(localFavs));
+        when(remoteDataSource.getFavoritas()).thenReturn(just(emptyList()));
+
+        obtainFavoritasAction.getFavoritas().toBlocking().subscribe();
+
+        verify(remoteDataSource).replaceFavoritas(localFavs);
     }
 
     public static <E> List<E> toList(Observable<E> observable) {

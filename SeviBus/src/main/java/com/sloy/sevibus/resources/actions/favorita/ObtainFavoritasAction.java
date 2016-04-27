@@ -17,12 +17,15 @@ public class ObtainFavoritasAction {
         this.favoritaRemoteDataSource = favoritaRemoteDataSource;
     }
 
-    public Observable<List<Favorita>> getFavoritas(){
+    public Observable<List<Favorita>> getFavoritas() {
         return Observable.concat(
           favoritaLocalDataSource.getFavoritas(),
           favoritaRemoteDataSource.getFavoritas()
             .filter((favoritas) -> !favoritas.isEmpty())
             .flatMap(favoritaLocalDataSource::replaceFavoritas)
+            .switchIfEmpty(favoritaLocalDataSource.getFavoritas()
+              .flatMap(favoritaRemoteDataSource::replaceFavoritas)
+              .flatMap(__ -> Observable.empty()))
         );
     }
 }
