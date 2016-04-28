@@ -35,6 +35,8 @@ import com.sloy.sevibus.ui.mvp.view.LineasCercanasViewContainer;
 import com.sloy.sevibus.ui.mvp.view.ParadasCercanasMainViewContainer;
 import com.squareup.picasso.Picasso;
 
+import de.cketti.mailto.EmailIntentBuilder;
+
 public class MainPageFragment extends BaseDBFragment {
 
     private static final int RC_SIGN_IN = 42;
@@ -127,6 +129,24 @@ public class MainPageFragment extends BaseDBFragment {
               .setNegativeButton("No", (dialog1, which1) -> Snackbar.make(getView(), "No hay problema", Snackbar.LENGTH_SHORT).show())
               .setNeutralButton("Más info", (dialog2, which2) -> showLoginMoreInfo())
               .show();
+        });
+
+        view.findViewById(R.id.sign_in_feedback_mail).setOnClickListener(v -> {
+            Intent emailIntent = EmailIntentBuilder.from(getActivity())
+              .to("sevibus@sloydev.com")
+              .subject("Feedback: Sincronización de datos")
+              .build();
+            startActivity(Intent.createChooser(emailIntent, "Enviar mail vía..."));
+        });
+
+        view.findViewById(R.id.sign_in_feedback_twitter).setOnClickListener(v -> {
+            Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/sevibus"));
+            startActivity(twitterIntent);
+        });
+
+        view.findViewById(R.id.sign_in_feedback_gplus).setOnClickListener(v -> {
+            Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/communities/111285770934051376534"));
+            startActivity(twitterIntent);
         });
     }
 
