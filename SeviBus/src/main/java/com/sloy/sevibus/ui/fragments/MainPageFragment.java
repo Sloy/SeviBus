@@ -1,6 +1,7 @@
 package com.sloy.sevibus.ui.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -16,7 +17,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.SignInButton;
 import com.sloy.sevibus.R;
-import com.sloy.sevibus.resources.CrashReportingTool;
 import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.actions.user.LogInAction;
@@ -104,6 +104,11 @@ public class MainPageFragment extends BaseDBFragment {
         logOutAction = StuffProvider.getLogoutAction(getActivity());
         loginController = new LoginController();
         setupLogin();
+
+        view.findViewById(R.id.sign_in_more_info).setOnClickListener(v -> {
+            Intent infoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://sevibus.sloydev.com/beta_login_info.php"));
+            startActivity(infoIntent);
+        });
     }
 
     @Override
