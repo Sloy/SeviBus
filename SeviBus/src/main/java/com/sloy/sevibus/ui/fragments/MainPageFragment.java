@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,6 +44,7 @@ public class MainPageFragment extends BaseDBFragment {
     private LogOutAction logOutAction;
 
     private SignInButton signInButton;
+    private TextView signInConfirmationButton;
     private LoginController loginController;
 
     private TextView signOutButton;
@@ -66,6 +68,7 @@ public class MainPageFragment extends BaseDBFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main_home, container, false);
+        signInConfirmationButton = (TextView) v.findViewById(R.id.sign_in_firts_confirmation);
         signInButton = (SignInButton) v.findViewById(R.id.sign_in_button);
         signOutButton = (TextView) v.findViewById(R.id.sign_out_button);
         loginForm = v.findViewById(R.id.login_form);
@@ -109,6 +112,27 @@ public class MainPageFragment extends BaseDBFragment {
             Intent infoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://sevibus.sloydev.com/beta_login_info.php"));
             startActivity(infoIntent);
         });
+        view.findViewById(R.id.sign_in_more_info).setOnClickListener(v -> showLoginMoreInfo());
+
+
+        signInConfirmationButton.setOnClickListener(v -> {
+            new AlertDialog.Builder(getActivity())
+              .setTitle("El que avisa no es traidor")
+              .setMessage("Esta función es MUY experimenta. Si decides probarla ayudarás a refinarla y que funcione perfecta cuanto antes y para todos, pero el bienestar de tus paradas favoritas no está garantizado. Por errores de programación o cambios de la funcionalidad se podrían llegar a perder.\n\n¿Deseas seguir adelante?")
+              .setPositiveButton("Sí, continuar", (dialog, which) -> {
+                  signInConfirmationButton.setVisibility(View.GONE);
+                  signInButton.setVisibility(View.VISIBLE);
+                  Snackbar.make(getView(), "¡Ole la gente valiente!", Snackbar.LENGTH_SHORT).show();
+              })
+              .setNegativeButton("No", (dialog1, which1) -> Snackbar.make(getView(), "No hay problema", Snackbar.LENGTH_SHORT).show())
+              .setNeutralButton("Más info", (dialog2, which2) -> showLoginMoreInfo())
+              .show();
+        });
+    }
+
+    private void showLoginMoreInfo() {
+        Intent infoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/+RafaVazquez/posts/gcd5hJWV2qb"));
+        startActivity(infoIntent);
     }
 
     @Override

@@ -41,10 +41,21 @@
                 android:layout_height="wrap_content"
                 android:text="Más información"/>
 
+            <TextView
+                android:id="@+id/sign_in_firts_confirmation"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Login"
+                android:visibility="visible"
+                tools:visibility="gone"/>
+
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/sign_in_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"
                 />
         </LinearLayout>
     </LinearLayout>
