@@ -159,6 +159,6 @@ public class StuffProvider {
     }
 
     public static LogOutAction getLogoutAction(Context context) {
-        return new LogOutAction(getUserDataSource(context));
+        return new LogOutAction(getUserDataSource(context), getFirebase());
     }
 }
