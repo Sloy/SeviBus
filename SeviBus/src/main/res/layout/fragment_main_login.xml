@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -132,42 +133,62 @@
             android:paddingRight="8dp"
             android:text="¿Algún feedback? ¡Cuéntame qué tal va la sincronización de favoritas!"/>
 
-        <LinearLayout
+        <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
+            <TextView
                 android:id="@+id/sign_in_feedback_mail"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:background="?selectableItemBackground"
                 android:clickable="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_email_black_24px"/>
+                android:drawableTop="@drawable/ic_email_black_24px"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_horizontal"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:text="Correo"
+                android:textColor="?colorAccent"
+                app:layout_widthPercent="33%"/>
 
-            <ImageView
+            <TextView
                 android:id="@+id/sign_in_feedback_gplus"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_weight="1"
                 android:background="?selectableItemBackground"
                 android:clickable="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_gplus_square_black_24px"/>
+                android:drawableTop="@drawable/ic_twitter_square_black_24px"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_horizontal"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:text="Twitter"
+                android:textColor="?colorAccent"
+                app:layout_widthPercent="33%"/>
 
-            <ImageView
+            <TextView
                 android:id="@+id/sign_in_feedback_twitter"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:layout_weight="1"
                 android:background="?selectableItemBackground"
                 android:clickable="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_twitter_square_black_24px"/>
+                android:drawableTop="@drawable/ic_gplus_square_black_24px"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_horizontal"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:text="Google+"
+                android:textColor="?colorAccent"
+                app:layout_widthPercent="33%"/>
 
-        </LinearLayout>
+        </android.support.percent.PercentRelativeLayout>
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
