@@ -1,9 +1,9 @@
 package com.sloy.sevibus.resources.actions.user;
 
-import com.google.common.base.Optional;
 import com.sloy.sevibus.resources.CrashReportingTool;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
 import com.sloy.sevibus.ui.SevibusUser;
+import com.sloydev.gallego.Optional;
 
 import rx.Observable;
 
