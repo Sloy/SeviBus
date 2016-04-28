@@ -39,4 +39,49 @@ public class EmptyAnalyticsTracker implements AnalyticsTracker {
         /* no-op */
     }
 
+    @Override
+    public void betaSignInConfirmationAccepted() {
+        /* no-op */
+    }
+
+    @Override
+    public void betaSignInConfirmationRejected() {
+        /* no-op */
+    }
+
+    @Override
+    public void betaSignInConfirmationMoreInfo() {
+        /* no-op */
+    }
+
+    @Override
+    public void betaSignInFeedbackGplus() {
+        /* no-op */
+    }
+
+    @Override
+    public void betaSignInFeedbackTwitter() {
+        /* no-op */
+    }
+
+    @Override
+    public void betaSignInFeedbackMail() {
+        /* no-op */
+    }
+
+    @Override
+    public void signInSuccess(long waitingMillis) {
+        /* no-op */
+    }
+
+    @Override
+    public void signInFailure() {
+        /* no-op */
+    }
+
+    @Override
+    public void signInLogout() {
+        /* no-op */
+    }
+
 }

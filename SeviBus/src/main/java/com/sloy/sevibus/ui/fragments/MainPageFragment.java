@@ -18,8 +18,10 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.SignInButton;
 import com.sloy.sevibus.R;
+import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.TimeTracker;
 import com.sloy.sevibus.resources.actions.user.LogInAction;
 import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
@@ -44,6 +46,7 @@ public class MainPageFragment extends BaseDBFragment {
     private ObtainUserAction obtainUserAction;
     private LogInAction logInAction;
     private LogOutAction logOutAction;
+    private AnalyticsTracker analyticsTracker;
 
     private SignInButton signInButton;
     private TextView signInConfirmationButton;
@@ -95,6 +98,8 @@ public class MainPageFragment extends BaseDBFragment {
         lineasCercanasPresenter = new LineasCercanasPresenter(locationProvider, StuffProvider.getObtainLineasCercanasAction(getActivity()));
 
         View view = getView();
+        analyticsTracker = StuffProvider.getAnalyticsTracker();
+
         favoritasPresenter.initialize(new FavoritasMainViewContainer(view.findViewById(R.id.fragment_main_favoritas)));
 
         ParadasCercanasMainViewContainer paradasCercanasView = new ParadasCercanasMainViewContainer(view.findViewById(R.id.fragment_main_paradas_cercanas));
@@ -124,9 +129,13 @@ public class MainPageFragment extends BaseDBFragment {
               .setPositiveButton("Sí, continuar", (dialog, which) -> {
                   signInConfirmationButton.setVisibility(View.GONE);
                   signInButton.setVisibility(View.VISIBLE);
+                  analyticsTracker.betaSignInConfirmationAccepted();
                   Snackbar.make(getView(), "¡Ole la gente valiente!", Snackbar.LENGTH_SHORT).show();
               })
-              .setNegativeButton("No", (dialog1, which1) -> Snackbar.make(getView(), "No hay problema", Snackbar.LENGTH_SHORT).show())
+              .setNegativeButton("No", (dialog1, which1) -> {
+                  analyticsTracker.betaSignInConfirmationRejected();
+                  Snackbar.make(getView(), "No hay problema", Snackbar.LENGTH_SHORT).show();
+              })
               .setNeutralButton("Más info", (dialog2, which2) -> showLoginMoreInfo())
               .show();
         });
@@ -137,20 +146,24 @@ public class MainPageFragment extends BaseDBFragment {
               .subject("Feedback: Sincronización de datos")
               .build();
             startActivity(Intent.createChooser(emailIntent, "Enviar mail vía..."));
+            analyticsTracker.betaSignInFeedbackMail();
         });
 
         view.findViewById(R.id.sign_in_feedback_twitter).setOnClickListener(v -> {
             Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/sevibus"));
             startActivity(twitterIntent);
+            analyticsTracker.betaSignInFeedbackTwitter();
         });
 
         view.findViewById(R.id.sign_in_feedback_gplus).setOnClickListener(v -> {
             Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/communities/111285770934051376534"));
             startActivity(twitterIntent);
+            analyticsTracker.betaSignInFeedbackGplus();
         });
     }
 
     private void showLoginMoreInfo() {
+        analyticsTracker.betaSignInConfirmationMoreInfo();
         Intent infoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/+RafaVazquez/posts/gcd5hJWV2qb"));
         startActivity(infoIntent);
     }
@@ -178,6 +191,7 @@ public class MainPageFragment extends BaseDBFragment {
         });
 
         signOutButton.setOnClickListener(v -> {
+            analyticsTracker.signInLogout();
             loginController.logout(((LocationProviderActivity) getActivity()).getGoogleApiClient());
             logOutAction.logOut().subscribe();
             loginForm.setVisibility(View.VISIBLE);
@@ -196,14 +210,17 @@ public class MainPageFragment extends BaseDBFragment {
     }
 
     private void handleSignInResult(Intent data) {
+        TimeTracker timeTracker = new TimeTracker();
         loginController.obtainOAuthTokenFromSignInResult(getActivity().getApplicationContext(), data)
           .flatMap(oauthToken -> logInAction.logIn(oauthToken))
           .subscribe((sevibusUser) -> {
+                analyticsTracker.signInSuccess(timeTracker.calculateInterval());
                 showUserProfile(sevibusUser);
                 Snackbar.make(getView(), "Sincronizando favoritas...", Snackbar.LENGTH_SHORT).show();
                 favoritasPresenter.update();
             },
             throwable -> {
+                analyticsTracker.signInFailure();
                 StuffProvider.getCrashReportingTool().regiterHandledException(throwable);
                 Log.e("Login", "Error!!", throwable);
                 Snackbar.make(getView(), "Error!! ¿Qué habrá pasado?", Snackbar.LENGTH_SHORT).show();
