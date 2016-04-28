@@ -3,7 +3,7 @@ package com.sloy.sevibus.resources;
 
 import android.location.Location;
 
-import com.google.common.base.Optional;
+import com.sloydev.gallego.Optional;
 
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
