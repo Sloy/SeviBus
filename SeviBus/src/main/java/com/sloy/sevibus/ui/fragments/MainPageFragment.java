@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.SignInButton;
 import com.sloy.sevibus.R;
+import com.sloy.sevibus.resources.CrashReportingTool;
 import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.actions.user.LogInAction;
@@ -154,7 +155,9 @@ public class MainPageFragment extends BaseDBFragment {
                 favoritasPresenter.update();
             },
             throwable -> {
-                Log.e("Login", "Error!!");
+                StuffProvider.getCrashReportingTool().regiterHandledException(throwable);
+                Log.e("Login", "Error!!", throwable);
+                Snackbar.make(getView(), "Error!! ¿Qué habrá pasado?", Snackbar.LENGTH_SHORT).show();
             });
 
     }
