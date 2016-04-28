@@ -36,8 +36,7 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
           .map(snapshot -> snapshot.getValue(new FavoritaMapFirebaseTypeIndicator()))
           .map(integerFavoritaMap -> new ArrayList<>(integerFavoritaMap.values()))
           .flatMap(Observable::from)
-          .toSortedList((f1, f2) -> Integer.compare(f1.getOrden(), f2.getOrden()))
-          .onErrorResumeNext(throwable -> Observable.empty());
+          .toSortedList((f1, f2) -> Integer.compare(f1.getOrden(), f2.getOrden()));
     }
 
     @Override
@@ -132,6 +131,4 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
     private class FavoritaMapFirebaseTypeIndicator extends GenericTypeIndicator<Map<Integer, Favorita>> {
     }
 
-    private class AuthException extends Exception {
-    }
 }

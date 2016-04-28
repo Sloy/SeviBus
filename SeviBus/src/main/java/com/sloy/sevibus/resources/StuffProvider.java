@@ -23,12 +23,12 @@ import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.LineaDataSource;
+import com.sloy.sevibus.resources.datasource.favorita.AuthAwareFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.llegada.ApiLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
 import com.sloy.sevibus.resources.datasource.favorita.DBFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.FavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.FirebaseFavoritaDataSource;
-import com.sloy.sevibus.resources.datasource.llegada.ApiLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.llegada.LlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.llegada.SevibusApi;
 import com.sloy.sevibus.resources.datasource.llegada.TussamLlegadaDataSource;
@@ -130,7 +130,8 @@ public class StuffProvider {
     }
 
     public static FavoritaDataSource getRemoteFavoritaDataSource(Context context) {
-        return new FirebaseFavoritaDataSource(getFirebase(), getUserDataSource(context));
+        UserDataSource userDataSource = getUserDataSource(context);
+        return new AuthAwareFavoritaDataSource(new FirebaseFavoritaDataSource(getFirebase(), userDataSource), userDataSource);
     }
 
     public static Firebase getFirebase() {
