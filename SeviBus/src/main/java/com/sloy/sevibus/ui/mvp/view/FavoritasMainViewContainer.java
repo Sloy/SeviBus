@@ -1,6 +1,7 @@
 package com.sloy.sevibus.ui.mvp.view;
 
 import android.app.Activity;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -103,8 +104,13 @@ public class FavoritasMainViewContainer implements FavoritasMainPresenter.View {
         contenido.setVisibility(View.GONE);
     }
 
+    @Override
+    public void showError() {
+        Snackbar.make(activity.findViewById(android.R.id.content), R.string.favoritas_main_error, Snackbar.LENGTH_LONG).show();
+    }
+
     private void bindViewFavorita(Favorita fav, View v) {
-        if (fav != null) {
+        if (fav != null && fav.getParadaAsociada() != null) {
             Integer numero = fav.getParadaAsociada().getNumero();
             TextView text = (TextView) v.findViewById(R.id.favoritas_main_numero);
             View color = v.findViewById(R.id.favoritas_main_color);
