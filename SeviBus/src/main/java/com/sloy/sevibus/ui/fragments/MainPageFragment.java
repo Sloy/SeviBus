@@ -101,7 +101,7 @@ public class MainPageFragment extends BaseDBFragment {
         obtainUserAction = StuffProvider.getObtainUserAction(getActivity());
         logInAction = StuffProvider.getLoginAction(getActivity());
         logOutAction = StuffProvider.getLogoutAction(getActivity());
-        loginController = new LoginController(StuffProvider.getFirebase());
+        loginController = new LoginController();
         setupLogin();
     }
 
@@ -146,8 +146,8 @@ public class MainPageFragment extends BaseDBFragment {
     }
 
     private void handleSignInResult(Intent data) {
-        loginController.handleSignInResult(getActivity().getApplicationContext(), data)
-          .flatMap(user -> logInAction.logIn(user))
+        loginController.obtainOAuthTokenFromSignInResult(getActivity().getApplicationContext(), data)
+          .flatMap(oauthToken -> logInAction.logIn(oauthToken))
           .subscribe((sevibusUser) -> {
                 showUserProfile(sevibusUser);
                 Snackbar.make(getView(), "Sincronizando favoritas...", Snackbar.LENGTH_SHORT).show();

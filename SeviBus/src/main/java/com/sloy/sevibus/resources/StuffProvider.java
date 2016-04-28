@@ -155,7 +155,7 @@ public class StuffProvider {
     }
 
     public static LogInAction getLoginAction(Context context) {
-        return new LogInAction(getUserDataSource(context));
+        return new LogInAction(getUserDataSource(context), getFirebase());
     }
 
     public static LogOutAction getLogoutAction(Context context) {
