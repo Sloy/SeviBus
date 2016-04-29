@@ -147,7 +147,7 @@ public class StuffProvider {
     }
 
     public static ObtainUserAction getObtainUserAction(Context context) {
-        return new ObtainUserAction(getUserDataSource(context));
+        return new ObtainUserAction(getUserDataSource(context), getCrashReportingTool());
     }
 
     private static UserDataSource getUserDataSource(Context context) {
@@ -155,7 +155,7 @@ public class StuffProvider {
     }
 
     public static LogInAction getLoginAction(Context context) {
-        return new LogInAction(getUserDataSource(context), getFirebase());
+        return new LogInAction(getUserDataSource(context), getFirebase(), getCrashReportingTool());
     }
 
     public static LogOutAction getLogoutAction(Context context) {
