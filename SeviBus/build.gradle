@@ -26,8 +26,8 @@ apply plugin: 'com.github.triplet.play'
 apply plugin: 'com.google.gms.google-services'
 
 
-def myVersionCode = 83
-def myVersionName = "3.7.0-beta"
+def myVersionCode = 84
+def myVersionName = "3.7.0-beta1"
 
 android {
     signingConfigs {
