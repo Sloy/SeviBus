@@ -1,6 +1,6 @@
 package com.sloy.sevibus.resources.actions;
 
-import com.google.common.base.Optional;
+import com.sloydev.gallego.Optional;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
 
