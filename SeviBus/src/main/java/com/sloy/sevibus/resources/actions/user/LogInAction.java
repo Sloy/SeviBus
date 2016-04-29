@@ -29,7 +29,7 @@ public class LogInAction {
           .flatMap(this::autenticateFirebase)
           .map(this::createSevibusUser)
           .flatMap(userDataSource::setCurrentUser)
-          .flatMap(this::sendUserToFirebase)
+          .map(this::sendUserToFirebase)
           .map(this::associateWithCrashReporting);
     }
 
@@ -64,14 +64,12 @@ public class LogInAction {
     }
 
 
-    private Observable<SevibusUser> sendUserToFirebase(SevibusUser sevibusUser) {
-        return Observable.just(firebase.getAuth())
-          .map(authData -> firebase.child(authData.getUid()))
-          .map(authNode -> authNode.child("user"))
-          .map(userNode -> {
-              userNode.setValue(sevibusUser);
-              return sevibusUser;
-          });
+    private SevibusUser sendUserToFirebase(SevibusUser sevibusUser) {
+        AuthData auth = firebase.getAuth();
+        firebase.child(auth.getUid())
+          .child("user")
+          .setValue(sevibusUser);
+        return sevibusUser;
     }
 
     private SevibusUser associateWithCrashReporting(SevibusUser sevibusUser) {
