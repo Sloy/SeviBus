@@ -47,4 +47,15 @@ public class SevibusUser {
     public void setOauthToken(String oauthToken) {
         this.oauthToken = oauthToken;
     }
+
+    @Override
+    public String toString() {
+        return "SevibusUser{" +
+          "id='" + id + '\'' +
+          ", name='" + name + '\'' +
+          ", email='" + email + '\'' +
+          ", photoUrl='" + photoUrl + '\'' +
+          ", oauthToken='" + oauthToken + '\'' +
+          '}';
+    }
 }

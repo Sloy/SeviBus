@@ -116,6 +116,7 @@ dependencies {
     compile 'com.firebase:firebase-client-android:2.5.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'de.cketti.mailto:email-intent-builder:1.0.0'
+    compile 'com.artjimlop:chernobyl:1.1.0'
 
 
     testCompile 'junit:junit:4.12'
