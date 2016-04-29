@@ -2,6 +2,7 @@ package com.sloy.sevibus.resources.actions.user;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
+import com.sloy.sevibus.resources.CrashReportingTool;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
 import com.sloy.sevibus.ui.SevibusUser;
 
@@ -23,13 +24,15 @@ public class LogInActionTest {
     UserDataSource userDataSource;
     @Mock
     Firebase firebase;
+    @Mock
+    CrashReportingTool crashReportingTool;
 
     private LogInAction action;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        action = new LogInAction(userDataSource, firebase);
+        action = new LogInAction(userDataSource, firebase, crashReportingTool);
     }
 
     @Test
@@ -40,6 +43,16 @@ public class LogInActionTest {
           .toBlocking().subscribe();
 
         verify(userDataSource).setCurrentUser(any(SevibusUser.class));
+    }
+
+    @Test
+    public void associate_user_with_crash_reporting_tool() throws Exception {
+        givenFirebaseAuthResponds(mock(AuthData.class));
+
+        action.logIn("token")
+          .toBlocking().subscribe();
+
+        verify(crashReportingTool).associateUser(any(SevibusUser.class));
     }
 
     private void givenFirebaseAuthResponds(AuthData authData) {

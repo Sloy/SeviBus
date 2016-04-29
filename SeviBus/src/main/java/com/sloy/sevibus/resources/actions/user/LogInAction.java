@@ -3,6 +3,7 @@ package com.sloy.sevibus.resources.actions.user;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.sloy.sevibus.resources.CrashReportingTool;
 import com.sloy.sevibus.resources.datasource.favorita.AuthException;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
 import com.sloy.sevibus.ui.SevibusUser;
@@ -15,10 +16,12 @@ public class LogInAction {
 
     private final UserDataSource userDataSource;
     private final Firebase firebase;
+    private final CrashReportingTool crashReportingTool;
 
-    public LogInAction(UserDataSource userDataSource, Firebase firebase) {
+    public LogInAction(UserDataSource userDataSource, Firebase firebase, CrashReportingTool crashReportingTool) {
         this.userDataSource = userDataSource;
         this.firebase = firebase;
+        this.crashReportingTool = crashReportingTool;
     }
 
     public Observable<SevibusUser> logIn(String oauthToken) {
@@ -26,7 +29,8 @@ public class LogInAction {
           .flatMap(this::autenticateFirebase)
           .map(this::createSevibusUser)
           .flatMap(userDataSource::setCurrentUser)
-          .flatMap(this::sendUserToFirebase);
+          .flatMap(this::sendUserToFirebase)
+          .map(this::associateWithCrashReporting);
     }
 
     private Observable<AuthData> autenticateFirebase(String oauthToken) {
@@ -48,7 +52,6 @@ public class LogInAction {
         }));
     }
 
-
     private SevibusUser createSevibusUser(AuthData authData) {
         Map<String, Object> data = authData.getProviderData();
         SevibusUser user = new SevibusUser();
@@ -60,6 +63,7 @@ public class LogInAction {
         return user;
     }
 
+
     private Observable<SevibusUser> sendUserToFirebase(SevibusUser sevibusUser) {
         return Observable.just(firebase.getAuth())
           .map(authData -> firebase.child(authData.getUid()))
@@ -68,5 +72,10 @@ public class LogInAction {
               userNode.setValue(sevibusUser);
               return sevibusUser;
           });
+    }
+
+    private SevibusUser associateWithCrashReporting(SevibusUser sevibusUser) {
+        crashReportingTool.associateUser(sevibusUser);
+        return sevibusUser;
     }
 }
