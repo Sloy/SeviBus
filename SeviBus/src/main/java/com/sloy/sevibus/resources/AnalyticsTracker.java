@@ -20,4 +20,22 @@ public interface AnalyticsTracker {
     void favoritaNotColorized(Integer numero);
 
     void lineaAddedToMap(Linea linea, int totalCount);
+
+    void betaSignInConfirmationAccepted();
+
+    void betaSignInConfirmationRejected();
+
+    void betaSignInConfirmationMoreInfo();
+
+    void betaSignInFeedbackGplus();
+
+    void betaSignInFeedbackTwitter();
+
+    void betaSignInFeedbackMail();
+
+    void signInSuccess(long waitingMillis);
+
+    void signInFailure();
+
+    void signInLogout();
 }

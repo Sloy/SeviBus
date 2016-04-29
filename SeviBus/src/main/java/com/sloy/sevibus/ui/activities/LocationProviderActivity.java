@@ -6,6 +6,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -29,10 +32,17 @@ public class LocationProviderActivity extends BaseToolbarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+          .requestEmail()
+          .requestIdToken("952975778259-4tdh0qdnn97a6epq4sj27p3dms1802it.apps.googleusercontent.com")
+          .build();
+
         googleApiClient = new GoogleApiClient.Builder(this)
           .enableAutoManage(this, this)
           .addConnectionCallbacks(this)
           .addApi(LocationServices.API)
+          .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
           .build();
 
         locationProvider = new LocationProvider();

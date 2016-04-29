@@ -1,10 +1,10 @@
-package com.sloy.sevibus.resources.actions;
+package com.sloy.sevibus.resources.actions.favorita;
 
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Parada;
-import com.sloy.sevibus.resources.datasource.FavoritaDataSource;
+import com.sloy.sevibus.resources.datasource.favorita.FavoritaDataSource;
 
 import rx.Observable;
 
@@ -13,17 +13,21 @@ import static rx.observables.MathObservable.max;
 public class SaveFavoritaAction {
 
     private final FavoritaDataSource favoritaLocalDataSource;
+    private final FavoritaDataSource favoritaRemoteDataSource;
     private final DBHelper dbHelper; //TODO use parada datasource!!!
 
-    public SaveFavoritaAction(FavoritaDataSource favoritaLocalDataSource, DBHelper dbHelper) {
+    public SaveFavoritaAction(FavoritaDataSource favoritaLocalDataSource, FavoritaDataSource favoritaRemoteDataSource, DBHelper dbHelper) {
         this.favoritaLocalDataSource = favoritaLocalDataSource;
+        this.favoritaRemoteDataSource = favoritaRemoteDataSource;
         this.dbHelper = dbHelper;
     }
 
     public Observable<Void> saveFavorita(int idParada, String nombrePropio, int color) {
         return favoritaLocalDataSource.getFavoritaById(idParada)
           .switchIfEmpty(createFavorita(idParada, nombrePropio, color))
-          .flatMap(favoritaLocalDataSource::saveFavorita);
+          .flatMap(favoritaLocalDataSource::saveFavorita)
+          .flatMap(favoritaRemoteDataSource::saveFavorita)
+          .flatMap(__ -> Observable.empty());
     }
 
     private Observable<Favorita> createFavorita(int idParada, String nombrePropio, int color) {

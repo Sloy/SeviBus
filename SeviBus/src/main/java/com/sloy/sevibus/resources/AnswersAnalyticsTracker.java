@@ -5,6 +5,7 @@ import android.os.Build;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.LoginEvent;
 import com.crashlytics.android.answers.SearchEvent;
 import com.sloy.sevibus.model.PaletaColores;
 import com.sloy.sevibus.model.tussam.Linea;
@@ -71,6 +72,68 @@ public class AnswersAnalyticsTracker implements AnalyticsTracker {
           .putCustomAttribute("Total count", Integer.toString(totalCount))
           .putCustomAttribute("Linea", linea.getNumero())
         );
+    }
+
+    @Override
+    public void betaSignInConfirmationAccepted() {
+        answers.logCustom(new CustomEvent("(beta) SignIn Confirmation")
+          .putCustomAttribute("Option", "accepted")
+        );
+    }
+
+    @Override
+    public void betaSignInConfirmationRejected() {
+        answers.logCustom(new CustomEvent("(beta) SignIn Confirmation")
+          .putCustomAttribute("Option", "rejected")
+        );
+    }
+
+    @Override
+    public void betaSignInConfirmationMoreInfo() {
+        answers.logCustom(new CustomEvent("(beta) SignIn Confirmation")
+          .putCustomAttribute("Option", "info")
+        );
+    }
+
+    @Override
+    public void betaSignInFeedbackGplus() {
+        answers.logCustom(new CustomEvent("(beta) SignIn Feedback")
+          .putCustomAttribute("Method", "gplus")
+        );
+    }
+
+    @Override
+    public void betaSignInFeedbackTwitter() {
+        answers.logCustom(new CustomEvent("(beta) SignIn Feedback")
+          .putCustomAttribute("Method", "twitter")
+        );
+    }
+
+    @Override
+    public void betaSignInFeedbackMail() {
+        answers.logCustom(new CustomEvent("(beta) SignIn Feedback")
+          .putCustomAttribute("Method", "mail")
+        );
+    }
+
+    @Override
+    public void signInSuccess(long waitingMillis) {
+        answers.logLogin(new LoginEvent()
+          .putSuccess(true)
+          .putCustomAttribute("Delay", waitingMillis)
+        );
+    }
+
+    @Override
+    public void signInFailure() {
+        answers.logLogin(new LoginEvent()
+          .putSuccess(false)
+        );
+    }
+
+    @Override
+    public void signInLogout() {
+        answers.logCustom(new CustomEvent("Logout"));
     }
 
 }

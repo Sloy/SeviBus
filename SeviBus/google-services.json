@@ -1,0 +1,111 @@
+{
+  "project_info": {
+    "project_id": "api-project-952975778259",
+    "project_number": "952975778259",
+    "name": "SeviBus"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:952975778259:android:73c23c8445ed65a3",
+        "client_id": "android:com.sloy.sevibus",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.sloy.sevibus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "952975778259-jd1t9uvf3328mpo6bdfl26hu4thl55i8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sloy.sevibus",
+            "certificate_hash": "06CCFE7EAC3E3A51CF67A3FFFF083505594692F2"
+          }
+        },
+        {
+          "client_id": "952975778259-jd1t9uvf3328mpo6bdfl26hu4thl55i8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sloy.sevibus.debug",
+            "certificate_hash": "00C3F215C35F664D5C5D48ACDAAC8C187BD48306"
+          }
+        },
+        {
+          "client_id": "952975778259-4tdh0qdnn97a6epq4sj27p3dms1802it.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+
+
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:952975778259:android:73c23c8445ed65a3",
+        "client_id": "android:com.sloy.sevibus",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.sloy.sevibus.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "952975778259-oboi0vte0610sto5ovaova1od1i22rbb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sloy.sevibus.debug",
+            "certificate_hash": "00C3F215C35F664D5C5D48ACDAAC8C187BD48306"
+          }
+        },
+        {
+          "client_id": "952975778259-oboi0vte0610sto5ovaova1od1i22rbb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+
+
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
