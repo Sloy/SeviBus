@@ -18,12 +18,15 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static rx.Observable.empty;
+import static rx.Observable.error;
 
 public class LineasCercanasPresenterTest {
 
     @Mock
     LineasCercanasPresenter.View view;
-    @Mock LocationProvider locationProvider;
+    @Mock
+    LocationProvider locationProvider;
     @Mock
     ObtainLineasCercanasAction obtainLineasCercanasAction;
 
@@ -58,7 +61,7 @@ public class LineasCercanasPresenterTest {
     @Test
     public void shows_empty_when_updated_with_no_cercanas() throws Exception {
         when(locationProvider.observe()).thenReturn(aLocation());
-        when(obtainLineasCercanasAction.obtainLineas(any(Location.class))).thenReturn(Observable.empty());
+        when(obtainLineasCercanasAction.obtainLineas(any(Location.class))).thenReturn(empty());
 
         presenter.initialize(view);
         presenter.update();
@@ -72,14 +75,38 @@ public class LineasCercanasPresenterTest {
     @Test
     public void shows_error_when_updated_and_location_is_abstent() throws Exception {
         when(locationProvider.observe()).thenReturn(Observable.just(Optional.absent()));
-        when(obtainLineasCercanasAction.obtainLineas(any(Location.class))).thenReturn(Observable.empty());
+        when(obtainLineasCercanasAction.obtainLineas(any(Location.class))).thenReturn(empty());
 
         presenter.initialize(view);
         presenter.update();
 
-        verify(view).showError();
         verify(view).hideLoading();
+        verify(view).showError();
     }
+
+    @Test
+    public void shows_error_when_location_fails() throws Exception {
+        when(locationProvider.observe()).thenReturn(error(new Exception()));
+
+        presenter.initialize(view);
+        presenter.update();
+
+        verify(view).hideLoading();
+        verify(view).showError();
+    }
+
+    @Test
+    public void shows_error_when_obtain_lineas_fails() throws Exception {
+        when(locationProvider.observe()).thenReturn(aLocation());
+        when(obtainLineasCercanasAction.obtainLineas(any(Location.class))).thenReturn(error(new Exception()));
+
+        presenter.initialize(view);
+        presenter.update();
+
+        verify(view).hideLoading();
+        verify(view).showError();
+    }
+
 
     private Linea lineaCercana() {
         return new Linea();

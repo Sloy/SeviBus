@@ -61,6 +61,9 @@ public class LineasCercanasPresenter {
                   view.hideLineas();
                   view.showEmpty();
               }
+          }, throwable -> {
+              view.hideLoading();
+              view.showError();
           });
     }
 
