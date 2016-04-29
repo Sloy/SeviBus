@@ -147,7 +147,7 @@ public class StuffProvider {
     }
 
     public static ObtainUserAction getObtainUserAction(Context context) {
-        return new ObtainUserAction(getUserDataSource(context));
+        return new ObtainUserAction(getUserDataSource(context), getCrashReportingTool());
     }
 
     private static UserDataSource getUserDataSource(Context context) {
