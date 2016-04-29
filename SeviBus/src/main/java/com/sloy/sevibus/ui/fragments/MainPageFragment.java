@@ -115,10 +115,6 @@ public class MainPageFragment extends BaseDBFragment {
         loginController = new LoginController();
         setupLogin();
 
-        view.findViewById(R.id.sign_in_more_info).setOnClickListener(v -> {
-            Intent infoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://sevibus.sloydev.com/beta_login_info.php"));
-            startActivity(infoIntent);
-        });
         view.findViewById(R.id.sign_in_more_info).setOnClickListener(v -> showLoginMoreInfo());
 
 
@@ -164,7 +160,7 @@ public class MainPageFragment extends BaseDBFragment {
 
     private void showLoginMoreInfo() {
         analyticsTracker.betaSignInConfirmationMoreInfo();
-        Intent infoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/+RafaVazquez/posts/gcd5hJWV2qb"));
+        Intent infoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://sevibus.sloydev.com/beta_login_info.php"));
         startActivity(infoIntent);
     }
 
