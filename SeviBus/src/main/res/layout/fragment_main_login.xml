@@ -155,7 +155,7 @@
                 app:layout_widthPercent="33%"/>
 
             <TextView
-                android:id="@+id/sign_in_feedback_gplus"
+                android:id="@+id/sign_in_feedback_twitter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -172,7 +172,7 @@
                 app:layout_widthPercent="33%"/>
 
             <TextView
-                android:id="@+id/sign_in_feedback_twitter"
+                android:id="@+id/sign_in_feedback_gplus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
