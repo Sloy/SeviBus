@@ -52,33 +52,61 @@
             android:id="@+id/landing_signin_rationale"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/landing_signin_button"
+            android:layout_above="@+id/landing_signin_buttons"
             android:layout_marginBottom="48dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center_horizontal"
-            android:text="Recupera tus paradas favoritas y nos las pierdas nunca más"
+            android:text="Guarda tus paradas favoritas y nos las pierdas nunca más"
             android:textSize="17sp"/>
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/landing_signin_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/landing_signin_reject"
-            android:layout_centerHorizontal="true"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="Permitir"
-            app:buttonSize="wide"/>
-
-        <TextView
-            android:id="@+id/landing_signin_reject"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:id="@+id/landing_signin_buttons"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:padding="0dp"
-            android:text="Ahora no"
-            android:textColor="?android:textColorSecondary"/>
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <com.google.android.gms.common.SignInButton
+                    android:id="@+id/landing_signin_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="Permitir"
+                    app:buttonSize="wide"/>
+
+                <TextView
+                    android:id="@+id/landing_signin_reject"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="0dp"
+                    android:text="Ahora no"
+                    android:textColor="?android:textColorSecondary"/>
+            </LinearLayout>
+
+            <com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar
+                android:id="@+id/landing_signin_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:color="?colorAccent"
+                android:radius="8dp"
+                app:dd_animationDuration="500"
+                app:dd_horizontalSpacing="16dp"
+                app:dd_numDots="3"
+                app:dd_scaleMultiplier="1.5"
+                />
+
+        </FrameLayout>
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>

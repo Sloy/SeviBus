@@ -14,8 +14,11 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 
 import com.sloy.sevibus.R;
+import com.squareup.picasso.Picasso;
+import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -36,6 +39,12 @@ public class LandingActivity extends Activity {
     @Bind(R.id.landing_install_logo)
     View logo;
 
+    @Bind(R.id.landing_signin_progress)
+    DilatingDotsProgressBar signInProgress;
+
+    @Bind(R.id.landing_signin_result_avatar)
+    ImageView avatar;
+
     @BindColor(R.color.primary)
     int colorPrimary;
 
@@ -48,6 +57,8 @@ public class LandingActivity extends Activity {
         setContentView(R.layout.activity_landing);
         ButterKnife.bind(this);
         findViewById(R.id.landing_install_logo).setOnClickListener(v -> initAnimation());
+        signInProgress.showNow();
+        Picasso.with(this).load("https://lh4.googleusercontent.com/-LABT3BQfnJY/AAAAAAAAAAI/AAAAAAAAAH0/C95bgcNcq_w/photo.jpg").into(avatar);
     }
 
     @OnClick(R.id.landing_permission_allow)

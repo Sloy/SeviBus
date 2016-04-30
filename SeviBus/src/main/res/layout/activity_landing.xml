@@ -14,10 +14,21 @@
         android:background="?colorPrimaryDark"
         />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+
+
+        <include layout="@layout/landing_card_signin_result"/>
+
+    </FrameLayout>
 
     <include layout="@layout/landing_card_installing"/>
 
     <include layout="@layout/landing_card_permission"/>
 
-    <!--<include layout="@layout/landing_card_signin"/>-->
+        <include layout="@layout/landing_card_signin"/>
+
 </FrameLayout>
