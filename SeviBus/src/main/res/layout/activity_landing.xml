@@ -14,9 +14,9 @@
         />
 
 
-    <!--<include layout="@layout/landing_card_installing"/>-->
+    <include layout="@layout/landing_card_installing"/>
 
     <!--<include layout="@layout/landing_card_permission"/>-->
 
-    <include layout="@layout/landing_card_signin"/>
+    <!--<include layout="@layout/landing_card_signin"/>-->
 </FrameLayout>
