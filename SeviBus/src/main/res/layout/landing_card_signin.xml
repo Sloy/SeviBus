@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,57 +21,57 @@
         >
 
         <TextView
-            android:id="@+id/landing_permission_title"
+            android:id="@+id/landing_signin_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
             android:fontFamily="sans-serif-medium"
-            android:text="Acceso a ubicación"
+            android:text="Inicio de sesión"
             android:textColor="?colorPrimary"
             android:textSize="21sp"/>
 
         <FrameLayout
-            android:id="@+id/landing_permission_icon_container"
+            android:id="@+id/landing_signin_icon_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/landing_permission_rationale"
-            android:layout_below="@+id/landing_permission_title"
+            android:layout_above="@+id/landing_signin_rationale"
+            android:layout_below="@+id/landing_signin_title"
             android:layout_marginBottom="32dp"
             android:layout_marginTop="32dp">
 
             <ImageView
-                android:id="@+id/landing_permission_icon"
+                android:id="@+id/landing_signin_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_person_pin_primary_152px"/>
+                android:src="@drawable/ic_cloud_black_24px"/>
         </FrameLayout>
 
         <TextView
-            android:id="@+id/landing_permission_rationale"
+            android:id="@+id/landing_signin_rationale"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/landing_permission_allow"
+            android:layout_above="@+id/landing_signin_button"
             android:layout_marginBottom="48dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center_horizontal"
-            android:text="Para encontrar paradas necesitamos acceso a tu ubicación"
+            android:text="Recupera tus paradas favoritas y nos las pierdas nunca más"
             android:textSize="17sp"/>
 
-        <TextView
-            android:id="@+id/landing_permission_allow"
-            style="@style/Widget.AppCompat.Button.Colored"
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/landing_signin_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/landing_permission_reject"
+            android:layout_above="@+id/landing_signin_reject"
             android:layout_centerHorizontal="true"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:text="Permitir"/>
+            android:text="Permitir"
+            app:buttonSize="wide"/>
 
         <TextView
-            android:id="@+id/landing_permission_reject"
+            android:id="@+id/landing_signin_reject"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
