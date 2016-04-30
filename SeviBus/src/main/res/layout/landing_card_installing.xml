@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:id="@+id/landing_install_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,21 +12,15 @@
     tools:showIn="@layout/activity_landing"
     >
 
-    <ImageView
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="32dp"
-        android:layout_marginTop="40dp"
-        android:src="@drawable/ic_launcher_big"/>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_height="match_parent"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:layout_weight="1"
+        android:gravity="center"
         android:text="Terminando la instalación…"
         android:textColor="#4D4D4D"
         android:textSize="22sp"
@@ -37,15 +32,17 @@
         android:layout_weight="1">
 
         <ProgressBar
-            android:id="@+id/initial_progress"
-            android:layout_gravity="center"
+            android:id="@+id/landing_install_progres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:layout_marginTop="32dp"
             android:indeterminate="true"
-            app:layout_heightPercent="50%"
-            app:layout_widthPercent="50%"/>
+            app:layout_heightPercent="40%"
+            />
     </android.support.percent.PercentFrameLayout>
 
 </LinearLayout>

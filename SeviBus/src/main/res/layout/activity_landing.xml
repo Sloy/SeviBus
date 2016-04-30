@@ -8,6 +8,7 @@
     tools:context="com.sloy.sevibus.ui.activities.LandingActivity">
 
     <View
+        android:id="@+id/landing_color_padding"
         android:layout_width="match_parent"
         android:layout_height="172dp"
         android:background="?colorPrimaryDark"
