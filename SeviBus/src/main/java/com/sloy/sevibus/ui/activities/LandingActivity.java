@@ -11,8 +11,9 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import com.sloy.sevibus.R;
 
@@ -32,6 +33,9 @@ public class LandingActivity extends Activity {
     @Bind(R.id.landing_permission_card)
     View permissionCard;
 
+    @Bind(R.id.landing_install_logo)
+    View logo;
+
     @BindColor(R.color.primary)
     int colorPrimary;
 
@@ -43,7 +47,7 @@ public class LandingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
         ButterKnife.bind(this);
-        findViewById(R.id.landing_install_progres).setOnClickListener(v -> initAnimation());
+        findViewById(R.id.landing_install_logo).setOnClickListener(v -> initAnimation());
     }
 
     @OnClick(R.id.landing_permission_allow)
@@ -51,12 +55,32 @@ public class LandingActivity extends Activity {
         int screenWidth = findViewById(android.R.id.content).getMeasuredWidth();
         installLayoutContainer.setAlpha(0f);
         installLayoutContainer.animate().alpha(1f).setDuration(750).start();
-        permissionCard.animate().translationX(-screenWidth).setInterpolator(new AnticipateOvershootInterpolator()).setDuration(750).setListener(new AnimatorListenerAdapter() {
+        permissionCard.animate().translationX(-screenWidth).setInterpolator(new AnticipateInterpolator()).setDuration(750).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 permissionCard.setVisibility(View.GONE);
             }
         }).start();
+
+        ObjectAnimator logoAnimation = ObjectAnimator.ofFloat(logo, "alpha", 0.8f);
+        logoAnimation.setRepeatCount(ValueAnimator.INFINITE);
+        logoAnimation.setRepeatMode(ValueAnimator.REVERSE);
+        logoAnimation.setInterpolator(new DecelerateInterpolator());
+        logoAnimation.setDuration(500);
+        logoAnimation.start();
+
+        ObjectAnimator logoScaleY = ObjectAnimator.ofFloat(logo, "scaleY", 1.02f, 0.95f);
+        logoScaleY.setRepeatCount(ValueAnimator.INFINITE);
+        logoScaleY.setRepeatMode(ValueAnimator.REVERSE);
+        ObjectAnimator logoScaleX = ObjectAnimator.ofFloat(logo, "scaleX", 0.98f, 1.05f);
+        logoScaleX.setRepeatCount(ValueAnimator.INFINITE);
+        logoScaleX.setRepeatMode(ValueAnimator.REVERSE);
+
+        AnimatorSet logoSqueezeAnimation = new AnimatorSet();
+        logoSqueezeAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        logoSqueezeAnimation.setDuration(500);
+        logoSqueezeAnimation.playTogether(logoScaleX, logoScaleY);
+        logoSqueezeAnimation.start();
     }
 
     private void initAnimation() {

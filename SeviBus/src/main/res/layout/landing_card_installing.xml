@@ -2,7 +2,6 @@
 <LinearLayout
     android:id="@+id/landing_install_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,23 +25,18 @@
         android:textSize="22sp"
         android:textStyle="bold"/>
 
-    <android.support.percent.PercentFrameLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <ProgressBar
-            android:id="@+id/landing_install_progres"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/landing_install_logo"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_marginTop="32dp"
-            android:indeterminate="true"
-            app:layout_heightPercent="40%"
-            />
-    </android.support.percent.PercentFrameLayout>
+            android:src="@drawable/ic_logo_black_152px"
+            android:tint="?colorPrimary"/>
+    </FrameLayout>
 
 </LinearLayout>
