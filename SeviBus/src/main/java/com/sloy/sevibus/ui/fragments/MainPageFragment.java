@@ -224,7 +224,7 @@ public class MainPageFragment extends BaseDBFragment {
             },
             throwable -> {
                 analyticsTracker.signInFailure();
-                StuffProvider.getCrashReportingTool().regiterHandledException(throwable);
+                StuffProvider.getCrashReportingTool().registerHandledException(throwable);
                 Log.e("Login", "Error!!", throwable);
                 Snackbar.make(getView(), "Error!! ¿Qué habrá pasado?", Snackbar.LENGTH_SHORT).show();
             });

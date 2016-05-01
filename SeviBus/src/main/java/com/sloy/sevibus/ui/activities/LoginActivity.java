@@ -10,6 +10,7 @@ import com.sloy.sevibus.ui.LoginController;
 import com.sloy.sevibus.ui.mvp.presenter.SignInCardPresenter;
 import com.sloy.sevibus.ui.mvp.presenter.SignInFlow;
 import com.sloy.sevibus.ui.mvp.view.SignInCardViewContainer;
+import com.sloy.sevibus.ui.other.CardWizardManager;
 import com.squareup.picasso.Picasso;
 
 import rx.Observable;
@@ -30,10 +31,7 @@ public class LoginActivity extends BaseActivity implements SignInFlow {
         setContentView(R.layout.activity_login);
 
         loginController = new LoginController();
-        presenter = new SignInCardPresenter(StuffProvider.getLoginAction(this), () -> {
-            setResult(RESULT_OK);
-            finish();
-        });
+        presenter = new SignInCardPresenter(StuffProvider.getLoginAction(this), new LoginCardManager(), StuffProvider.getAnalyticsTracker(), StuffProvider.getCrashReportingTool());
 
         SignInCardViewContainer viewContainer = new SignInCardViewContainer(findViewById(android.R.id.content), presenter, Picasso.with(this), this);
 
@@ -65,6 +63,20 @@ public class LoginActivity extends BaseActivity implements SignInFlow {
                   signInFlowSubscriber.onError(throwable);
               });
 
+        }
+    }
+
+    private class LoginCardManager implements CardWizardManager {
+
+        @Override
+        public void next() {
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public String getDescription() {
+            return "Login";
         }
     }
 }

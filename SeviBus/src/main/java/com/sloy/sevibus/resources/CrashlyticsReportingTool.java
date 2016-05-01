@@ -8,7 +8,7 @@ import static com.chernobyl.Chernobyl.checkNotNull;
 public class CrashlyticsReportingTool implements CrashReportingTool {
 
     @Override
-    public void regiterHandledException(Throwable t) {
+    public void registerHandledException(Throwable t) {
         Crashlytics.logException(t);
     }
 

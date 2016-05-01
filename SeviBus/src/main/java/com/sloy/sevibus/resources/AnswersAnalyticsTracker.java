@@ -9,6 +9,7 @@ import com.crashlytics.android.answers.LoginEvent;
 import com.crashlytics.android.answers.SearchEvent;
 import com.sloy.sevibus.model.PaletaColores;
 import com.sloy.sevibus.model.tussam.Linea;
+import com.sloy.sevibus.ui.other.CardWizardManager;
 
 public class AnswersAnalyticsTracker implements AnalyticsTracker {
 
@@ -125,9 +126,25 @@ public class AnswersAnalyticsTracker implements AnalyticsTracker {
     }
 
     @Override
+    public void signInSuccess(CardWizardManager cardManager) {
+        answers.logLogin(new LoginEvent()
+          .putSuccess(true)
+          .putCustomAttribute("Card Manager", cardManager.getDescription())
+        );
+    }
+
+    @Override
     public void signInFailure() {
         answers.logLogin(new LoginEvent()
           .putSuccess(false)
+        );
+    }
+
+    @Override
+    public void signInFailure(CardWizardManager cardManager) {
+        answers.logLogin(new LoginEvent()
+          .putSuccess(false)
+          .putCustomAttribute("Card Manager", cardManager.getDescription())
         );
     }
 

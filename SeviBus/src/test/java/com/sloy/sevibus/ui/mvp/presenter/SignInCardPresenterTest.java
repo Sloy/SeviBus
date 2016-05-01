@@ -1,6 +1,8 @@
 package com.sloy.sevibus.ui.mvp.presenter;
 
 import com.google.firebase.auth.AuthCredential;
+import com.sloy.sevibus.resources.AnalyticsTracker;
+import com.sloy.sevibus.resources.CrashReportingTool;
 import com.sloy.sevibus.resources.actions.user.LogInAction;
 import com.sloy.sevibus.ui.SevibusUser;
 import com.sloy.sevibus.ui.other.CardWizardManager;
@@ -27,13 +29,17 @@ public class SignInCardPresenterTest {
     CardWizardManager cardManager;
     @Mock
     AuthCredential authCredential;
+    @Mock
+    AnalyticsTracker analyticsTracker;
+    @Mock
+    CrashReportingTool crashReportingTool;
 
     private SignInCardPresenter presenter;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        presenter = new SignInCardPresenter(logInAction, cardManager);
+        presenter = new SignInCardPresenter(logInAction, cardManager, analyticsTracker, crashReportingTool);
         when(view.startSignInFlow()).thenReturn(empty()); //don't crash
     }
 

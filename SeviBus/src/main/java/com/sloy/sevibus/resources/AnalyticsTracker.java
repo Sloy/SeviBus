@@ -4,6 +4,7 @@ package com.sloy.sevibus.resources;
 import com.sloy.sevibus.model.PaletaColores;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Linea;
+import com.sloy.sevibus.ui.other.CardWizardManager;
 
 public interface AnalyticsTracker {
 
@@ -33,9 +34,15 @@ public interface AnalyticsTracker {
 
     void betaSignInFeedbackMail();
 
+    @Deprecated
     void signInSuccess(long waitingMillis);
 
+    void signInSuccess(CardWizardManager cardManager);
+
+    @Deprecated
     void signInFailure();
+
+    void signInFailure(CardWizardManager cardManager);
 
     void signInLogout();
 }
