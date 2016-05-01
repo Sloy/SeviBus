@@ -47,7 +47,6 @@ public class Debug {
 
     public static void registerHandledException(Throwable e) {
         StuffProvider.getCrashReportingTool().regiterHandledException(e);
-        Log.e("Debug", "Handled Exception", e);
     }
 
     public static class FakeLocationSource implements LocationSource{

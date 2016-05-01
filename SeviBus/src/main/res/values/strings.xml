@@ -16,6 +16,7 @@
     <string name="paradas_cercanas_cargando">Buscando paradas cercanas a tu posición...</string>
     <string name="lineas_cercanas_cargando">Buscando líneas cercanas a tu posición...</string>
     <string name="lineas_cercanas_empty">No encontramos líneas cercanas a tu posición. ¿Estás fuera de Sevilla?</string>
+    <string name="favoritas_main_error">Ocurrió un error cargando las favoritas :(</string>
     <string name="favoritas_main_empty">Guarda tus paradas favoritas y aparecerán aquí</string>
     <string name="favoritas_main_cargando">Cargando paradas favoritas...</string>
     <string name="search_hint">Nº o nombre</string>
@@ -38,4 +39,5 @@
     \n\nLa posición es aproximada y no se da en tiempo real. Puede no siempre estar disponible para todos los autobuses.
     \n\nLa aplicación no tiene influencia sobre los resultados.</string>
     <string name="nuevo_bonobus_info">Tipos de tajeta soportados actualmente:\n- Bonobús saldo sin transbordo\n- Bonobús saldo con transbordo\n- Tarjeta joven\n- Tarjeta 30 días</string>
+    <string name="error_message_generic">Oops, ocurrió un error :/</string>
 </resources>

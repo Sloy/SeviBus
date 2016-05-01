@@ -87,6 +87,14 @@ public class FavoritasMainPresenterTest {
         verify(view).showFavoritas(favoritas);
     }
 
+    @Test
+    public void shows_error_when_received_an_error() throws Exception {
+        when(obtainFavoritasAction.getFavoritas()).thenReturn(Observable.error(new Exception()));
+
+        presenter.initialize(view);
+
+        verify(view).showError();
+    }
 
     private List<Favorita> favoritasListOf(int count) {
         List<Favorita> res = new ArrayList<>();
