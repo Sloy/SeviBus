@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E0E0E0"
-
     tools:context="com.sloy.sevibus.ui.activities.LandingActivity">
 
     <View
@@ -14,18 +13,6 @@
         android:layout_height="172dp"
         android:background="?colorPrimaryDark"
         />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <include layout="@layout/landing_card_installing"/>
-
-        <include layout="@layout/landing_card_permission"/>
-
-    </FrameLayout>
-
 
     <include layout="@layout/landing_card_signin"/>
 

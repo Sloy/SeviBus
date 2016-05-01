@@ -39,7 +39,7 @@ public class LandingActivity extends Activity {
     @Bind(R.id.landing_install_logo)
     View logo;
 
-    @Bind(R.id.landing_signin_progress)
+    @Bind(R.id.landing_signin_form_progress)
     DilatingDotsProgressBar signInProgress;
 
     @Bind(R.id.landing_signin_result_avatar)

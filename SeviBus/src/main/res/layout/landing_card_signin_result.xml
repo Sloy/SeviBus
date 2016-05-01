@@ -1,81 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<LinearLayout
+    android:id="@+id/landing_signin_result_card"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="32dp"
-    android:layout_marginLeft="32dp"
-    android:layout_marginRight="32dp"
-    android:layout_marginTop="72dp"
-    tools:showIn="@layout/activity_landing">
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:visibility="gone"
+    tools:showIn="@layout/activity_landing"
+    tools:visibility="visible">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/landing_signin_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Inicio de sesión"
+        android:textColor="?colorPrimary"
+        android:textSize="21sp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/landing_signin_result_avatar"
+        android:layout_width="94dp"
+        android:layout_height="94dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:src="@color/accent"/>
+
+    <TextView
+        android:id="@+id/landing_signin_result_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center_horizontal"
+        android:text="Rafael Vázquez Sánchez"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="17sp"/>
+
+    <TextView
+        android:id="@+id/landing_signin_result_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:text="rafa.vazsan@gmail.com"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp"/>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_weight="1">
 
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="8dp"
-        >
 
-        <TextView
-            android:id="@+id/landing_signin_title"
+        <Button
+            android:id="@+id/landing_signin_result_continue"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Inicio de sesión"
-            android:textColor="?colorPrimary"
-            android:textSize="21sp"/>
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="Continuar"/>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/landing_signin_result_avatar"
-            android:layout_width="94dp"
-            android:layout_height="94dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="32dp"
-            android:src="@color/accent"/>
+    </FrameLayout>
 
-        <TextView
-            android:id="@+id/landing_signin_result_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:gravity="center_horizontal"
-            android:text="Rafael Vázquez Sánchez"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="17sp"/>
-
-        <TextView
-            android:id="@+id/landing_signin_result_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_horizontal"
-            android:text="rafa.vazsan@gmail.com"
-            android:textColor="?android:textColorSecondary"
-            android:textSize="14sp"/>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-
-            <Button
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginBottom="16dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:text="Continuar"/>
-
-        </FrameLayout>
-
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+</LinearLayout>
