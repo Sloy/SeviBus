@@ -1,5 +1,6 @@
 package com.sloy.sevibus.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -24,6 +25,10 @@ public class LoginActivity extends BaseActivity implements SignInFlow {
     private SignInCardPresenter presenter;
     private LoginController loginController;
     private Subscriber<? super AuthCredential> signInFlowSubscriber;
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, LoginActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

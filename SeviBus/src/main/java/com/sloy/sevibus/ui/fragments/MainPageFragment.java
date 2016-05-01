@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,20 +15,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.SignInButton;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.RemoteConfiguration;
 import com.sloy.sevibus.resources.StuffProvider;
-import com.sloy.sevibus.resources.TimeTracker;
-import com.sloy.sevibus.resources.actions.user.LogInAction;
 import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.ui.LoginController;
 import com.sloy.sevibus.ui.SevibusUser;
 import com.sloy.sevibus.ui.activities.BusquedaActivity;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
+import com.sloy.sevibus.ui.activities.LoginActivity;
 import com.sloy.sevibus.ui.mvp.presenter.FavoritasMainPresenter;
 import com.sloy.sevibus.ui.mvp.presenter.LineasCercanasPresenter;
 import com.sloy.sevibus.ui.mvp.presenter.ParadasCercanasMainPresenter;
@@ -42,15 +39,13 @@ import de.cketti.mailto.EmailIntentBuilder;
 
 public class MainPageFragment extends BaseDBFragment {
 
-    private static final int RC_SIGN_IN = 42;
+    public static final int LOGIN_REQUEST_CODE = 38;
 
     private ObtainUserAction obtainUserAction;
-    private LogInAction logInAction;
     private LogOutAction logOutAction;
     private AnalyticsTracker analyticsTracker;
 
-    private SignInButton signInButton;
-    private TextView signInConfirmationButton;
+    private TextView signInButton;
     private LoginController loginController;
 
     private TextView signOutButton;
@@ -75,8 +70,7 @@ public class MainPageFragment extends BaseDBFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main_home, container, false);
-        signInConfirmationButton = (TextView) v.findViewById(R.id.sign_in_firts_confirmation);
-        signInButton = (SignInButton) v.findViewById(R.id.sign_in_button);
+        signInButton = (TextView) v.findViewById(R.id.sign_in_button);
         signOutButton = (TextView) v.findViewById(R.id.sign_out_button);
         loginForm = v.findViewById(R.id.login_form);
         userProfile = v.findViewById(R.id.user_profile);
@@ -113,21 +107,19 @@ public class MainPageFragment extends BaseDBFragment {
         lineasCercanasPresenter.initialize(lineasCercanasView);
 
         obtainUserAction = StuffProvider.getObtainUserAction(getActivity());
-        logInAction = StuffProvider.getLoginAction(getActivity());
         logOutAction = StuffProvider.getLogoutAction(getActivity());
         loginController = new LoginController();
-        setupLogin();
+        updateLoginViews();
 
         view.findViewById(R.id.sign_in_more_info).setOnClickListener(v -> showLoginMoreInfo());
 
 
-        signInConfirmationButton.setOnClickListener(v -> {
+        signInButton.setOnClickListener(v -> {
             new AlertDialog.Builder(getActivity())
               .setTitle("El que avisa no es traidor")
               .setMessage("Esta función es MUY experimenta. Si decides probarla ayudarás a refinarla y que funcione perfecta cuanto antes y para todos, pero el bienestar de tus paradas favoritas no está garantizado. Por errores de programación o cambios de la funcionalidad se podrían llegar a perder.\n\n¿Deseas seguir adelante?")
               .setPositiveButton("Sí, continuar", (dialog, which) -> {
-                  signInConfirmationButton.setVisibility(View.GONE);
-                  signInButton.setVisibility(View.VISIBLE);
+                  startActivityForResult(LoginActivity.newIntent(getActivity()), LOGIN_REQUEST_CODE);
                   analyticsTracker.betaSignInConfirmationAccepted();
                   Snackbar.make(getView(), "¡Ole la gente valiente!", Snackbar.LENGTH_SHORT).show();
               })
@@ -183,16 +175,11 @@ public class MainPageFragment extends BaseDBFragment {
         lineasCercanasPresenter.pause();
     }
 
-    private void setupLogin() {
+    private void updateLoginViews() {
         if (!remoteConfiguration.isLoginEnabled()) {
             getView().findViewById(R.id.main_login_root).setVisibility(View.GONE);
             return;
         }
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
-        signInButton.setOnClickListener(v -> {
-            startActivityForResult(loginController.loginIntent(((LocationProviderActivity) getActivity()).getGoogleApiClient()), RC_SIGN_IN);
-        });
-
         signOutButton.setOnClickListener(v -> {
             analyticsTracker.signInLogout();
             loginController.logout(((LocationProviderActivity) getActivity()).getGoogleApiClient());
@@ -210,25 +197,6 @@ public class MainPageFragment extends BaseDBFragment {
                   userProfile.setVisibility(View.GONE);
               }
           });
-    }
-
-    private void handleSignInResult(Intent data) {
-        TimeTracker timeTracker = new TimeTracker();
-        loginController.obtainOAuthTokenFromSignInResult(getActivity().getApplicationContext(), data)
-          .flatMap(oauthToken -> logInAction.logIn(oauthToken))
-          .subscribe((sevibusUser) -> {
-                analyticsTracker.signInSuccess(timeTracker.calculateInterval());
-                showUserProfile(sevibusUser);
-                Snackbar.make(getView(), "Sincronizando favoritas...", Snackbar.LENGTH_SHORT).show();
-                favoritasPresenter.update();
-            },
-            throwable -> {
-                analyticsTracker.signInFailure();
-                StuffProvider.getCrashReportingTool().registerHandledException(throwable);
-                Log.e("Login", "Error!!", throwable);
-                Snackbar.make(getView(), "Error!! ¿Qué habrá pasado?", Snackbar.LENGTH_SHORT).show();
-            });
-
     }
 
     private void showUserProfile(SevibusUser sevibusUser) {
@@ -258,8 +226,8 @@ public class MainPageFragment extends BaseDBFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            handleSignInResult(data);
+        if (requestCode == LOGIN_REQUEST_CODE) {
+            updateLoginViews();
         }
     }
 }
