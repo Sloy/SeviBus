@@ -76,7 +76,13 @@ public class FavoritasListFragment extends BaseDBFragment {
 
     private void recargaListaFavoritas() {
         obtainFavoritasAction.getFavoritas()
-          .subscribe(this::showFavoritasInList);
+          .subscribe(this::showFavoritasInList,
+            throwable -> {
+                Debug.registerHandledException(throwable);
+                if (isAdded()) {
+                    Snackbar.make(getView(), R.string.error_message_generic, Snackbar.LENGTH_SHORT).show();
+                }
+            });
     }
 
     private void showFavoritasInList(List<Favorita> favoritas) {

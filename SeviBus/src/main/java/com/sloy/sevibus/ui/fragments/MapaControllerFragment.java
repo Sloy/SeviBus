@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -220,7 +221,13 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
             comienzaSeguimientoBuses();
         }
         locationSubscription = locationProvider.observeAvailable()
-          .subscribe(this::onLocationUpdated);
+          .subscribe(this::onLocationUpdated,
+            throwable -> {
+                Debug.registerHandledException(throwable);
+                if (isAdded()) {
+                    Snackbar.make(getView(), R.string.error_message_generic, Snackbar.LENGTH_SHORT).show();
+                }
+            });
     }
 
 
@@ -416,6 +423,11 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
                   }
                   mFavoritasLayer = new FavoritasLayer(paradas, getActivity(), getDBHelper());
                   mLayerManager.addLayer(mFavoritasLayer);
+              }, error -> {
+                  Debug.registerHandledException(error);
+                  if (isAdded()) {
+                      Snackbar.make(getView(), R.string.error_message_generic, Snackbar.LENGTH_SHORT).show();
+                  }
               });
         } else {
             if (mFavoritasLayer != null) {

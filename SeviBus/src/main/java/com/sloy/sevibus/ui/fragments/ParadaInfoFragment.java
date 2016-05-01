@@ -331,15 +331,21 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         obtainSingleFavoritaAction
           .obtainFavorita(mParada.getNumero())
           .subscribe(favorita -> {
-              if (favorita.isPresent()) {
-                  colorizeScreenFromFavorita(favorita.get());
-                  favoritaButton.setImageResource(R.drawable.ic_fab_star_outline);
-                  favoritaButton.setOnClickListener(v -> onEliminarFavoritaClick());
-              } else {
-                  favoritaButton.setImageResource(R.drawable.ic_fab_star);
-                  favoritaButton.setOnClickListener(v -> onCrearFavoritaClick());
-              }
-          });
+                if (favorita.isPresent()) {
+                    colorizeScreenFromFavorita(favorita.get());
+                    favoritaButton.setImageResource(R.drawable.ic_fab_star_outline);
+                    favoritaButton.setOnClickListener(v -> onEliminarFavoritaClick());
+                } else {
+                    favoritaButton.setImageResource(R.drawable.ic_fab_star);
+                    favoritaButton.setOnClickListener(v -> onCrearFavoritaClick());
+                }
+            },
+            throwable -> {
+                Debug.registerHandledException(throwable);
+                if (isAdded()) {
+                    Snackbar.make(getView(), R.string.error_message_generic, Snackbar.LENGTH_SHORT).show();
+                }
+            });
     }
 
     private void colorizeScreenFromFavorita(Favorita fav) {

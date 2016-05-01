@@ -2,7 +2,7 @@ package com.sloy.sevibus.ui.mvp.presenter;
 
 import android.location.Location;
 
-import com.google.common.base.Optional;
+import com.sloydev.gallego.Optional;
 import com.sloy.sevibus.model.ParadaCercana;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.LocationProvider;

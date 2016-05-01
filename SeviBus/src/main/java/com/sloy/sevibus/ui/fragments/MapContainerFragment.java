@@ -2,6 +2,7 @@ package com.sloy.sevibus.ui.fragments;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.common.base.Optional;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.LocationProvider;
@@ -70,7 +70,13 @@ public class MapContainerFragment extends BaseDBFragment {
             showMapControls(mShowInterface);
             asociarOpciones(true);
             locationSubscription = locationProvider.observeAvailable()
-              .subscribe(this::onLocationUpdated);
+              .subscribe(this::onLocationUpdated,
+                throwable -> {
+                    Debug.registerHandledException(throwable);
+                    if (isAdded()) {
+                        Snackbar.make(getView(), R.string.error_message_generic, Snackbar.LENGTH_SHORT).show();
+                    }
+                });
         }
     }
 
