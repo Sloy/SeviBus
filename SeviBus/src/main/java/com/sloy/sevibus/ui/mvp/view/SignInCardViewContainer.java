@@ -58,6 +58,11 @@ public class SignInCardViewContainer implements SignInCardPresenter.View {
         presenter.onSignInClick();
     }
 
+    @OnClick(R.id.landing_signin_form_reject)
+    public void onRejectClick() {
+        presenter.onRejectClick();
+    }
+
     @OnClick(R.id.landing_signin_result_continue)
     public void onContinueClick() {
         presenter.onContinueClick();

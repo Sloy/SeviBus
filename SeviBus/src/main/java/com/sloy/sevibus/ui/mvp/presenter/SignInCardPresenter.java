@@ -50,6 +50,10 @@ public class SignInCardPresenter implements Presenter<SignInCardPresenter.View> 
         cardManager.next();
     }
 
+    public void onRejectClick() {
+        cardManager.next();
+    }
+
     @Override
     public void update() {
         //NA

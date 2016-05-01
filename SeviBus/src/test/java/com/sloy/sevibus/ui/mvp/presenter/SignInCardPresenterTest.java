@@ -111,4 +111,12 @@ public class SignInCardPresenterTest {
 
         verify(cardManager).next();
     }
+
+    @Test
+    public void should_trigger_next_card_when_reject_clicked() throws Exception {
+        presenter.initialize(view);
+        presenter.onRejectClick();
+
+        verify(cardManager).next();
+    }
 }
