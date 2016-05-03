@@ -1,0 +1,27 @@
+<!DOCTYPE walkmod PUBLIC "-//WALKMOD//DTD" "http://www.walkmod.com/dtd/walkmod-1.1.dtd">
+<walkmod>
+    <conf-providers>
+        <conf-provider type="gradle">
+            <param name="flavor">barna</param>
+        </conf-provider>
+    </conf-providers>
+    <chain name="default">
+        <reader path="src/main/java">
+            <exclude wildcard="com/sloy/sevibus/resources/actions/ObtainCercanasAction.java"/>
+            <exclude wildcard="com/sloy/sevibus/resources/actions/ObtainLineasCercanasAction.java"/>
+            <exclude wildcard="com/sloy/sevibus/resources/actions/ReorderFavoritasAction.java"/>
+            <exclude wildcard="com/sloy/sevibus/resources/actions/SaveFavoritaAction.java"/>
+            <exclude wildcard="com/sloy/sevibus/resources/datasource/DBFavoritaDataSource.java"/>
+            <exclude wildcard="com/sloy/sevibus/resources/maputils/BusesLayer.java"/>
+            <exclude wildcard="com/sloy/sevibus/resources/datasource/TussamLlegadaDataSource.java"/>
+            <exclude wildcard="com/sloy/sevibus/resources/sync/UpdateDatabaseAction.java"/>
+            <exclude wildcard="com/sloy/sevibus/ui/fragments/MapaControllerFragment.java"/>
+            <exclude wildcard="com/sloy/sevibus/resources/sync/UpdateDatabaseService.java"/>
+            <exclude wildcard="com/sloy/sevibus/ui/fragments/AjustesFragment.java"/>
+            <exclude wildcard="com/sloy/sevibus/ui/fragments/FavoritasListFragment.java"/>
+            <exclude wildcard="com/sloy/sevibus/ui/fragments/MapContainerFragment.java"/>
+        </reader>
+        <transformation type="dead-code-cleaner"/>
+        <writer path="src/main/java" type="javalang:string-writer"/>
+    </chain>
+</walkmod>
