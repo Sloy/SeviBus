@@ -41,7 +41,7 @@ public class UpdateDatabaseService extends GcmTaskService {
     public void onCreate() {
         super.onCreate();
         updateDatabaseAction = StuffProvider.getUpdateDatabaseAction(getApplicationContext());
-        analyticsTracker = StuffProvider.getAnalyticsTracker();
+        analyticsTracker = StuffProvider.getAnalyticsTracker(this);
     }
 
     @Override

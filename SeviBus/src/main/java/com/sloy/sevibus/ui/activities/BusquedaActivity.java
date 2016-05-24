@@ -52,7 +52,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_busqueda);
 
-        analyticsTracker = StuffProvider.getAnalyticsTracker();
+        analyticsTracker = StuffProvider.getAnalyticsTracker(this);
         mListView = (ListView) findViewById(R.id.busqueda_lista);
         mEmptyView = (TextView) findViewById(R.id.busqueda_texto_vacio);
         mIndicadorRecientes = findViewById(R.id.busqueda_indicador_recientes);

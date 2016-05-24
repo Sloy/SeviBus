@@ -98,7 +98,7 @@ public class MainPageFragment extends BaseDBFragment {
         lineasCercanasPresenter = new LineasCercanasPresenter(locationProvider, StuffProvider.getObtainLineasCercanasAction(getActivity()));
 
         View view = getView();
-        analyticsTracker = StuffProvider.getAnalyticsTracker();
+        analyticsTracker = StuffProvider.getAnalyticsTracker(getActivity());
 
         favoritasPresenter.initialize(new FavoritasMainViewContainer(view.findViewById(R.id.fragment_main_favoritas)));
 

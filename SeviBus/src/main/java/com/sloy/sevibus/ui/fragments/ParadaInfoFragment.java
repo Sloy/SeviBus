@@ -124,7 +124,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         obtainSingleFavoritaAction = StuffProvider.getObtainSingleFavoritaAction(getActivity());
         saveFavoritaAction = StuffProvider.getSaveFavoritaAction(getActivity());
         deleteFavoritaAction = StuffProvider.getDeleteFavoritaAction(getActivity());
-        analyticsTracker = StuffProvider.getAnalyticsTracker();
+        analyticsTracker = StuffProvider.getAnalyticsTracker(getActivity());
     }
 
     @Override

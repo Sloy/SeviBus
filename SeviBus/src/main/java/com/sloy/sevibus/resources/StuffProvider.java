@@ -68,7 +68,7 @@ public class StuffProvider {
         return new StringDownloader();
     }
 
-    public static AnalyticsTracker getAnalyticsTracker() {
+    public static AnalyticsTracker getAnalyticsTracker(Context context) {
         if (BuildConfig.DEBUG) {
             return new EmptyAnalyticsTracker();
         } else {

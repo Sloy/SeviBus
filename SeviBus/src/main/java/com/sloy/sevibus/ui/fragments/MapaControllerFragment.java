@@ -174,7 +174,7 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        analyticsTracker = StuffProvider.getAnalyticsTracker();
+        analyticsTracker = StuffProvider.getAnalyticsTracker(getActivity());
         locationProvider = ((LocationProviderActivity) getActivity()).getLocationProvider();
         if (savedInstanceState != null) {
             mCurrentConfig = ConfigWraper.fromBundle(savedInstanceState.getBundle(ConfigWraper.OPCIONES_KEY));
