@@ -34,6 +34,9 @@ android {
         release {
             storeFile file("../sevibus.keystore")
         }
+        debug {
+            storeFile file("../debug.keystore")
+        }
     }
     compileSdkVersion 23
     buildToolsVersion '23.0.3'
