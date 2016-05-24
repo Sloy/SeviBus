@@ -30,11 +30,6 @@ public class EmptyAnalyticsTracker implements AnalyticsTracker {
     }
 
     @Override
-    public void favoritaNotColorized(Integer numero) {
-        /* no-op */
-    }
-
-    @Override
     public void lineaAddedToMap(Linea linea, int totalCount) {
         /* no-op */
     }

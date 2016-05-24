@@ -17,8 +17,6 @@ public interface AnalyticsTracker {
 
     void favoritaColorized(PaletaColores paleta, Integer numeroParada);
 
-    void favoritaNotColorized(Integer numero);
-
     void lineaAddedToMap(Linea linea, int totalCount);
 
     void betaSignInConfirmationAccepted();
