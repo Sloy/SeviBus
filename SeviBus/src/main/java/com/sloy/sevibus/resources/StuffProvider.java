@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.crashlytics.android.answers.Answers;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
@@ -70,10 +71,15 @@ public class StuffProvider {
 
     public static AnalyticsTracker getAnalyticsTracker(Context context) {
         if (BuildConfig.DEBUG) {
-            return new EmptyAnalyticsTracker();
+            //return new EmptyAnalyticsTracker();
+            return new FirebaseAnalyticsTracker(getFirebaseAnalytics(context));
         } else {
             return new AnswersAnalyticsTracker(Answers.getInstance());
         }
+    }
+
+    private static FirebaseAnalytics getFirebaseAnalytics(Context context) {
+        return FirebaseAnalytics.getInstance(context);
     }
 
     public static ObtainLlegadasAction getObtainLlegadaAction() {
