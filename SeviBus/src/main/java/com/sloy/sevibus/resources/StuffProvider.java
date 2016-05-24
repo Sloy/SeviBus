@@ -42,13 +42,13 @@ import retrofit.RestAdapter;
 
 public class StuffProvider {
 
-    public static final String PRODUCTION_API_ENDPOINT = "http://api.sevibus.sloydev.com";
+    private static final String PRODUCTION_API_ENDPOINT = "http://api.sevibus.sloydev.com";
     public static final String STAGING_API_ENDPOINT = "https://sevibus-staging.herokuapp.com/";
-    public static final String API_ENDPOINT = PRODUCTION_API_ENDPOINT;
+    private static final String API_ENDPOINT = PRODUCTION_API_ENDPOINT;
 
     private static CrashReportingTool crashReportingToolInstance;
 
-    public static Gson getGson() {
+    private static Gson getGson() {
         return new Gson();
     }
 
@@ -64,7 +64,7 @@ public class StuffProvider {
         return OpenHelperManager.getHelper(context, DBHelper.class);
     }
 
-    public static StringDownloader getStringDownloader() {
+    static StringDownloader getStringDownloader() {
         return new StringDownloader();
     }
 
@@ -90,11 +90,11 @@ public class StuffProvider {
 
     private static SevibusApi getSevibusApi() {
         return new RestAdapter.Builder()
-                .setEndpoint(API_ENDPOINT)
-                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL: RestAdapter.LogLevel.NONE)
-                .setErrorHandler(new ApiErrorHandler())
-                .build()
-                .create(SevibusApi.class);
+          .setEndpoint(API_ENDPOINT)
+          .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
+          .setErrorHandler(new ApiErrorHandler())
+          .build()
+          .create(SevibusApi.class);
     }
 
     public static CrashReportingTool getCrashReportingTool() {
@@ -123,24 +123,25 @@ public class StuffProvider {
     public static SaveFavoritaAction getSaveFavoritaAction(Context context) {
         return new SaveFavoritaAction(getLocalFavoritaDataSource(context), getRemoteFavoritaDataSource(context), getDbHelper(context));
     }
+
     public static ReorderFavoritasAction getReorderFavoritasAction(Context context) {
         return new ReorderFavoritasAction(getLocalFavoritaDataSource(context), getRemoteFavoritaDataSource(context));
     }
 
-    public static FavoritaDataSource getLocalFavoritaDataSource(Context context) {
+    private static FavoritaDataSource getLocalFavoritaDataSource(Context context) {
         return new DBFavoritaDataSource(getDbHelper(context));
     }
 
-    public static FavoritaDataSource getRemoteFavoritaDataSource(Context context) {
+    private static FavoritaDataSource getRemoteFavoritaDataSource(Context context) {
         UserDataSource userDataSource = getUserDataSource(context);
         return new AuthAwareFavoritaDataSource(new FirebaseFavoritaDataSource(getFirebaseDatabase(), userDataSource), userDataSource);
     }
 
-    public static FirebaseAuth getFirebaseAuth() {
+    private static FirebaseAuth getFirebaseAuth() {
         return FirebaseAuth.getInstance();
     }
 
-    public static FirebaseDatabase getFirebaseDatabase() {
+    private static FirebaseDatabase getFirebaseDatabase() {
         return FirebaseDatabase.getInstance();
     }
 
