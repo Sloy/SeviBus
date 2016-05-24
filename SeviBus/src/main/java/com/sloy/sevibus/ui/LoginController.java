@@ -5,19 +5,15 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-
-import java.io.IOException;
+import com.google.android.gms.common.api.Status;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class LoginController implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -29,28 +25,12 @@ public class LoginController implements GoogleApiClient.OnConnectionFailedListen
         Auth.GoogleSignInApi.signOut(googleApiClient);
     }
 
-    public Observable<String> obtainOAuthTokenFromSignInResult(Context context, Intent data) {
+    public Observable<AuthCredential> obtainOAuthTokenFromSignInResult(Context context, Intent data) {
         return Observable.just(data)
           .map(Auth.GoogleSignInApi::getSignInResultFromIntent)
           .flatMap(this::successOrFail)
           .map(GoogleSignInResult::getSignInAccount)
-          .map(GoogleSignInAccount::getEmail)
-          .flatMap(email -> getOauthToken(context, email));
-    }
-
-    private Observable<String> getOauthToken(Context context, String email) {
-        return Observable.defer(() -> {
-            try {
-                String token = GoogleAuthUtil.getToken(context, email, "oauth2:profile email");
-                Log.d("token", token);
-                return Observable.just(token);
-            } catch (IOException | GoogleAuthException e) {
-                return Observable.error(e);
-            }
-        })
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread());
-
+          .map(googleSignInAccount -> GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null));
     }
 
     @Override
@@ -60,6 +40,11 @@ public class LoginController implements GoogleApiClient.OnConnectionFailedListen
 
     @NonNull
     private Observable<GoogleSignInResult> successOrFail(GoogleSignInResult signInResult) {
-        return signInResult.isSuccess() ? Observable.just(signInResult) : Observable.error(new Exception("Oops"));
+        if (signInResult.isSuccess()) {
+            return Observable.just(signInResult);
+        } else {
+            Status status = signInResult.getStatus();
+            return Observable.error(new Exception(status.toString()));
+        }
     }
 }

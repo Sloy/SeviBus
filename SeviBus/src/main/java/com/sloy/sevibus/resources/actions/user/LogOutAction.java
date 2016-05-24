@@ -1,6 +1,6 @@
 package com.sloy.sevibus.resources.actions.user;
 
-import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
 
 import rx.Observable;
@@ -8,11 +8,11 @@ import rx.Observable;
 public class LogOutAction {
 
     private final UserDataSource userDataSource;
-    private final Firebase firebase;
+    private final FirebaseAuth firebaseAuth;
 
-    public LogOutAction(UserDataSource userDataSource, Firebase firebase) {
+    public LogOutAction(UserDataSource userDataSource, FirebaseAuth firebaseAuth) {
         this.userDataSource = userDataSource;
-        this.firebase = firebase;
+        this.firebaseAuth = firebaseAuth;
     }
 
     public Observable<Void> logOut() {
@@ -21,7 +21,7 @@ public class LogOutAction {
 
     private Observable<Void> logoutFromFirebase() {
         return Observable.defer(() -> {
-            firebase.unauth();
+            firebaseAuth.signOut();
             return Observable.empty();
         });
     }

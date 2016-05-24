@@ -1,6 +1,6 @@
 package com.sloy.sevibus.resources.actions.user;
 
-import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
 
 import org.junit.Before;
@@ -17,14 +17,14 @@ public class LogOutActionTest {
     @Mock
     UserDataSource userDataSource;
     @Mock
-    Firebase firebase;
+    FirebaseAuth firebaseAuth;
 
     private LogOutAction action;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        action = new LogOutAction(userDataSource, firebase);
+        action = new LogOutAction(userDataSource, firebaseAuth);
         when(userDataSource.removeCurrentUser()).thenReturn(empty());
     }
 
@@ -41,7 +41,7 @@ public class LogOutActionTest {
         action.logOut()
           .toBlocking().subscribe();
 
-        verify(firebase).unauth();
+        verify(firebaseAuth).signOut();
     }
 
 

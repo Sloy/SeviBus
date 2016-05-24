@@ -2,12 +2,12 @@ package com.sloy.sevibus.resources.datasource.favorita;
 
 import android.util.Log;
 
-import com.fernandocejas.frodo.annotation.RxLogObservable;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.GenericTypeIndicator;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
 
@@ -20,10 +20,10 @@ import rx.Subscriber;
 
 public class FirebaseFavoritaDataSource implements FavoritaDataSource {
 
-    private final Firebase firebase;
+    private final FirebaseDatabase firebase;
     private final UserDataSource userDataSource;
 
-    public FirebaseFavoritaDataSource(Firebase firebase, UserDataSource userDataSource) {
+    public FirebaseFavoritaDataSource(FirebaseDatabase firebase, UserDataSource userDataSource) {
         this.firebase = firebase;
         this.userDataSource = userDataSource;
     }
@@ -59,11 +59,12 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
 
     @Override
     public Observable<Integer> deleteFavorita(Integer idParada) {
-        return favoritasFirebaseNode(firebase, userDataSource)
+        /*return favoritasFirebaseNode(firebase, userDataSource)
           .flatMap(favsNode -> {
               favsNode.child(idParada.toString()).removeValue();
               return Observable.just(idParada);
-          });
+          });*/
+        return null;
     }
 
     @Override
@@ -83,25 +84,27 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
           .flatMap(__ -> saveFavoritas(favoritas));
     }
 
-    /*private Observable<Firebase> favoritasFirebaseNode(Firebase firebase, UserDataSource userDataSource) {
+    private Observable<DatabaseReference> favoritasFirebaseNode(FirebaseDatabase firebase, UserDataSource userDataSource) {
         return Observable.zip(
-          Observable.just(firebase),
+          Observable.just(firebase.getReference()),
           userDataSource.getCurrentUser()
-            .switchIfEmpty(Observable.error(new AuthException())),
+            .switchIfEmpty(Observable.error(new AuthException("Empty current user"))),
           (rootNode, user) -> rootNode.child(user.getId()))
-          .map(authNode -> authNode.child("favoritas"));
-    }*/
-
-    @RxLogObservable
-    private Observable<Firebase> favoritasFirebaseNode(Firebase firebase, UserDataSource userDataSource) {
-        return Observable.just(firebase.getAuth())
-          .filter(auth -> auth != null)
-          .switchIfEmpty(Observable.error(new AuthException()))
-          .map(authData -> firebase.child(authData.getUid()))
           .map(authNode -> authNode.child("favoritas"));
     }
 
-    private Observable<DataSnapshot> observeSingleValue(Firebase firebaseNode) {
+    /*private Observable<DatabaseReference> favoritasFirebaseNode(FirebaseDatabase firebase, UserDataSource userDataSource) {
+//        return Observable.just(firebase.getAuth())
+//          .filter(auth -> auth != null)
+//          .switchIfEmpty(Observable.error(new AuthException()))
+//          .map(authData -> firebase.child(authData.getUid()))
+//          .map(authNode -> authNode.child("favoritas"));
+        return Observable.just(firebase)
+          .map(firebaseDatabase -> firebaseDatabase.getReference("favoritas"));
+          //TODO get authenticated node
+    }*/
+
+    private Observable<DataSnapshot> observeSingleValue(DatabaseReference firebaseNode) {
         return Observable.create(new Observable.OnSubscribe<DataSnapshot>() {
             @Override
             public void call(Subscriber<? super DataSnapshot> subscriber) {
@@ -116,19 +119,20 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
                     }
 
                     @Override
-                    public void onCancelled(FirebaseError firebaseError) {
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e("FIREBASE", "error: " + databaseError.getMessage());
                         if (subscriber.isUnsubscribed()) {
                             return;
                         }
-                        Log.e("FIREBASE", "error: " + firebaseError.getMessage());
-                        subscriber.onError(firebaseError.toException());
+                        subscriber.onError(databaseError.toException());
+
                     }
                 });
             }
         });
     }
 
-    private class FavoritaMapFirebaseTypeIndicator extends GenericTypeIndicator<Map<Integer, Favorita>> {
+    private class FavoritaMapFirebaseTypeIndicator extends GenericTypeIndicator<Map<String, Favorita>> {
     }
 
 }

@@ -34,8 +34,8 @@ public class LocationProviderActivity extends BaseToolbarActivity
         super.onCreate(savedInstanceState);
 
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+          .requestIdToken("255022367225-g00bjo9aoo9tke4siolik1ikck2unefj.apps.googleusercontent.com")
           .requestEmail()
-          .requestIdToken("952975778259-4tdh0qdnn97a6epq4sj27p3dms1802it.apps.googleusercontent.com")
           .build();
 
         googleApiClient = new GoogleApiClient.Builder(this)
