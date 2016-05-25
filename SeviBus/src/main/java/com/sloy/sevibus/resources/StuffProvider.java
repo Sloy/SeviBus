@@ -5,7 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.crashlytics.android.answers.Answers;
-import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.BuildConfig;
@@ -23,30 +24,31 @@ import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.LineaDataSource;
-import com.sloy.sevibus.resources.datasource.favorita.AuthAwareFavoritaDataSource;
-import com.sloy.sevibus.resources.datasource.llegada.ApiLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
+import com.sloy.sevibus.resources.datasource.favorita.AuthAwareFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.DBFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.FavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.FirebaseFavoritaDataSource;
+import com.sloy.sevibus.resources.datasource.llegada.ApiLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.llegada.LlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.llegada.SevibusApi;
 import com.sloy.sevibus.resources.datasource.llegada.TussamLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.user.PreferencesUserDataSource;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
+import com.sloy.sevibus.resources.services.LoginService;
 import com.sloy.sevibus.resources.sync.UpdateDatabaseAction;
 
 import retrofit.RestAdapter;
 
 public class StuffProvider {
 
-    public static final String PRODUCTION_API_ENDPOINT = "http://api.sevibus.sloydev.com";
+    private static final String PRODUCTION_API_ENDPOINT = "http://api.sevibus.sloydev.com";
     public static final String STAGING_API_ENDPOINT = "https://sevibus-staging.herokuapp.com/";
-    public static final String API_ENDPOINT = PRODUCTION_API_ENDPOINT;
+    private static final String API_ENDPOINT = PRODUCTION_API_ENDPOINT;
 
     private static CrashReportingTool crashReportingToolInstance;
 
-    public static Gson getGson() {
+    private static Gson getGson() {
         return new Gson();
     }
 
@@ -62,7 +64,7 @@ public class StuffProvider {
         return OpenHelperManager.getHelper(context, DBHelper.class);
     }
 
-    public static StringDownloader getStringDownloader() {
+    static StringDownloader getStringDownloader() {
         return new StringDownloader();
     }
 
@@ -88,11 +90,11 @@ public class StuffProvider {
 
     private static SevibusApi getSevibusApi() {
         return new RestAdapter.Builder()
-                .setEndpoint(API_ENDPOINT)
-                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL: RestAdapter.LogLevel.NONE)
-                .setErrorHandler(new ApiErrorHandler())
-                .build()
-                .create(SevibusApi.class);
+          .setEndpoint(API_ENDPOINT)
+          .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
+          .setErrorHandler(new ApiErrorHandler())
+          .build()
+          .create(SevibusApi.class);
     }
 
     public static CrashReportingTool getCrashReportingTool() {
@@ -121,21 +123,26 @@ public class StuffProvider {
     public static SaveFavoritaAction getSaveFavoritaAction(Context context) {
         return new SaveFavoritaAction(getLocalFavoritaDataSource(context), getRemoteFavoritaDataSource(context), getDbHelper(context));
     }
+
     public static ReorderFavoritasAction getReorderFavoritasAction(Context context) {
         return new ReorderFavoritasAction(getLocalFavoritaDataSource(context), getRemoteFavoritaDataSource(context));
     }
 
-    public static FavoritaDataSource getLocalFavoritaDataSource(Context context) {
+    private static FavoritaDataSource getLocalFavoritaDataSource(Context context) {
         return new DBFavoritaDataSource(getDbHelper(context));
     }
 
-    public static FavoritaDataSource getRemoteFavoritaDataSource(Context context) {
+    private static FavoritaDataSource getRemoteFavoritaDataSource(Context context) {
         UserDataSource userDataSource = getUserDataSource(context);
-        return new AuthAwareFavoritaDataSource(new FirebaseFavoritaDataSource(getFirebase(), userDataSource), userDataSource);
+        return new AuthAwareFavoritaDataSource(new FirebaseFavoritaDataSource(getFirebaseDatabase(), userDataSource), userDataSource);
     }
 
-    public static Firebase getFirebase() {
-        return new Firebase("https://sevibus.firebaseio.com/");
+    private static FirebaseAuth getFirebaseAuth() {
+        return FirebaseAuth.getInstance();
+    }
+
+    private static FirebaseDatabase getFirebaseDatabase() {
+        return FirebaseDatabase.getInstance();
     }
 
     public static ObtainCercanasAction getObtainCercanasAction(Context context) {
@@ -155,10 +162,14 @@ public class StuffProvider {
     }
 
     public static LogInAction getLoginAction(Context context) {
-        return new LogInAction(getUserDataSource(context), getFirebase(), getCrashReportingTool());
+        return new LogInAction(getUserDataSource(context), getLoginService(), getFirebaseDatabase(), getCrashReportingTool());
+    }
+
+    private static LoginService getLoginService() {
+        return new LoginService(getFirebaseAuth());
     }
 
     public static LogOutAction getLogoutAction(Context context) {
-        return new LogOutAction(getUserDataSource(context), getFirebase());
+        return new LogOutAction(getUserDataSource(context), getFirebaseAuth());
     }
 }
