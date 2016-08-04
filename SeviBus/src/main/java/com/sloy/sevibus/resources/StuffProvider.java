@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import com.crashlytics.android.answers.Answers;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.BuildConfig;
@@ -171,5 +172,9 @@ public class StuffProvider {
 
     public static LogOutAction getLogoutAction(Context context) {
         return new LogOutAction(getUserDataSource(context), getFirebaseAuth());
+    }
+
+    public static RemoteConfiguration getRemoteConfiguration() {
+        return new FirebaseRemoteConfiguration(FirebaseRemoteConfig.getInstance());
     }
 }

@@ -21,6 +21,7 @@ import android.view.MenuItem;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Linea;
+import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.syncadapter.IntentFactory;
 import com.sloy.sevibus.ui.fragments.AlertasFragment;
 import com.sloy.sevibus.ui.fragments.BonobusListaFragment;
@@ -71,6 +72,8 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         } else {
             arrancaPrimeraVez();
         }
+
+        StuffProvider.getRemoteConfiguration().update();
     }
 
     @Override
