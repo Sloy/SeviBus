@@ -121,7 +121,7 @@
             android:layout_height="1dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:background="@color/common_action_bar_splitter"
+            android:background="#D2D2D2"
             />
 
         <TextView
