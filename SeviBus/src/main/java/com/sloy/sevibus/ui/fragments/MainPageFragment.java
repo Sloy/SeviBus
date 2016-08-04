@@ -20,6 +20,7 @@ import com.google.android.gms.common.SignInButton;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.LocationProvider;
+import com.sloy.sevibus.resources.RemoteConfiguration;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.TimeTracker;
 import com.sloy.sevibus.resources.actions.user.LogInAction;
@@ -62,6 +63,7 @@ public class MainPageFragment extends BaseDBFragment {
     private FavoritasMainPresenter favoritasPresenter;
     private ParadasCercanasMainPresenter cercanasPresenter;
     private LineasCercanasPresenter lineasCercanasPresenter;
+    private RemoteConfiguration remoteConfiguration;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,7 @@ public class MainPageFragment extends BaseDBFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        remoteConfiguration = StuffProvider.getRemoteConfiguration();
         favoritasPresenter = new FavoritasMainPresenter(StuffProvider.getObtainFavoritasAction(getActivity()));
         LocationProvider locationProvider = ((LocationProviderActivity) getActivity()).getLocationProvider();
         cercanasPresenter = new ParadasCercanasMainPresenter(locationProvider, StuffProvider.getObtainCercanasAction(getActivity()));
@@ -181,6 +184,10 @@ public class MainPageFragment extends BaseDBFragment {
     }
 
     private void setupLogin() {
+        if (!remoteConfiguration.isLoginEnabled()) {
+            getView().findViewById(R.id.main_login_root).setVisibility(View.GONE);
+            return;
+        }
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(v -> {
             startActivityForResult(loginController.loginIntent(((LocationProviderActivity) getActivity()).getGoogleApiClient()), RC_SIGN_IN);
