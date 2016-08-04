@@ -102,8 +102,7 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-core:4.42'
     compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.7'
     compile('com.fourmob.colorpicker:colorpicker:1.0.0') {
-        // exclusion is not neccessary, but generally a good idea.
-        exclude group: 'com.google.android', module: 'support-v4'
+        exclude module: 'support-v4';
     }
     compile 'de.cketti.library.changelog:ckchangelog:1.2.0'
     compile 'com.google.guava:guava:18.0'
