@@ -88,7 +88,7 @@ public class LlegadasList extends LinearLayout {
                             .setPositiveButton("Ver todas", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    getContext().startActivity(new Intent(getContext(), HomeActivity.class).putExtra(HomeActivity.EXTRA_DRAWER_ID, R.id.nav_alertas));
+                                    context.startActivity(HomeActivity.createIntentForSectionAlertas(context));
                                 }
                             })
                             .create().show();

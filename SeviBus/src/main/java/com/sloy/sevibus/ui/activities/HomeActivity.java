@@ -1,5 +1,6 @@
 package com.sloy.sevibus.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -53,6 +54,18 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
     public static final String PREF_FIRST_TIME_MAP = "map_1st";
     private NavigationView navigationView;
     private SparseArray<String> drawerFragments;
+
+    public static Intent createIntentForSectionAlertas(Context context) {
+        Intent intent = new Intent(context, HomeActivity.class);
+        intent.putExtra(EXTRA_DRAWER_ID, R.id.nav_alertas);
+        return intent;
+    }
+
+    public static Intent createIntentForSectionBonobus(Context context) {
+        Intent intent = new Intent(context, HomeActivity.class);
+        intent.putExtra(EXTRA_DRAWER_ID, R.id.nav_bonobus);
+        return intent;
+    }
 
     @Override
     protected boolean needsToolbarDecorator() {

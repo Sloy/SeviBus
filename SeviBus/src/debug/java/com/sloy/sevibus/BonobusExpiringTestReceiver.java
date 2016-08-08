@@ -2,12 +2,15 @@ package com.sloy.sevibus;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.util.Log;
+
+import com.sloy.sevibus.ui.activities.HomeActivity;
 
 import java.util.Random;
 
@@ -32,6 +35,8 @@ public class BonobusExpiringTestReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.ic_notification_default)
                 .setLights(Color.RED, 500, 5000)
                 .setColor(Color.RED)
+                .setContentIntent(PendingIntent.getActivity(context, 1, HomeActivity.createIntentForSectionBonobus(context), 0))
+                .setAutoCancel(true)
                 .build();
 
         nm.notify(new Random().nextInt(1000), notification);
