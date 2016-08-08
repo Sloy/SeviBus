@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -48,17 +49,22 @@ public class MapContainerFragment extends BaseDBFragment {
     }
 
     private void setUpMapIfNeeded() {
-        // confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            mMap = mMapFragment.getMap();
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                // The Map is verified. It is now safe to manipulate the map.
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                mMap.setMyLocationEnabled(true);
-                //Config
-                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(37.3808828009948, -5.986958742141724), 13)));
-            }
+        if (mMap != null) {
+            initMap();
+        } else {
+            mMapFragment.getMapAsync(googleMap -> {
+                mMap = googleMap;
+                // Check if we were successful in obtaining the map.
+                if (mMap != null) {
+                    // The Map is verified. It is now safe to manipulate the map.
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    mMap.setMyLocationEnabled(true);
+                    //Config
+                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(37.3808828009948, -5.986958742141724), 13)));
+                }
+                initMap();
+            });
+
         }
     }
 
@@ -66,18 +72,19 @@ public class MapContainerFragment extends BaseDBFragment {
     public void onStart() {
         super.onStart();
         setUpMapIfNeeded();
-        if (mMap != null) {
-            showMapControls(mShowInterface);
-            asociarOpciones(true);
-            locationSubscription = locationProvider.observeAvailable()
-              .subscribe(this::onLocationUpdated,
-                throwable -> {
-                    Debug.registerHandledException(throwable);
-                    if (isAdded()) {
-                        Snackbar.make(getView(), R.string.error_message_generic, Snackbar.LENGTH_SHORT).show();
-                    }
-                });
-        }
+    }
+
+    private void initMap() {
+        showMapControls(mShowInterface);
+        asociarOpciones(true);
+        locationSubscription = locationProvider.observeAvailable()
+                .subscribe(this::onLocationUpdated,
+                        throwable -> {
+                            Debug.registerHandledException(throwable);
+                            if (isAdded()) {
+                                Snackbar.make(getView(), R.string.error_message_generic, Snackbar.LENGTH_SHORT).show();
+                            }
+                        });
     }
 
 
