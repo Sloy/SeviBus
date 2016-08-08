@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.bbdd.DBHelper;
+import com.sloy.sevibus.resources.actions.HasExpiringBonobusAction;
 import com.sloy.sevibus.resources.actions.ObtainCercanasAction;
 import com.sloy.sevibus.resources.actions.ObtainLineasCercanasAction;
 import com.sloy.sevibus.resources.actions.favorita.DeleteFavoritaAction;
@@ -24,8 +25,12 @@ import com.sloy.sevibus.resources.actions.user.LogInAction;
 import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
+import com.sloy.sevibus.resources.datasource.bonobus.BonobusDataSource;
+import com.sloy.sevibus.resources.datasource.bonobus.DatabaseBonobusDataSource;
+import com.sloy.sevibus.resources.datasource.bonobus.BonobusSaldoDataSource;
 import com.sloy.sevibus.resources.datasource.LineaDataSource;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
+import com.sloy.sevibus.resources.datasource.bonobus.MockBonobusSaldoDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.AuthAwareFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.DBFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.FavoritaDataSource;
@@ -176,5 +181,17 @@ public class StuffProvider {
 
     public static RemoteConfiguration getRemoteConfiguration() {
         return new FirebaseRemoteConfiguration(FirebaseRemoteConfig.getInstance());
+    }
+
+    public static HasExpiringBonobusAction getHasBonobusesExpiringAction(Context context) {
+        return new HasExpiringBonobusAction(getBonobusDataSource(context), getBonobusSaldoDataSource());
+    }
+
+    private static BonobusDataSource getBonobusDataSource(Context context) {
+        return new DatabaseBonobusDataSource(getDbHelper(context));
+    }
+
+    private static BonobusSaldoDataSource getBonobusSaldoDataSource() {
+        return new MockBonobusSaldoDataSource();
     }
 }

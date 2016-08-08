@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.util.Log;
 
+import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.actions.HasExpiringBonobusAction;
 import com.sloy.sevibus.ui.activities.HomeActivity;
 
 import java.util.Random;
@@ -24,21 +26,24 @@ public class BonobusExpiringTestReceiver extends BroadcastReceiver {
         Log.d("Sevibus", "hola bebés");
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        //String pavito = "\uD83E\uDD83";
-        String pavito = "€";
-        String message = "Ojocuidao, tienes un bonobús con menos de 1" + pavito + ". ¡Acuérdate de recargarlo!";
-        Notification notification = new Notification.Builder(context)
-                .setContentTitle("Aviso de Bonobús")
-                .setContentText("Tienes uno a punto de agotarse")
-                .setStyle(new Notification.BigTextStyle().bigText(message))
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setSmallIcon(R.drawable.ic_notification_default)
-                .setLights(Color.RED, 500, 5000)
-                .setColor(Color.RED)
-                .setContentIntent(PendingIntent.getActivity(context, 1, HomeActivity.createIntentForSectionBonobus(context), 0))
-                .setAutoCancel(true)
-                .build();
+        HasExpiringBonobusAction hasExpiringBonobusAction = StuffProvider.getHasBonobusesExpiringAction(context);
+        hasExpiringBonobusAction.hasExpiringBonobus()
+                .filter(Boolean.TRUE::equals)
+                .subscribe(__ -> {
+                    String message = "Ojocuidao, tienes un bonobús con menos de 1€. ¡Acuérdate de recargarlo!";
+                    Notification notification = new Notification.Builder(context)
+                            .setContentTitle("Aviso de Bonobús")
+                            .setContentText("Tienes uno a punto de agotarse")
+                            .setStyle(new Notification.BigTextStyle().bigText(message))
+                            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                            .setSmallIcon(R.drawable.ic_notification_default)
+                            .setLights(Color.RED, 500, 5000)
+                            .setColor(Color.RED)
+                            .setContentIntent(PendingIntent.getActivity(context, 1, HomeActivity.createIntentForSectionBonobus(context), 0))
+                            .setAutoCancel(true)
+                            .build();
 
-        nm.notify(new Random().nextInt(1000), notification);
+                    nm.notify(new Random().nextInt(1000), notification);
+                });
     }
 }
