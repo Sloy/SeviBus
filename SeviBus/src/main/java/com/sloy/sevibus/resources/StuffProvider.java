@@ -25,12 +25,14 @@ import com.sloy.sevibus.resources.actions.user.LogInAction;
 import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
-import com.sloy.sevibus.resources.datasource.bonobus.TussamApiBonobusSaldoDataSource;
-import com.sloy.sevibus.resources.datasource.bonobus.BonobusDataSource;
-import com.sloy.sevibus.resources.datasource.bonobus.BonobusSaldoDataSource;
 import com.sloy.sevibus.resources.datasource.LineaDataSource;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
+import com.sloy.sevibus.resources.datasource.bonobus.BonobusDataSource;
+import com.sloy.sevibus.resources.datasource.bonobus.BonobusSaldoDataSource;
+import com.sloy.sevibus.resources.datasource.bonobus.DatabaseBonobusDataSource;
 import com.sloy.sevibus.resources.datasource.bonobus.MockBonobusDataSource;
+import com.sloy.sevibus.resources.datasource.bonobus.MockBonobusSaldoDataSource;
+import com.sloy.sevibus.resources.datasource.bonobus.TussamApiBonobusSaldoDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.AuthAwareFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.DBFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.FavoritaDataSource;
@@ -188,12 +190,18 @@ public class StuffProvider {
     }
 
     private static BonobusDataSource getBonobusDataSource(Context context) {
-        //return new DatabaseBonobusDataSource(getDbHelper(context));
-        return new MockBonobusDataSource();
+        if (BuildConfig.DEBUG) {
+            return new MockBonobusDataSource();
+        } else {
+            return new DatabaseBonobusDataSource(getDbHelper(context));
+        }
     }
 
     private static BonobusSaldoDataSource getBonobusSaldoDataSource() {
-        //return new MockBonobusSaldoDataSource();
-        return new TussamApiBonobusSaldoDataSource();
+        if (BuildConfig.DEBUG) {
+            return new MockBonobusSaldoDataSource();
+        } else {
+            return new TussamApiBonobusSaldoDataSource();
+        }
     }
 }
