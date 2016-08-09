@@ -12,6 +12,7 @@ public class MockBonobusDataSource implements BonobusDataSource {
         bonobus.setNombre("Bono de alguien");
         bonobus.setTipo(Bonobus.TIPO.SALDO);
         bonobus.setId(1);
+        bonobus.setNumero(158162610277L);
         return Collections.singletonList(bonobus);
     }
 }

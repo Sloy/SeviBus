@@ -25,6 +25,9 @@ import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class BonobusNotifier {
 
     private static final long TIME_8_AM = TimeUnit.HOURS.toMillis(8);
@@ -35,6 +38,8 @@ public class BonobusNotifier {
     public void checkBonobusAndNotify(Context context) {
         HasExpiringBonobusAction hasExpiringBonobusAction = StuffProvider.getHasExpiringBonobusesAction(context);
         hasExpiringBonobusAction.hasExpiringBonobus()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .filter(Boolean.TRUE::equals)
                 .subscribe(__ -> {
                     showNotification(context);

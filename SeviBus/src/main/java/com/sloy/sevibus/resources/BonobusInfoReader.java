@@ -22,11 +22,11 @@ public class BonobusInfoReader {
 
     private static final String URL_CONSULTA = "http://recargas.tussam.es/TPW/Common/cardStatus.do?swNumber=%d";
 
-    public static final String XPATH_NUMERO = "//b[text()=\"Num Tarjeta:\"]/following-sibling::span[1]";
-    public static final String XPATH_TITULO = "//b[text()=\"Título:\"]/following-sibling::span[1]";
-    public static final String XPATH_SALDO = "//b[text()=\"Saldo monedero:\"]/following-sibling::span[1]";
-    public static final String XPATH_CADUCIDAD = "//b[text()=\"Caducidad Tarjeta:\"]/following-sibling::span[1]";
-    public static final String XPATH_FECHA_FIN = "//b[text()=\"Fecha fin actual\"]/following-sibling::span[1]";
+    private static final String XPATH_NUMERO = "//b[text()=\"Num Tarjeta:\"]/following-sibling::span[1]";
+    private static final String XPATH_TITULO = "//b[text()=\"Título:\"]/following-sibling::span[1]";
+    private static final String XPATH_SALDO = "//b[text()=\"Saldo monedero:\"]/following-sibling::span[1]";
+    private static final String XPATH_CADUCIDAD = "//b[text()=\"Caducidad Tarjeta:\"]/following-sibling::span[1]";
+    private static final String XPATH_FECHA_FIN = "//b[text()=\"Fecha fin actual\"]/following-sibling::span[1]";
 
 
     public static Bonobus populateBonobusInfo(Bonobus bonobus) throws IOException, ParserConfigurationException, XPathExpressionException, NumberFormatException {
