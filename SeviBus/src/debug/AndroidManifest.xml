@@ -3,11 +3,7 @@
           package="com.sloy.sevibus">
 
     <application>
-        <receiver android:name=".BonobusExpiringTestReceiver">
-            <intent-filter>
-                <action android:name="com.sloy.sevibus.TEST_BONOBUS_EXPIRING"/>
-            </intent-filter>
-        </receiver>
+
     </application>
 
 </manifest>

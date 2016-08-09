@@ -30,6 +30,7 @@ import com.sloy.sevibus.resources.datasource.bonobus.DatabaseBonobusDataSource;
 import com.sloy.sevibus.resources.datasource.bonobus.BonobusSaldoDataSource;
 import com.sloy.sevibus.resources.datasource.LineaDataSource;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
+import com.sloy.sevibus.resources.datasource.bonobus.MockBonobusDataSource;
 import com.sloy.sevibus.resources.datasource.bonobus.MockBonobusSaldoDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.AuthAwareFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.DBFavoritaDataSource;
@@ -183,12 +184,13 @@ public class StuffProvider {
         return new FirebaseRemoteConfiguration(FirebaseRemoteConfig.getInstance());
     }
 
-    public static HasExpiringBonobusAction getHasBonobusesExpiringAction(Context context) {
+    public static HasExpiringBonobusAction getHasExpiringBonobusesAction(Context context) {
         return new HasExpiringBonobusAction(getBonobusDataSource(context), getBonobusSaldoDataSource());
     }
 
     private static BonobusDataSource getBonobusDataSource(Context context) {
-        return new DatabaseBonobusDataSource(getDbHelper(context));
+        //return new DatabaseBonobusDataSource(getDbHelper(context));
+        return new MockBonobusDataSource();
     }
 
     private static BonobusSaldoDataSource getBonobusSaldoDataSource() {

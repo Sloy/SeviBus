@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
 
     <permission
         android:name="${applicationId}.permission.MAPS_RECEIVE"
@@ -28,8 +29,12 @@
         android:supportsRtl="false"
         android:allowBackup="true">
         <meta-data
+            android:name="com.google.android.awareness.API_KEY"
+            android:value="AIzaSyA-6PAosMG_IQWHsRMpbxNtX4X7UalGVsQ"/>
+        <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyA-6PAosMG_IQWHsRMpbxNtX4X7UalGVsQ" />
+
         <meta-data android:name="com.crashlytics.ApiKey" android:value="619aa8ceeeae55fe071504dca6d386a9d346b6a4"/>
 
         <activity android:name=".ui.activities.HomeActivity"
@@ -98,6 +103,27 @@
             <intent-filter>
                 <action android:name="android.provider.Telephony.SECRET_CODE" />
                 <data android:scheme="android_secret_code" android:host="33284" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".resources.awareness.AwarenessFenceSetupReceiver">
+            <intent-filter>
+                <action android:name="com.sloy.sevibus.action.SETUP_FENCE_BONOBUS"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".resources.awareness.AwarenessFenceTriggerReceiver">
+            <intent-filter>
+                <action android:name="com.sloy.sevibus.action.TRIGGER_FENCE_BONOBUS"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".resources.awareness.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="net.infojobs.mobile.android.BOOT_TEST" />
             </intent-filter>
         </receiver>
 
