@@ -4,10 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.sloy.sevibus.resources.StuffProvider;
+
 public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        new BonobusFenceSetupScheduler(new AlarmManagerWrapper(context)).schedule();
+        StuffProvider.getBonobusFenceSetupScheduler(context).schedule();
     }
 }

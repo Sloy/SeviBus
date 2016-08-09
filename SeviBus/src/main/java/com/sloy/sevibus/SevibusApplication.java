@@ -26,6 +26,6 @@ public class SevibusApplication extends MultiDexApplication {
         }
 
         StuffProvider.getRemoteConfiguration().init();
-        new BonobusFenceSetupScheduler(new AlarmManagerWrapper(this)).schedule();
+        StuffProvider.getBonobusFenceSetupScheduler(this).schedule();
     }
 }

@@ -24,6 +24,8 @@ import com.sloy.sevibus.resources.actions.llegada.ObtainLlegadasAction;
 import com.sloy.sevibus.resources.actions.user.LogInAction;
 import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
+import com.sloy.sevibus.resources.awareness.AlarmManagerWrapper;
+import com.sloy.sevibus.resources.awareness.BonobusFenceSetupScheduler;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.LineaDataSource;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
@@ -185,6 +187,10 @@ public class StuffProvider {
         return new FirebaseRemoteConfiguration(FirebaseRemoteConfig.getInstance());
     }
 
+    public static FeatureToggle getFeatureToggle() {
+        return new FeatureToggle(getRemoteConfiguration());
+    }
+
     public static HasExpiringBonobusAction getHasExpiringBonobusesAction(Context context) {
         return new HasExpiringBonobusAction(getBonobusDataSource(context), getBonobusSaldoDataSource());
     }
@@ -203,5 +209,9 @@ public class StuffProvider {
         } else {
             return new TussamApiBonobusSaldoDataSource();
         }
+    }
+
+    public static BonobusFenceSetupScheduler getBonobusFenceSetupScheduler(Context context) {
+        return new BonobusFenceSetupScheduler(new AlarmManagerWrapper(context), getFeatureToggle());
     }
 }

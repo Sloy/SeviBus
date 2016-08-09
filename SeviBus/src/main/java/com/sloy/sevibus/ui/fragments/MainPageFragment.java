@@ -19,8 +19,8 @@ import android.widget.TextView;
 import com.google.android.gms.common.SignInButton;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.resources.AnalyticsTracker;
+import com.sloy.sevibus.resources.FeatureToggle;
 import com.sloy.sevibus.resources.LocationProvider;
-import com.sloy.sevibus.resources.RemoteConfiguration;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.TimeTracker;
 import com.sloy.sevibus.resources.actions.user.LogInAction;
@@ -63,7 +63,7 @@ public class MainPageFragment extends BaseDBFragment {
     private FavoritasMainPresenter favoritasPresenter;
     private ParadasCercanasMainPresenter cercanasPresenter;
     private LineasCercanasPresenter lineasCercanasPresenter;
-    private RemoteConfiguration remoteConfiguration;
+    private FeatureToggle featureToggle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,7 +94,7 @@ public class MainPageFragment extends BaseDBFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        remoteConfiguration = StuffProvider.getRemoteConfiguration();
+        featureToggle = StuffProvider.getFeatureToggle();
         favoritasPresenter = new FavoritasMainPresenter(StuffProvider.getObtainFavoritasAction(getActivity()));
         LocationProvider locationProvider = ((LocationProviderActivity) getActivity()).getLocationProvider();
         cercanasPresenter = new ParadasCercanasMainPresenter(locationProvider, StuffProvider.getObtainCercanasAction(getActivity()));
@@ -184,7 +184,7 @@ public class MainPageFragment extends BaseDBFragment {
     }
 
     private void setupLogin() {
-        if (!remoteConfiguration.isLoginEnabled()) {
+        if (!featureToggle.isLoginEnabled()) {
             getView().findViewById(R.id.main_login_root).setVisibility(View.GONE);
             return;
         }

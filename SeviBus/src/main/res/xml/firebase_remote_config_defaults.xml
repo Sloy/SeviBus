@@ -2,6 +2,10 @@
 <defaultsMap>
     <entry>
         <key>feature_login_enabled</key>
-        <value>false</value>
+        <value>default</value>
+    </entry>
+    <entry>
+        <key>feature_awareness_bonobus_enabled</key>
+        <value>default</value>
     </entry>
 </defaultsMap>

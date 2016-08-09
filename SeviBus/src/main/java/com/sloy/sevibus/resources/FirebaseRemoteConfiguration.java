@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class FirebaseRemoteConfiguration implements RemoteConfiguration {
 
     private static final long FIREBASE_CACHE_TTL_SECONDS = BuildConfig.DEBUG ? 0 : TimeUnit.DAYS.toSeconds(1);
-    public static final String DEFAULT_INDICATOR = "default";
+    private static final String DEFAULT_INDICATOR = "default";
 
     private final FirebaseRemoteConfig firebaseRemoteConfig;
 
@@ -63,7 +63,9 @@ public class FirebaseRemoteConfiguration implements RemoteConfiguration {
     }
 
     @Override
-    public boolean isLoginEnabled() {
-        return firebaseRemoteConfig.getBoolean("feature_login_enabled");
+    public boolean getBoolean(String key, boolean defaultValue) {
+        String value = getString(key, String.valueOf(defaultValue));
+        return Boolean.valueOf(value);
     }
+
 }
