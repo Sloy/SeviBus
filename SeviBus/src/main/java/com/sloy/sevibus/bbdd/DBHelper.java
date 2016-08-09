@@ -9,6 +9,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.sloy.sevibus.model.LineaWarning;
+import com.sloy.sevibus.model.ParadaRequestSnapshot;
 import com.sloy.sevibus.model.TweetHolder;
 import com.sloy.sevibus.model.tussam.Bonobus;
 import com.sloy.sevibus.model.tussam.Favorita;
@@ -29,7 +30,7 @@ import java.util.concurrent.Callable;
 public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DB_NAME = "sevibus.db";
-    private static final int DB_VERSION = 9;
+    private static final int DB_VERSION = 10;
 
     private RuntimeExceptionDao<Linea, Integer> lineaDao;
     private RuntimeExceptionDao<Seccion, Integer> seccionDao;
@@ -39,6 +40,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     private RuntimeExceptionDao<Favorita, Integer> favoritaDao;
     private RuntimeExceptionDao<Reciente, Integer> recienteDao;
     private RuntimeExceptionDao<Bonobus, Long> bonobusDao;
+    private RuntimeExceptionDao<ParadaRequestSnapshot, Integer> paradaRequestedSnapshotDao;
 
     private RuntimeExceptionDao<TweetHolder, Long> tweetHolderDao;
     private RuntimeExceptionDao<LineaWarning, Long> lineaWarningDao;
@@ -64,6 +66,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(cs, Bonobus.class);
             TableUtils.createTableIfNotExists(cs, TweetHolder.class);
             TableUtils.createTableIfNotExists(cs, LineaWarning.class);
+            TableUtils.createTableIfNotExists(cs, ParadaRequestSnapshot.class);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -328,6 +331,13 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             lineaWarningDao = getRuntimeExceptionDao(LineaWarning.class);
         }
         return lineaWarningDao;
+    }
+
+    public RuntimeExceptionDao<ParadaRequestSnapshot, Integer> getDaoParadaRequestSnapshot() {
+        if (paradaRequestedSnapshotDao == null) {
+            paradaRequestedSnapshotDao = getRuntimeExceptionDao(ParadaRequestSnapshot.class);
+        }
+        return paradaRequestedSnapshotDao;
     }
 
 }

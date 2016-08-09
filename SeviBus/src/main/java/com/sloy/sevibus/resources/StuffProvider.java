@@ -25,6 +25,7 @@ import com.sloy.sevibus.resources.actions.user.LogInAction;
 import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.resources.awareness.AlarmManagerWrapper;
+import com.sloy.sevibus.resources.awareness.AwarenessUsageTracker;
 import com.sloy.sevibus.resources.awareness.BonobusFenceSetupScheduler;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.LineaDataSource;
@@ -100,11 +101,11 @@ public class StuffProvider {
 
     private static SevibusApi getSevibusApi() {
         return new RestAdapter.Builder()
-          .setEndpoint(API_ENDPOINT)
-          .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
-          .setErrorHandler(new ApiErrorHandler())
-          .build()
-          .create(SevibusApi.class);
+                .setEndpoint(API_ENDPOINT)
+                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
+                .setErrorHandler(new ApiErrorHandler())
+                .build()
+                .create(SevibusApi.class);
     }
 
     public static CrashReportingTool getCrashReportingTool() {
@@ -213,5 +214,9 @@ public class StuffProvider {
 
     public static BonobusFenceSetupScheduler getBonobusFenceSetupScheduler(Context context) {
         return new BonobusFenceSetupScheduler(new AlarmManagerWrapper(context), getFeatureToggle());
+    }
+
+    public static AwarenessUsageTracker getAwarenessUsageTracker(Context context) {
+        return new AwarenessUsageTracker(getDbHelper(context));
     }
 }

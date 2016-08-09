@@ -40,13 +40,15 @@ import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.Reciente;
 import com.sloy.sevibus.resources.AlertasManager;
 import com.sloy.sevibus.resources.AnalyticsTracker;
+import com.sloy.sevibus.resources.CrashReportingTool;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.TimeTracker;
 import com.sloy.sevibus.resources.actions.favorita.DeleteFavoritaAction;
-import com.sloy.sevibus.resources.actions.llegada.ObtainLlegadasAction;
 import com.sloy.sevibus.resources.actions.favorita.ObtainSingleFavoritaAction;
 import com.sloy.sevibus.resources.actions.favorita.SaveFavoritaAction;
+import com.sloy.sevibus.resources.actions.llegada.ObtainLlegadasAction;
+import com.sloy.sevibus.resources.awareness.AwarenessUsageTracker;
 import com.sloy.sevibus.ui.activities.BaseActivity;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 import com.sloy.sevibus.ui.widgets.LlegadasList;
@@ -91,6 +93,8 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
     private Map<String, ArrivalTime> mLlegadas;
     private AnalyticsTracker analyticsTracker;
+    private CrashReportingTool crashReportingTool;
+    private AwarenessUsageTracker awarenessUsageTracker;
     private ObtainSingleFavoritaAction obtainSingleFavoritaAction;
     private DeleteFavoritaAction deleteFavoritaAction;
 
@@ -125,6 +129,8 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         saveFavoritaAction = StuffProvider.getSaveFavoritaAction(getActivity());
         deleteFavoritaAction = StuffProvider.getDeleteFavoritaAction(getActivity());
         analyticsTracker = StuffProvider.getAnalyticsTracker();
+        crashReportingTool = StuffProvider.getCrashReportingTool();
+        awarenessUsageTracker = StuffProvider.getAwarenessUsageTracker(getActivity());
     }
 
     @Override
@@ -211,11 +217,20 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
                 Debug.registerHandledException(e);
             }
 
+            cargaInfoDeParada();
+
             guardaReciente();
+
+            awarenessUsageTracker.trackParadaRequested(parada_numero)
+                    .onErrorResumeNext(throwable -> {
+                        crashReportingTool.regiterHandledException(throwable);
+                        return Observable.empty();
+                    })
+                    .subscribe();
         }
-        cargaInfoDeParada();
 
         cargaAnuncio();
+
     }
 
     private void guardaReciente() {
