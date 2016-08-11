@@ -1,10 +1,10 @@
-package com.sloy.sevibus.model;
+package com.sloy.sevibus.resources.awareness.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class ParadaRequestSnapshot {
+public class ParadaVisualization {
 
     @DatabaseField(generatedId = true)
     private Integer id;
@@ -13,10 +13,10 @@ public class ParadaRequestSnapshot {
     @DatabaseField
     private Long requestedTimestamp;
 
-    public ParadaRequestSnapshot() {
+    public ParadaVisualization() {
     }
 
-    public ParadaRequestSnapshot(Integer requestedParadaNumero, Long requestedTimestamp) {
+    public ParadaVisualization(Integer requestedParadaNumero, Long requestedTimestamp) {
         this.requestedParadaNumero = requestedParadaNumero;
         this.requestedTimestamp = requestedTimestamp;
     }

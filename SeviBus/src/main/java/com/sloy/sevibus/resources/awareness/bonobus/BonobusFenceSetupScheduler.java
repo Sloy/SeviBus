@@ -1,8 +1,11 @@
-package com.sloy.sevibus.resources.awareness;
+package com.sloy.sevibus.resources.awareness.bonobus;
 
 import android.util.Log;
 
 import com.sloy.sevibus.resources.FeatureToggle;
+import com.sloy.sevibus.resources.awareness.AlarmManagerWrapper;
+import com.sloy.sevibus.resources.awareness.AwarenessFenceSetupReceiver;
+import com.sloy.sevibus.resources.awareness.TimeOfDay;
 
 public class BonobusFenceSetupScheduler {
 

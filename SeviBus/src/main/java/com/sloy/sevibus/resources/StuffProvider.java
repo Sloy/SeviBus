@@ -25,8 +25,10 @@ import com.sloy.sevibus.resources.actions.user.LogInAction;
 import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.resources.awareness.AlarmManagerWrapper;
-import com.sloy.sevibus.resources.awareness.AwarenessUsageTracker;
-import com.sloy.sevibus.resources.awareness.BonobusFenceSetupScheduler;
+import com.sloy.sevibus.resources.awareness.TrackParadaVisualizationAction;
+import com.sloy.sevibus.resources.awareness.bonobus.BonobusFenceSetupScheduler;
+import com.sloy.sevibus.resources.awareness.model.DatabaseParadaVisualizationDataSource;
+import com.sloy.sevibus.resources.awareness.model.ParadaVisualizationDataSource;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
 import com.sloy.sevibus.resources.datasource.LineaDataSource;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
@@ -216,7 +218,11 @@ public class StuffProvider {
         return new BonobusFenceSetupScheduler(new AlarmManagerWrapper(context), getFeatureToggle());
     }
 
-    public static AwarenessUsageTracker getAwarenessUsageTracker(Context context) {
-        return new AwarenessUsageTracker(getDbHelper(context));
+    public static TrackParadaVisualizationAction getTrackParadaVisualization(Context context) {
+        return new TrackParadaVisualizationAction(getParadaVisualizationDataSource(context));
+    }
+
+    private static ParadaVisualizationDataSource getParadaVisualizationDataSource(Context context) {
+        return new DatabaseParadaVisualizationDataSource(getDbHelper(context));
     }
 }

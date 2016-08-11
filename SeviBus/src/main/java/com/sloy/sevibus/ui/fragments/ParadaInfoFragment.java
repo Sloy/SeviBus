@@ -48,7 +48,7 @@ import com.sloy.sevibus.resources.actions.favorita.DeleteFavoritaAction;
 import com.sloy.sevibus.resources.actions.favorita.ObtainSingleFavoritaAction;
 import com.sloy.sevibus.resources.actions.favorita.SaveFavoritaAction;
 import com.sloy.sevibus.resources.actions.llegada.ObtainLlegadasAction;
-import com.sloy.sevibus.resources.awareness.AwarenessUsageTracker;
+import com.sloy.sevibus.resources.awareness.TrackParadaVisualizationAction;
 import com.sloy.sevibus.ui.activities.BaseActivity;
 import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 import com.sloy.sevibus.ui.widgets.LlegadasList;
@@ -94,7 +94,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
     private Map<String, ArrivalTime> mLlegadas;
     private AnalyticsTracker analyticsTracker;
     private CrashReportingTool crashReportingTool;
-    private AwarenessUsageTracker awarenessUsageTracker;
+    private TrackParadaVisualizationAction trackParadaVisualizationAction;
     private ObtainSingleFavoritaAction obtainSingleFavoritaAction;
     private DeleteFavoritaAction deleteFavoritaAction;
 
@@ -130,7 +130,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         deleteFavoritaAction = StuffProvider.getDeleteFavoritaAction(getActivity());
         analyticsTracker = StuffProvider.getAnalyticsTracker();
         crashReportingTool = StuffProvider.getCrashReportingTool();
-        awarenessUsageTracker = StuffProvider.getAwarenessUsageTracker(getActivity());
+        trackParadaVisualizationAction = StuffProvider.getTrackParadaVisualization(getActivity());
     }
 
     @Override
@@ -221,7 +221,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
 
             guardaReciente();
 
-            awarenessUsageTracker.trackParadaRequested(parada_numero)
+            trackParadaVisualizationAction.track(parada_numero)
                     .onErrorResumeNext(throwable -> {
                         crashReportingTool.regiterHandledException(throwable);
                         return Observable.empty();

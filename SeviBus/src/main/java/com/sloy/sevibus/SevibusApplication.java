@@ -5,9 +5,7 @@ import android.support.multidex.MultiDexApplication;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.stetho.Stetho;
-import com.sloy.sevibus.resources.awareness.AlarmManagerWrapper;
 import com.sloy.sevibus.resources.StuffProvider;
-import com.sloy.sevibus.resources.awareness.BonobusFenceSetupScheduler;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
