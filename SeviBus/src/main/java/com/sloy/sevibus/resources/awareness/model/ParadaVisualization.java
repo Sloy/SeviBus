@@ -9,35 +9,35 @@ public class ParadaVisualization {
     @DatabaseField(generatedId = true)
     private Integer id;
     @DatabaseField
-    private Integer requestedParadaNumero;
+    private Integer paradaNumero;
     @DatabaseField
-    private Long requestedTimestamp;
+    private Long timestamp;
 
     public ParadaVisualization() {
     }
 
-    public ParadaVisualization(Integer requestedParadaNumero, Long requestedTimestamp) {
-        this.requestedParadaNumero = requestedParadaNumero;
-        this.requestedTimestamp = requestedTimestamp;
+    public ParadaVisualization(Integer paradaNumero, Long timestamp) {
+        this.paradaNumero = paradaNumero;
+        this.timestamp = timestamp;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public Integer getRequestedParadaNumero() {
-        return requestedParadaNumero;
+    public Integer getParadaNumero() {
+        return paradaNumero;
     }
 
-    public void setRequestedParadaNumero(Integer requestedParadaNumero) {
-        this.requestedParadaNumero = requestedParadaNumero;
+    public void setParadaNumero(Integer paradaNumero) {
+        this.paradaNumero = paradaNumero;
     }
 
-    public Long getRequestedTimestamp() {
-        return requestedTimestamp;
+    public Long getTimestamp() {
+        return timestamp;
     }
 
-    public void setRequestedTimestamp(Long requestedTimestamp) {
-        this.requestedTimestamp = requestedTimestamp;
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 }
