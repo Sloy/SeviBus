@@ -9,7 +9,6 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.+'
         classpath "com.fernandocejas.frodo:frodo-plugin:0.8.1"
         classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
-
     }
 }
 
@@ -25,23 +24,28 @@ apply plugin: 'com.fernandocejas.frodo'
 apply plugin: 'com.github.triplet.play'
 
 
-def myVersionCode = 85
-def myVersionName = "3.6.10"
+def myVersionCode = 87
+def myVersionName = "3.7.0-beta3"
 
 android {
     signingConfigs {
         release {
             storeFile file("../sevibus.keystore")
         }
+        debug {
+            storeFile file("../debug.keystore")
+        }
     }
     compileSdkVersion 23
-    buildToolsVersion '22.0.1'
+    buildToolsVersion '23.0.3'
     defaultConfig {
+        applicationId 'com.sloy.sevibus'
         minSdkVersion 14
         targetSdkVersion 22
         versionCode myVersionCode
         versionName myVersionName
         archivesBaseName = "SeviBus-" + versionName
+        multiDexEnabled true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -65,6 +69,8 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
     }
     lintOptions {
         abortOnError false
@@ -72,15 +78,24 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:design:23.1.0'
-    compile 'com.android.support:recyclerview-v7:23.1.0'
-    compile 'com.android.support:cardview-v7:23.1.0'
-    compile 'com.android.support:percent:23.1.0'
+    def supportVersion = "23.1.1"
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
+    compile "com.android.support:percent:$supportVersion"
 
-    compile 'com.google.android.gms:play-services-location:8.1.0'
-    compile 'com.google.android.gms:play-services-maps:8.1.0'
-    compile 'com.google.android.gms:play-services-gcm:8.1.0'
+    def playServicesVersion = "9.0.0"
+    compile "com.google.android.gms:play-services-location:$playServicesVersion"
+    compile "com.google.android.gms:play-services-maps:$playServicesVersion"
+    compile "com.google.android.gms:play-services-gcm:$playServicesVersion"
+    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
+
+    def firebaseVersion = "9.0.0"
+    compile "com.google.firebase:firebase-auth:$firebaseVersion"
+    compile "com.google.firebase:firebase-database:$firebaseVersion"
+    compile "com.google.firebase:firebase-analytics:$firebaseVersion"
+    compile "com.google.firebase:firebase-config:$firebaseVersion"
 
     compile 'com.sloydev:gallego:1.0.0'
     compile 'io.reactivex:rxjava:1.0.16'
@@ -95,8 +110,7 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-core:4.42'
     compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.7'
     compile('com.fourmob.colorpicker:colorpicker:1.0.0') {
-        // exclusion is not neccessary, but generally a good idea.
-        exclude group: 'com.google.android', module: 'support-v4'
+        exclude module: 'support-v4';
     }
     compile 'de.cketti.library.changelog:ckchangelog:1.2.0'
     compile 'com.google.guava:guava:18.0'
@@ -108,7 +122,12 @@ dependencies {
     compile('com.crashlytics.sdk.android:answers:1.3.3@aar') {
         transitive = true;
     }
+    compile 'com.android.support:multidex:1.0.1'
 
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
+    compile 'de.cketti.mailto:email-intent-builder:1.0.0'
+    compile 'com.artjimlop:chernobyl:1.1.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:1.7.0'
@@ -158,3 +177,5 @@ def signingConfigFromFile() {
     }
     return [null, null, null]
 }
+
+apply plugin: 'com.google.gms.google-services'

@@ -2,6 +2,7 @@ package com.sloy.sevibus.resources;
 
 import com.sloy.sevibus.model.PaletaColores;
 import com.sloy.sevibus.model.tussam.Linea;
+import com.sloy.sevibus.ui.other.CardWizardManager;
 
 public class EmptyAnalyticsTracker implements AnalyticsTracker {
     @Override
@@ -30,12 +31,22 @@ public class EmptyAnalyticsTracker implements AnalyticsTracker {
     }
 
     @Override
-    public void favoritaNotColorized(Integer numero) {
+    public void lineaAddedToMap(Linea linea, int totalCount) {
         /* no-op */
     }
 
     @Override
-    public void lineaAddedToMap(Linea linea, int totalCount) {
+    public void signInSuccess(CardWizardManager cardManager) {
+        /* no-op */
+    }
+
+    @Override
+    public void signInFailure(CardWizardManager cardManager) {
+        /* no-op */
+    }
+
+    @Override
+    public void signInLogout() {
         /* no-op */
     }
 

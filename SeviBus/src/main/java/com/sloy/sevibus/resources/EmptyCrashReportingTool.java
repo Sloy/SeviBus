@@ -2,10 +2,17 @@ package com.sloy.sevibus.resources;
 
 import android.util.Log;
 
+import com.sloy.sevibus.ui.SevibusUser;
+
 public class EmptyCrashReportingTool implements CrashReportingTool {
 
     @Override
-    public void regiterHandledException(Throwable t) {
-        Log.e("TAG", "Register handled exception", t);
+    public void associateUser(SevibusUser user) {
+        Log.i("EmptyCrashReporting", "Associating user: " + user);
+    }
+
+    @Override
+    public void registerHandledException(Throwable t) {
+        Log.e("EmptyCrashReporting", "Register handled exception", t);
     }
 }

@@ -20,13 +20,15 @@ env:
 
 android:
   components:
-    - build-tools-22.0.1
+    - platform-tools
+    - tools
+    - build-tools-23.0.3
     - android-23
     - extra-google-m2repository
     - extra-android-m2repository
 
   licenses:
-    - android-sdk-license-5be876d5
+    - 'android-sdk-license-.+'
 
 notifications:
   slack: sevibus:4beIQklwr0L7yEvXDBGymaDx
