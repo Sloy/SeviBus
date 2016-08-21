@@ -38,6 +38,7 @@ import com.sloy.sevibus.resources.datasource.user.PreferencesUserDataSource;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
 import com.sloy.sevibus.resources.services.LoginService;
 import com.sloy.sevibus.resources.sync.UpdateDatabaseAction;
+import com.sloy.sevibus.ui.mvp.presenter.UserInfoHeaderPresenter;
 
 import retrofit.RestAdapter;
 
@@ -176,5 +177,9 @@ public class StuffProvider {
 
     public static RemoteConfiguration getRemoteConfiguration() {
         return new FirebaseRemoteConfiguration(FirebaseRemoteConfig.getInstance());
+    }
+
+    public static UserInfoHeaderPresenter getUserInfoHeaderPresenter(Context context) {
+        return new UserInfoHeaderPresenter(getObtainUserAction(context), getAnalyticsTracker(), getCrashReportingTool());
     }
 }
