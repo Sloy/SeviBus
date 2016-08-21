@@ -103,7 +103,7 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         arrancado = true;
         setupNavigationDrawer();
 
-        userInfoHeaderPresenter = StuffProvider.getUserInfoHeaderPresenter(this);
+        userInfoHeaderPresenter = StuffProvider.getUserInfoHeaderPresenter(this, getGoogleApiClient());
         View navHeader = LayoutInflater.from(this).inflate(R.layout.drawer_header_profile, navigationView, false);
         navigationView.addHeaderView(navHeader);
         userInfoHeaderViewContainer = new UserInfoHeaderViewContainer(navHeader, userInfoHeaderPresenter, Picasso.with(this));

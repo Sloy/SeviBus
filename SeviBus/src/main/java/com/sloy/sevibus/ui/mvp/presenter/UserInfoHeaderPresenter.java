@@ -1,22 +1,30 @@
 package com.sloy.sevibus.ui.mvp.presenter;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.CrashReportingTool;
+import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.ui.SevibusUser;
+import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloydev.gallego.Optional;
 
 public class UserInfoHeaderPresenter implements Presenter<UserInfoHeaderPresenter.View> {
 
     private final ObtainUserAction obtainUserAction;
+    private final LogOutAction logOutAction;
     private final AnalyticsTracker analyticsTracker;
     private final CrashReportingTool crashReportingTool;
+    private final GoogleApiClient googleApiClient;
     private View view;
 
-    public UserInfoHeaderPresenter(ObtainUserAction obtainUserAction, AnalyticsTracker analyticsTracker, CrashReportingTool crashReportingTool) {
+    public UserInfoHeaderPresenter(ObtainUserAction obtainUserAction, LogOutAction logOutAction, AnalyticsTracker analyticsTracker, CrashReportingTool crashReportingTool, GoogleApiClient googleApiClient) {
         this.obtainUserAction = obtainUserAction;
+        this.logOutAction = logOutAction;
         this.analyticsTracker = analyticsTracker;
         this.crashReportingTool = crashReportingTool;
+        this.googleApiClient = googleApiClient;
     }
 
     @Override
@@ -42,11 +50,19 @@ public class UserInfoHeaderPresenter implements Presenter<UserInfoHeaderPresente
           .map(Optional::isPresent)
           .subscribe(isLoggedIn -> {
               if (isLoggedIn) {
-                //TODO logout menu
+                  view.showLogoutOption();
               } else {
                   view.navigateToLogin();
               }
           });
+    }
+
+    public void onSignOutClick() {
+        analyticsTracker.signInLogout();
+        logOutAction.logOut().subscribe();
+        view.showSigninInstructions();
+        // Sorry, clean code
+        Auth.GoogleSignInApi.signOut(googleApiClient);
     }
 
     @Override
@@ -66,6 +82,8 @@ public class UserInfoHeaderPresenter implements Presenter<UserInfoHeaderPresente
         void showSigninInstructions();
 
         void navigateToLogin();
+
+        void showLogoutOption();
     }
 
 }

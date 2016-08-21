@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.crashlytics.android.answers.Answers;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -179,7 +180,7 @@ public class StuffProvider {
         return new FirebaseRemoteConfiguration(FirebaseRemoteConfig.getInstance());
     }
 
-    public static UserInfoHeaderPresenter getUserInfoHeaderPresenter(Context context) {
-        return new UserInfoHeaderPresenter(getObtainUserAction(context), getAnalyticsTracker(), getCrashReportingTool());
+    public static UserInfoHeaderPresenter getUserInfoHeaderPresenter(Context context, GoogleApiClient googleApiClient) {
+        return new UserInfoHeaderPresenter(getObtainUserAction(context), getLogoutAction(context), getAnalyticsTracker(), getCrashReportingTool(), googleApiClient);
     }
 }
