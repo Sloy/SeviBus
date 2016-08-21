@@ -7,10 +7,9 @@ import android.widget.TextView;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.ui.SevibusUser;
-import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloy.sevibus.ui.activities.LoginActivity;
 import com.sloy.sevibus.ui.mvp.presenter.UserInfoHeaderPresenter;
-import com.sloy.sevibus.ui.widgets.CustomContextMenu;
+import com.sloy.sevibus.ui.widgets.SimpleContextMenu;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -59,7 +58,7 @@ public class UserInfoHeaderViewContainer implements UserInfoHeaderPresenter.View
 
     @Override
     public void showLogoutOption() {
-        CustomContextMenu.builder(getContext())
+        SimpleContextMenu.builder(getContext())
           .addAction("Cerrar sesión", presenter::onSignOutClick)
           .show();
     }

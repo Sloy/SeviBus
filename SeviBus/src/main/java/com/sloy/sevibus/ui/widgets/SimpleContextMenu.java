@@ -9,7 +9,7 @@ import java.util.List;
 
 import static com.chernobyl.Chernobyl.checkArgument;
 
-public class CustomContextMenu {
+public class SimpleContextMenu {
 
     private final Context context;
     private final String[] titles;
@@ -19,7 +19,7 @@ public class CustomContextMenu {
         return new Builder(context);
     }
 
-    private CustomContextMenu(Context context, List<MenuAction> actions) {
+    private SimpleContextMenu(Context context, List<MenuAction> actions) {
         this.context = context;
         titles = new String[actions.size()];
         callbacks = new Runnable[actions.size()];
@@ -58,9 +58,9 @@ public class CustomContextMenu {
             return addAction(new MenuAction(title, callback));
         }
 
-        public CustomContextMenu build() {
+        public SimpleContextMenu build() {
             checkArgument(!actions.isEmpty(), "Can't create a menu with empty list of actions. Use addAction method first.");
-            return new CustomContextMenu(context, actions);
+            return new SimpleContextMenu(context, actions);
         }
 
         public void show() {
