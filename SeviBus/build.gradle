@@ -78,16 +78,24 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:cardview-v7:23.1.1'
-    compile 'com.android.support:percent:23.1.1'
+    def supportVersion = "23.1.1"
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
+    compile "com.android.support:percent:$supportVersion"
 
-    compile 'com.google.android.gms:play-services-location:9.0.0'
-    compile 'com.google.android.gms:play-services-maps:9.0.0'
-    compile 'com.google.android.gms:play-services-gcm:9.0.0'
-    compile 'com.google.android.gms:play-services-auth:9.0.0'
+    def playServicesVersion = "9.0.0"
+    compile "com.google.android.gms:play-services-location:$playServicesVersion"
+    compile "com.google.android.gms:play-services-maps:$playServicesVersion"
+    compile "com.google.android.gms:play-services-gcm:$playServicesVersion"
+    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
+
+    def firebaseVersion = "9.0.0"
+    compile "com.google.firebase:firebase-auth:$firebaseVersion"
+    compile "com.google.firebase:firebase-database:$firebaseVersion"
+    compile "com.google.firebase:firebase-analytics:$firebaseVersion"
+    compile "com.google.firebase:firebase-config:$firebaseVersion"
 
     compile 'com.sloydev:gallego:1.0.0'
     compile 'io.reactivex:rxjava:1.0.16'
@@ -120,11 +128,6 @@ dependencies {
     compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
     compile 'de.cketti.mailto:email-intent-builder:1.0.0'
     compile 'com.artjimlop:chernobyl:1.1.0'
-    compile 'com.google.firebase:firebase-auth:9.0.0'
-    compile 'com.google.firebase:firebase-database:9.0.0'
-    compile 'com.google.firebase:firebase-analytics:9.0.0'
-    compile 'com.google.firebase:firebase-config:9.0.0'
-
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:1.7.0'
