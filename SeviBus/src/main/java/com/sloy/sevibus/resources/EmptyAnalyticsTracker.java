@@ -31,57 +31,12 @@ public class EmptyAnalyticsTracker implements AnalyticsTracker {
     }
 
     @Override
-    public void favoritaNotColorized(Integer numero) {
-        /* no-op */
-    }
-
-    @Override
     public void lineaAddedToMap(Linea linea, int totalCount) {
         /* no-op */
     }
 
     @Override
-    public void betaSignInConfirmationAccepted() {
-        /* no-op */
-    }
-
-    @Override
-    public void betaSignInConfirmationRejected() {
-        /* no-op */
-    }
-
-    @Override
-    public void betaSignInConfirmationMoreInfo() {
-        /* no-op */
-    }
-
-    @Override
-    public void betaSignInFeedbackGplus() {
-        /* no-op */
-    }
-
-    @Override
-    public void betaSignInFeedbackTwitter() {
-        /* no-op */
-    }
-
-    @Override
-    public void betaSignInFeedbackMail() {
-        /* no-op */
-    }
-
-    @Override
-    public void signInSuccess(long waitingMillis) {
-        /* no-op */
-    }
-
-    @Override
     public void signInSuccess(CardWizardManager cardManager) {
-        /* no-op */
-    }
-
-    @Override
-    public void signInFailure() {
         /* no-op */
     }
 
