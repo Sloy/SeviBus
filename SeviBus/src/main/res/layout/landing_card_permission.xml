@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:id="@+id/landing_permission_card"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="32dp"
+    android:layout_marginLeft="32dp"
+    android:layout_marginRight="32dp"
+    android:layout_marginTop="72dp"
+    tools:showIn="@layout/activity_landing">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        >
+
+        <TextView
+            android:id="@+id/landing_permission_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Acceso a ubicación"
+            android:textColor="?colorPrimary"
+            android:textSize="21sp"/>
+
+        <FrameLayout
+            android:id="@+id/landing_permission_icon_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/landing_permission_rationale"
+            android:layout_below="@+id/landing_permission_title"
+            android:layout_marginBottom="32dp"
+            android:layout_marginTop="32dp">
+
+            <ImageView
+                android:id="@+id/landing_permission_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_person_pin_primary_152px"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/landing_permission_rationale"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/landing_permission_allow"
+            android:layout_marginBottom="48dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_horizontal"
+            android:text="Para encontrar paradas necesitamos acceso a tu ubicación"
+            android:textSize="17sp"/>
+
+        <TextView
+            android:id="@+id/landing_permission_allow"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/landing_permission_reject"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="Permitir"/>
+
+        <TextView
+            android:id="@+id/landing_permission_reject"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:padding="0dp"
+            android:text="Ahora no"
+            android:textColor="?android:textColorSecondary"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

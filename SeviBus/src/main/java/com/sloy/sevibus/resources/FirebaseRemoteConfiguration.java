@@ -66,4 +66,9 @@ public class FirebaseRemoteConfiguration implements RemoteConfiguration {
     public boolean isLoginEnabled() {
         return firebaseRemoteConfig.getBoolean("feature_login_enabled");
     }
+
+    @Override
+    public boolean isLoginSuggestionEnabled() {
+        return firebaseRemoteConfig.getBoolean("feature_login_suggestion_enabled");
+    }
 }

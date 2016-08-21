@@ -4,6 +4,7 @@ package com.sloy.sevibus.resources;
 import com.sloy.sevibus.model.PaletaColores;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Linea;
+import com.sloy.sevibus.ui.other.CardWizardManager;
 
 public interface AnalyticsTracker {
 
@@ -17,25 +18,11 @@ public interface AnalyticsTracker {
 
     void favoritaColorized(PaletaColores paleta, Integer numeroParada);
 
-    void favoritaNotColorized(Integer numero);
-
     void lineaAddedToMap(Linea linea, int totalCount);
 
-    void betaSignInConfirmationAccepted();
+    void signInSuccess(CardWizardManager cardManager);
 
-    void betaSignInConfirmationRejected();
-
-    void betaSignInConfirmationMoreInfo();
-
-    void betaSignInFeedbackGplus();
-
-    void betaSignInFeedbackTwitter();
-
-    void betaSignInFeedbackMail();
-
-    void signInSuccess(long waitingMillis);
-
-    void signInFailure();
+    void signInFailure(CardWizardManager cardManager);
 
     void signInLogout();
 }

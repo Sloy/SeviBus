@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:id="@+id/main_login_suggestion_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:visibility="gone"
+    card_view:cardBackgroundColor="@color/cardview_white_background"
+    card_view:cardCornerRadius="2dp"
+    card_view:cardElevation="2dp"
+    card_view:cardUseCompatPadding="true"
+    tools:showIn="@layout/fragment_main_home"
+    tools:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="¡Hey! ¿Sabías que ahora SeviBus puede guardar tus favoritas online para que no las pierdas nunca más? ¡Pruébalo!"
+            android:textColor="#ff6f6f6f"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/login_suggestion_button"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="Probar"
+            android:visibility="visible"
+            />
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

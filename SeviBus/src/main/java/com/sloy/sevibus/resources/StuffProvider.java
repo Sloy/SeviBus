@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.crashlytics.android.answers.Answers;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -38,6 +39,7 @@ import com.sloy.sevibus.resources.datasource.user.PreferencesUserDataSource;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
 import com.sloy.sevibus.resources.services.LoginService;
 import com.sloy.sevibus.resources.sync.UpdateDatabaseAction;
+import com.sloy.sevibus.ui.mvp.presenter.UserInfoHeaderPresenter;
 
 import retrofit.RestAdapter;
 
@@ -176,5 +178,9 @@ public class StuffProvider {
 
     public static RemoteConfiguration getRemoteConfiguration() {
         return new FirebaseRemoteConfiguration(FirebaseRemoteConfig.getInstance());
+    }
+
+    public static UserInfoHeaderPresenter getUserInfoHeaderPresenter(Context context, GoogleApiClient googleApiClient) {
+        return new UserInfoHeaderPresenter(getObtainUserAction(context), getLogoutAction(context), getAnalyticsTracker(), getCrashReportingTool(), googleApiClient);
     }
 }
