@@ -59,12 +59,11 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
 
     @Override
     public Observable<Integer> deleteFavorita(Integer idParada) {
-        /*return favoritasFirebaseNode(firebase, userDataSource)
+        return favoritasFirebaseNode(firebase, userDataSource)
           .flatMap(favsNode -> {
               favsNode.child(idParada.toString()).removeValue();
               return Observable.just(idParada);
-          });*/
-        return null;
+          });
     }
 
     @Override
@@ -92,17 +91,6 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
           (rootNode, user) -> rootNode.child(user.getId()))
           .map(authNode -> authNode.child("favoritas"));
     }
-
-    /*private Observable<DatabaseReference> favoritasFirebaseNode(FirebaseDatabase firebase, UserDataSource userDataSource) {
-//        return Observable.just(firebase.getAuth())
-//          .filter(auth -> auth != null)
-//          .switchIfEmpty(Observable.error(new AuthException()))
-//          .map(authData -> firebase.child(authData.getUid()))
-//          .map(authNode -> authNode.child("favoritas"));
-        return Observable.just(firebase)
-          .map(firebaseDatabase -> firebaseDatabase.getReference("favoritas"));
-          //TODO get authenticated node
-    }*/
 
     private Observable<DataSnapshot> observeSingleValue(DatabaseReference firebaseNode) {
         return Observable.create(new Observable.OnSubscribe<DataSnapshot>() {
