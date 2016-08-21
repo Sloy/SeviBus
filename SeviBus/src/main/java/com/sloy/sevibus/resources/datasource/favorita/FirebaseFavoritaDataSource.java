@@ -36,7 +36,7 @@ public class FirebaseFavoritaDataSource implements FavoritaDataSource {
           .map(snapshot -> snapshot.getValue(new FavoritaMapFirebaseTypeIndicator()))
           .map(integerFavoritaMap -> new ArrayList<>(integerFavoritaMap.values()))
           .flatMap(Observable::from)
-          .toSortedList((f1, f2) -> Integer.compare(f1.getOrden(), f2.getOrden()));
+          .toSortedList((f1, f2) -> Integer.valueOf(f1.getOrden()).compareTo(f2.getOrden()));
     }
 
     @Override

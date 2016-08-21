@@ -40,7 +40,7 @@ android {
     buildToolsVersion '23.0.3'
     defaultConfig {
         applicationId 'com.sloy.sevibus'
-        minSdkVersion 21
+        minSdkVersion 14
         targetSdkVersion 22
         versionCode myVersionCode
         versionName myVersionName
