@@ -95,6 +95,9 @@
                 android:value="com.sloy.sevibus.ui.activities.HomeActivity"/>
         </activity>
 
+        <activity android:name=".ui.activities.LoginActivity" />
+
+        <activity android:name=".ui.activities.LandingActivity" />
 
         <receiver android:name=".resources.SecretCodeReceiver">
             <intent-filter>
@@ -112,23 +115,6 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ui.activities.LandingActivity"
-            android:label="SB Landing">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".ui.activities.LoginActivity"
-                  android:label="SB Login">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>
