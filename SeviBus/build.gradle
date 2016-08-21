@@ -136,7 +136,7 @@ dependencies {
 
 play {
     jsonFile = file('gplay-secret.json')
-    track = 'beta'
+    track = 'alpha'
 //    userFraction = 0.005
 }
 
