@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="3.7.0-beta" versioncode="83">
+    <release version="3.7.0" versioncode="88">
         <change>Favoritas en la nube!!</change>
         <change>Login con Google</change>
         <change>Mogollón de cambios internos</change>
