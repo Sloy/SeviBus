@@ -4,6 +4,7 @@ import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.CrashReportingTool;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.ui.SevibusUser;
+import com.sloydev.gallego.Optional;
 
 public class UserInfoHeaderPresenter implements Presenter<UserInfoHeaderPresenter.View> {
 
@@ -30,11 +31,23 @@ public class UserInfoHeaderPresenter implements Presenter<UserInfoHeaderPresente
               if (optionalUser.isPresent()) {
                   view.showUserInfo(optionalUser.get());
               } else {
-                  //TODO
+                  view.showSigninInstructions();
               }
           });
     }
 
+
+    public void onProfileClick() {
+        obtainUserAction.obtainUser()
+          .map(Optional::isPresent)
+          .subscribe(isLoggedIn -> {
+              if (isLoggedIn) {
+                //TODO logout menu
+              } else {
+                  view.navigateToLogin();
+              }
+          });
+    }
 
     @Override
     public void update() {
@@ -49,6 +62,10 @@ public class UserInfoHeaderPresenter implements Presenter<UserInfoHeaderPresente
     public interface View {
 
         void showUserInfo(SevibusUser user);
+
+        void showSigninInstructions();
+
+        void navigateToLogin();
     }
 
 }

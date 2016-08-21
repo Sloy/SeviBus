@@ -40,4 +40,6 @@
     \n\nLa aplicación no tiene influencia sobre los resultados.</string>
     <string name="nuevo_bonobus_info">Tipos de tajeta soportados actualmente:\n- Bonobús saldo sin transbordo\n- Bonobús saldo con transbordo\n- Tarjeta joven\n- Tarjeta 30 días</string>
     <string name="error_message_generic">Oops, ocurrió un error :/</string>
+    <string name="drawer_signin_title">INICIA SESIÓN</string>
+    <string name="drawer_signin_subtitle">Sincroniza tus paradas favoritas y no las pierdas nunca más</string>
 </resources>
