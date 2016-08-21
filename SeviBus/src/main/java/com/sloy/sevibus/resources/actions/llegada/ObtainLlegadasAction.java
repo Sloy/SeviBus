@@ -1,7 +1,7 @@
-package com.sloy.sevibus.resources.actions;
+package com.sloy.sevibus.resources.actions.llegada;
 
 import com.sloy.sevibus.model.ArrivalTime;
-import com.sloy.sevibus.resources.datasource.LlegadaDataSource;
+import com.sloy.sevibus.resources.datasource.llegada.LlegadaDataSource;
 
 import java.util.List;
 

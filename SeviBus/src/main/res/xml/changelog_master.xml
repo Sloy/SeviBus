@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="3.7.0" versioncode="88">
+        <change>Favoritas en la nube!!</change>
+        <change>Login con Google</change>
+        <change>Mogollón de cambios internos</change>
+    </release>
+
     <release version="3.6" versioncode="72">
         <change>Favoritas! Sección rediseñada con estilo Material Design.</change>
         <change>Ahora el color de tus paradas favoritas está más presente en la aplicación. ¡Pruébalos!</change>

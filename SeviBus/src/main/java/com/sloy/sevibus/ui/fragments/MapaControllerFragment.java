@@ -38,7 +38,7 @@ import com.sloy.sevibus.resources.BusLocation;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.StuffProvider;
-import com.sloy.sevibus.resources.actions.ObtainFavoritasAction;
+import com.sloy.sevibus.resources.actions.favorita.ObtainFavoritasAction;
 import com.sloy.sevibus.resources.exceptions.ServerErrorException;
 import com.sloy.sevibus.resources.maputils.BusesLayer;
 import com.sloy.sevibus.resources.maputils.CercanasLayer;

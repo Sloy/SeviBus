@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/header_signin_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?selectableItemBackground"
+    tools:layout_marginRight="72dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/drawer_header_background"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        >
+
+        <TextView
+            android:id="@+id/header_signin_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header_signin_avatar"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/drawer_signin_title"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+        <!--tools:text="Rafa Vázquez"-->
+        <TextView
+            android:id="@+id/header_signin_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header_signin_name"
+            android:layout_marginBottom="16dp"
+            android:text="@string/drawer_signin_subtitle"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/header_signin_avatar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:src="@color/accent"
+            android:visibility="invisible"/>
+        <!--tools:text="rafa.vazsan@gmail.com"-->
+    </RelativeLayout>
+
+
+</FrameLayout>

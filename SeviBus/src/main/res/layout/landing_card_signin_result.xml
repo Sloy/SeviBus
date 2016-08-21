@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/landing_signin_result_card"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:visibility="gone"
+    tools:showIn="@layout/activity_landing"
+    tools:visibility="visible">
+
+    <TextView
+        android:id="@+id/landing_signin_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Inicio de sesión"
+        android:textColor="?colorPrimary"
+        android:textSize="21sp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/landing_signin_result_avatar"
+        android:layout_width="94dp"
+        android:layout_height="94dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:src="@color/accent"/>
+
+    <TextView
+        android:id="@+id/landing_signin_result_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center_horizontal"
+        android:text="Rafael Vázquez Sánchez"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="17sp"/>
+
+    <TextView
+        android:id="@+id/landing_signin_result_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:text="rafa.vazsan@gmail.com"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+
+        <Button
+            android:id="@+id/landing_signin_result_continue"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="Continuar"/>
+
+    </FrameLayout>
+
+</LinearLayout>

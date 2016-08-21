@@ -16,11 +16,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Linea;
+import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.syncadapter.IntentFactory;
 import com.sloy.sevibus.ui.fragments.AlertasFragment;
 import com.sloy.sevibus.ui.fragments.BonobusListaFragment;
@@ -30,8 +33,11 @@ import com.sloy.sevibus.ui.fragments.ListaLineasFragment;
 import com.sloy.sevibus.ui.fragments.MainPageFragment;
 import com.sloy.sevibus.ui.fragments.MapContainerFragment;
 import com.sloy.sevibus.ui.fragments.MapaControllerFragment;
+import com.sloy.sevibus.ui.mvp.presenter.UserInfoHeaderPresenter;
 import com.sloy.sevibus.ui.mvp.view.LineasCercanasViewContainer;
 import com.sloy.sevibus.ui.mvp.view.ParadasCercanasMainViewContainer;
+import com.sloy.sevibus.ui.mvp.view.UserInfoHeaderViewContainer;
+import com.squareup.picasso.Picasso;
 
 public class HomeActivity extends LocationProviderActivity implements IMainController, InitialFragment.ApplicationReadyListener, ListaLineasFragment.LineaSelectedListener, ParadasCercanasMainViewContainer.ParadasCercanasMainClickListener, LineasCercanasViewContainer.LineasCercanasMainClickListener {
 
@@ -41,6 +47,8 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private UserInfoHeaderPresenter userInfoHeaderPresenter;
+    private UserInfoHeaderViewContainer userInfoHeaderViewContainer;
 
     private SharedPreferences mPrefs;
     private String mCurrentTitle;
@@ -71,6 +79,8 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         } else {
             arrancaPrimeraVez();
         }
+
+        StuffProvider.getRemoteConfiguration().update();
     }
 
     @Override
@@ -92,6 +102,12 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
     private void arrancaNormal(Bundle savedInstanceState) {
         arrancado = true;
         setupNavigationDrawer();
+
+        userInfoHeaderPresenter = StuffProvider.getUserInfoHeaderPresenter(this, getGoogleApiClient());
+        View navHeader = LayoutInflater.from(this).inflate(R.layout.drawer_header_profile, navigationView, false);
+        navigationView.addHeaderView(navHeader);
+        userInfoHeaderViewContainer = new UserInfoHeaderViewContainer(navHeader, userInfoHeaderPresenter, Picasso.with(this));
+        userInfoHeaderPresenter.initialize(userInfoHeaderViewContainer);
 
         /*
          * Vía https://plus.google.com/+AndroidDevelopers/posts/3exHM3ZuCYM (Protip de Bruno Olivieira
@@ -134,13 +150,10 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        doSelectDrawerItemById(menuItem.getItemId());
-                        return true;
-                    }
-                });
+          menuItem -> {
+              doSelectDrawerItemById(menuItem.getItemId());
+              return true;
+          });
 
         drawerFragments = new SparseArray<>();
         drawerFragments.append(R.id.nav_inicio, MainPageFragment.class.getName());
@@ -267,6 +280,19 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         }
         mIsRightDrawerAvailable = !lock;
         supportInvalidateOptionsMenu();
+    }
+
+    public void openNavigationMenu() {
+        mDrawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Because of arrancaNormal
+        if (userInfoHeaderPresenter != null) {
+            userInfoHeaderPresenter.update();
+        }
     }
 
     @Override
