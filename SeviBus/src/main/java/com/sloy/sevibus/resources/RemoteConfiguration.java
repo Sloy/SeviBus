@@ -9,4 +9,6 @@ public interface RemoteConfiguration {
     String getString(String key, String defaultValue);
 
     boolean isLoginEnabled();
+
+    boolean isLoginSuggestionEnabled();
 }

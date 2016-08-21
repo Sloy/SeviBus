@@ -282,6 +282,10 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         supportInvalidateOptionsMenu();
     }
 
+    public void openNavigationMenu() {
+        mDrawerLayout.openDrawer(GravityCompat.START);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
