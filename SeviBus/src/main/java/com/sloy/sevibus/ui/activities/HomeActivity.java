@@ -23,6 +23,7 @@ import android.view.View;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Linea;
+import com.sloy.sevibus.resources.RemoteConfiguration;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.syncadapter.IntentFactory;
 import com.sloy.sevibus.ui.fragments.AlertasFragment;
@@ -50,6 +51,7 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
     private UserInfoHeaderPresenter userInfoHeaderPresenter;
     private UserInfoHeaderViewContainer userInfoHeaderViewContainer;
 
+    private RemoteConfiguration remoteConfiguration;
     private SharedPreferences mPrefs;
     private String mCurrentTitle;
     private int mCurrentDrawerId;
@@ -73,6 +75,7 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         setContentView(R.layout.activity_home);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        remoteConfiguration = StuffProvider.getRemoteConfiguration();
 
         if (getDBHelper().getDaoParada().countOf() > 0) {
             arrancaNormal(savedInstanceState);
@@ -103,11 +106,7 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         arrancado = true;
         setupNavigationDrawer();
 
-        userInfoHeaderPresenter = StuffProvider.getUserInfoHeaderPresenter(this, getGoogleApiClient());
-        View navHeader = LayoutInflater.from(this).inflate(R.layout.drawer_header_profile, navigationView, false);
-        navigationView.addHeaderView(navHeader);
-        userInfoHeaderViewContainer = new UserInfoHeaderViewContainer(navHeader, userInfoHeaderPresenter, Picasso.with(this));
-        userInfoHeaderPresenter.initialize(userInfoHeaderViewContainer);
+        setupLoginHeader();
 
         /*
          * Vía https://plus.google.com/+AndroidDevelopers/posts/3exHM3ZuCYM (Protip de Bruno Olivieira
@@ -117,6 +116,17 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         } else {
             doUpdateTitle(savedInstanceState.getString(EXTRA_CURRENT_TITLE));
         }
+    }
+
+    private void setupLoginHeader() {
+        if (!remoteConfiguration.isLoginEnabled()) {
+            return;
+        }
+        userInfoHeaderPresenter = StuffProvider.getUserInfoHeaderPresenter(this, getGoogleApiClient());
+        View navHeader = LayoutInflater.from(this).inflate(R.layout.drawer_header_profile, navigationView, false);
+        navigationView.addHeaderView(navHeader);
+        userInfoHeaderViewContainer = new UserInfoHeaderViewContainer(navHeader, userInfoHeaderPresenter, Picasso.with(this));
+        userInfoHeaderPresenter.initialize(userInfoHeaderViewContainer);
     }
 
     private void arrancaPrimeraVez() {
