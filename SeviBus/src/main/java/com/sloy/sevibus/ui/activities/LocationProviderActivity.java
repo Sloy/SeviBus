@@ -17,6 +17,12 @@ public class LocationProviderActivity extends BaseToolbarActivity {
         locationProvider = new LocationProvider();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requestNewLocation();
+    }
+
     public LocationProvider getLocationProvider() {
         return locationProvider;
     }
