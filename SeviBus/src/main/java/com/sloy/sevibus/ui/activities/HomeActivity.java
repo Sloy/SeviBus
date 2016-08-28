@@ -262,6 +262,7 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         } catch (IllegalStateException e) {
             Log.w("SeviBus", "Oops, la aplicación se cerró antes terminar la carga inicial. No pasa nada, cuando la abras estará bien.");
         }
+        requestNewLocation();
     }
 
     public MapaControllerFragment getMapOptions() {
