@@ -26,7 +26,8 @@ public class LocationProvider {
     }
 
     public Observable<Location> observeAvailable() {
-        return observe().filter(Optional::isPresent)
+        return observe()
+          .filter(Optional::isPresent)
           .map(Optional::get);
     }
 
