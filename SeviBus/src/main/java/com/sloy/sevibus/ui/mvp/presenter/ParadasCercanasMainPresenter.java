@@ -1,7 +1,6 @@
 package com.sloy.sevibus.ui.mvp.presenter;
 
 import android.location.Location;
-import android.util.Log;
 
 import com.sloy.sevibus.model.ParadaCercana;
 import com.sloy.sevibus.resources.LocationProvider;

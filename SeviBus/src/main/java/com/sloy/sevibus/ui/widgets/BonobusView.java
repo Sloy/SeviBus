@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.os.Build;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Bonobus;
-import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 
 public class BonobusView extends FrameLayout {
 

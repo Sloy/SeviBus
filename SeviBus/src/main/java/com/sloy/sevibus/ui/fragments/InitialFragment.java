@@ -1,6 +1,5 @@
 package com.sloy.sevibus.ui.fragments;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,8 +10,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.sloy.sevibus.R;
-import com.sloy.sevibus.resources.Debug;
-import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 
 public class InitialFragment extends BaseDBFragment {
 
@@ -78,10 +75,4 @@ public class InitialFragment extends BaseDBFragment {
         }
     }
 
-    private void error() {
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mReintentar.setVisibility(View.VISIBLE);
-        mInfo.setText(R.string.initial_info_error);
-
-    }
 }

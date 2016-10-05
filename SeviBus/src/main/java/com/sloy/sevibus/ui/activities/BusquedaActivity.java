@@ -33,7 +33,6 @@ import java.util.List;
 public class BusquedaActivity extends BaseToolbarActivity implements SearchView.OnQueryTextListener {
 
     private static final long RESULTS_LIMIT = 50;
-    private static final String SCREEN_NAME = "Búsqueda";
 
     private SearchView mSearchView;
     private ParadasAdapter mAdapter;
@@ -97,7 +96,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
 
-        if (query.equalsIgnoreCase("virgi")) {
+        if ("virgi".equalsIgnoreCase(query)) {
             ImageView img = new ImageView(this);
             img.setImageResource(R.drawable.secret);
             Toast toast = new Toast(this);

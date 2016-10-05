@@ -7,7 +7,6 @@ import com.sloy.sevibus.resources.CrashReportingTool;
 import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.ui.SevibusUser;
-import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 import com.sloydev.gallego.Optional;
 
 public class UserInfoHeaderPresenter implements Presenter<UserInfoHeaderPresenter.View> {

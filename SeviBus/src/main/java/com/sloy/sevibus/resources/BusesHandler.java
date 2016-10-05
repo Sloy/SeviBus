@@ -41,21 +41,21 @@ public class BusesHandler extends DefaultHandler {
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		if(localName.equals("InfoVehiculo")){
+		if("InfoVehiculo".equals(localName)){
 			tmpBus = new BusLocation();
-		}else if(localName.equals("xcoord")){
+		}else if("xcoord".equals(localName)){
 			build = Builder.X;
-		}else if(localName.equals("ycoord")){
+		}else if("ycoord".equals(localName)){
 			build = Builder.Y;
 		}
 	}
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		if(localName.equals("InfoVehiculo")){
+		if("InfoVehiculo".equals(localName)){
 			buses.add(tmpBus);
 			tmpBus = null;
-		}else if(localName.equals("xcoord") || localName.equals("ycoord")){
+		}else if("xcoord".equals(localName) || "ycoord".equals(localName)){
 			build = Builder.NO;
 		}
 	}

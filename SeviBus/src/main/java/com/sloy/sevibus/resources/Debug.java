@@ -30,7 +30,7 @@ public class Debug {
     @Deprecated
     public static void useFakeLocation(Context context, Location location) {
         boolean forceFakeLocation = context.getSharedPreferences("debug", Context.MODE_MULTI_PROCESS).getBoolean(FAKE_LOCATION_KEY, false);
-        if (BuildConfig.FLAVOR.equals("sevilla") && forceFakeLocation && isDebugEnabled(context)) {
+        if ("sevilla".equals(BuildConfig.FLAVOR) && forceFakeLocation && isDebugEnabled(context)) {
             Log.w("Sevibus debug", "Usando ubicación falsa");
             location.setLatitude(FAKE_LATITUDE);
             location.setLongitude(FAKE_LONGITUDE);
@@ -40,7 +40,7 @@ public class Debug {
     @Deprecated
     public static void setUseFakeLocationProvider(Context context, GoogleMap map) {
         boolean forceFakeLocation = context.getSharedPreferences("debug", Context.MODE_MULTI_PROCESS).getBoolean(FAKE_LOCATION_KEY, false);
-        if (BuildConfig.FLAVOR.equals("sevilla") && forceFakeLocation && isDebugEnabled(context)) {
+        if ("sevilla".equals(BuildConfig.FLAVOR) && forceFakeLocation && isDebugEnabled(context)) {
             map.setLocationSource(new Debug.FakeLocationSource());
         }
     }
