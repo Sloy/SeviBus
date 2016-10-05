@@ -76,6 +76,10 @@ public class AcercaDeActivity extends BaseToolbarActivity {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_faq)));
                 startActivity(intent);
                 return true;
+            default:
+                {
+                    break;
+                }
         }
         return super.onOptionsItemSelected(item);
     }

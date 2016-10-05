@@ -80,6 +80,10 @@ public class BonobusInfoReader {
                 break;
             case UNKNOWN:
                 break;
+            default:
+                {
+                    break;
+                }
         }
 
 

@@ -158,6 +158,10 @@ public class ContactoActivity extends BaseToolbarActivity {
             case R.id.menu_preguntas_frecuentes:
                 abrirPreguntasFrecuentes();
                 return true;
+            default:
+                {
+                    break;
+                }
         }
         return super.onOptionsItemSelected(item);
     }
