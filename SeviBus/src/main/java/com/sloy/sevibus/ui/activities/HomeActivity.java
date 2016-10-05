@@ -188,6 +188,10 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
             case R.id.menu_ajustes:
                 startActivity(new Intent(this, PreferenciasActivity.class));
                 return;
+            default:
+                {
+                    break;
+                }
         }
 
         doReplaceFragment(drawerFragments.get(itemId), null);
@@ -226,6 +230,10 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
             case R.id.menu_mapa_abrir:
                 toggleMapOptions();
                 return true;
+            default:
+                {
+                    break;
+                }
         }
         return super.onOptionsItemSelected(item);
     }

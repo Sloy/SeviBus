@@ -42,26 +42,26 @@ public class TiemposHandler extends DefaultHandler {
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		if(localName.equals("e1")){
+		if("e1".equals(localName)){
 			tmpBus = new Bus();
-		}else if(localName.equals("e2")){
+		}else if("e2".equals(localName)){
 			tmpBus = new Bus();
-		}else if(localName.equals("minutos")){
+		}else if("minutos".equals(localName)){
 			build = Builder.TIEMPO;
-		}else if(localName.equals("metros")){
+		}else if("metros".equals(localName)){
 			build = Builder.DISTANCIA;
 		}
 	}
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		if(localName.equals("e1")){
+		if("e1".equals(localName)){
 			bus1 = tmpBus;
 			tmpBus = null;
-		}else if(localName.equals("e2")){
+		}else if("e2".equals(localName)){
 			bus2 = tmpBus;
 			tmpBus = null;
-		}else if(localName.equals("minutos") || localName.equals("metros")){
+		}else if("minutos".equals(localName) || "metros".equals(localName)){
 			build = Builder.NO;
 		}
 	}
