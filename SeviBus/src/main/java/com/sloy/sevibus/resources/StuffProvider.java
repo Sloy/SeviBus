@@ -33,7 +33,7 @@ import com.sloy.sevibus.resources.datasource.favorita.FavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.FirebaseFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.llegada.ApiLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.llegada.LlegadaDataSource;
-import com.sloy.sevibus.resources.datasource.llegada.SevibusApi;
+import com.sloy.sevibus.resources.datasource.SevibusApi;
 import com.sloy.sevibus.resources.datasource.llegada.TussamLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.user.PreferencesUserDataSource;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
@@ -91,13 +91,17 @@ public class StuffProvider {
         return new TussamLlegadaDataSource();
     }
 
-    private static SevibusApi getSevibusApi() {
-        return new RestAdapter.Builder()
-          .setEndpoint(API_ENDPOINT)
-          .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
-          .setErrorHandler(new ApiErrorHandler())
-          .build()
-          .create(SevibusApi.class);
+    private static SevibusApi sevibusApi;
+    public static SevibusApi getSevibusApi() {
+        if (sevibusApi == null) {
+            sevibusApi = new RestAdapter.Builder()
+              .setEndpoint(API_ENDPOINT)
+              .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
+              .setErrorHandler(new ApiErrorHandler())
+              .build()
+              .create(SevibusApi.class);
+        }
+        return sevibusApi;
     }
 
     public static CrashReportingTool getCrashReportingTool() {

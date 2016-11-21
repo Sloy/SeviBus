@@ -1,6 +1,7 @@
 package com.sloy.sevibus.resources.datasource.llegada;
 
 import com.sloy.sevibus.model.ArrivalTime;
+import com.sloy.sevibus.resources.datasource.SevibusApi;
 import com.sloy.sevibus.resources.exceptions.ServerErrorException;
 
 import java.util.List;
