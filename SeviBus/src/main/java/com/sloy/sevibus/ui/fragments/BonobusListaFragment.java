@@ -90,7 +90,7 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        bonobusInfoReader = new BonobusInfoReader(StuffProvider.getSevibusApi());
+        bonobusInfoReader = new BonobusInfoReader(StuffProvider.getSevibusApi(getActivity()));
     }
 
     @Override

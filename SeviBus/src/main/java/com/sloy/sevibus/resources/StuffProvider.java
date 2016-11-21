@@ -39,6 +39,7 @@ import com.sloy.sevibus.resources.datasource.user.PreferencesUserDataSource;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
 import com.sloy.sevibus.resources.services.LoginService;
 import com.sloy.sevibus.resources.sync.UpdateDatabaseAction;
+import com.sloy.sevibus.ui.SevibusUser;
 import com.sloy.sevibus.ui.mvp.presenter.UserInfoHeaderPresenter;
 
 import retrofit.RestAdapter;
@@ -47,7 +48,7 @@ public class StuffProvider {
 
     private static final String PRODUCTION_API_ENDPOINT = "http://api.sevibus.sloydev.com";
     public static final String STAGING_API_ENDPOINT = "https://sevibus-staging.herokuapp.com/";
-    private static final String API_ENDPOINT = PRODUCTION_API_ENDPOINT;
+    private static final String API_ENDPOINT = BuildConfig.DEBUG ? STAGING_API_ENDPOINT : PRODUCTION_API_ENDPOINT;
 
     private static CrashReportingTool crashReportingToolInstance;
 
@@ -79,12 +80,12 @@ public class StuffProvider {
         }
     }
 
-    public static ObtainLlegadasAction getObtainLlegadaAction() {
-        return new ObtainLlegadasAction(getLlegadaDataSource());
+    public static ObtainLlegadasAction getObtainLlegadaAction(Context context) {
+        return new ObtainLlegadasAction(getLlegadaDataSource(context));
     }
 
-    private static LlegadaDataSource getLlegadaDataSource() {
-        return new ApiLlegadaDataSource(getSevibusApi(), getLegacyLlegadaDataSource());
+    private static LlegadaDataSource getLlegadaDataSource(Context context) {
+        return new ApiLlegadaDataSource(getSevibusApi(context), getLegacyLlegadaDataSource());
     }
 
     private static LlegadaDataSource getLegacyLlegadaDataSource() {
@@ -92,12 +93,20 @@ public class StuffProvider {
     }
 
     private static SevibusApi sevibusApi;
-    public static SevibusApi getSevibusApi() {
+
+    public static SevibusApi getSevibusApi(Context context) {
+        final UserDataSource userDataSource = getUserDataSource(context);
         if (sevibusApi == null) {
             sevibusApi = new RestAdapter.Builder()
               .setEndpoint(API_ENDPOINT)
               .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
               .setErrorHandler(new ApiErrorHandler())
+              .setRequestInterceptor(request -> {
+                  SevibusUser user = userDataSource.getCurrentUser().toBlocking().firstOrDefault(null);
+                  if (user != null) {
+                      request.addHeader("userId", user.getId());
+                  }
+              })
               .build()
               .create(SevibusApi.class);
         }

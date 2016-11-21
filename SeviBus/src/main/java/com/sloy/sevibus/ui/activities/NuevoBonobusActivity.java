@@ -53,7 +53,7 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_bonobus);
 
-        bonobusInfoReader = new BonobusInfoReader(StuffProvider.getSevibusApi());
+        bonobusInfoReader = new BonobusInfoReader(StuffProvider.getSevibusApi(this));
 
         getSupportActionBar().setTitle("Nuevo Bonobús");
 
