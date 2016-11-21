@@ -85,6 +85,7 @@
             android:text="Mostrar buses de líneas"
             android:textSize="17sp"
             android:layout_gravity="left|center_vertical"
+            android:visibility="gone"
             android:checked="false"/>
 
         <CheckBox
