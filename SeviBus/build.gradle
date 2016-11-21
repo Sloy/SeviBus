@@ -24,8 +24,8 @@ apply plugin: 'com.fernandocejas.frodo'
 apply plugin: 'com.github.triplet.play'
 
 
-def myVersionCode = 92
-def myVersionName = "3.7.2"
+def myVersionCode = 93
+def myVersionName = "3.7.3"
 
 android {
     signingConfigs {
