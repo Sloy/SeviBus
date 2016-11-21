@@ -47,7 +47,7 @@ public class StuffProvider {
 
     private static final String PRODUCTION_API_ENDPOINT = "http://api.sevibus.sloydev.com";
     public static final String STAGING_API_ENDPOINT = "https://sevibus-staging.herokuapp.com/";
-    private static final String API_ENDPOINT = PRODUCTION_API_ENDPOINT;
+    private static final String API_ENDPOINT = BuildConfig.DEBUG ? STAGING_API_ENDPOINT : PRODUCTION_API_ENDPOINT;
 
     private static CrashReportingTool crashReportingToolInstance;
 
