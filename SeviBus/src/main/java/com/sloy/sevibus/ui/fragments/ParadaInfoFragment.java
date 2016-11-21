@@ -120,7 +120,7 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
             Snackbar.make(getView(), "No hay conexión a Internet, y es necesaria", Snackbar.LENGTH_LONG).show();
         }
 
-        obtainLlegadasAction = StuffProvider.getObtainLlegadaAction();
+        obtainLlegadasAction = StuffProvider.getObtainLlegadaAction(getActivity());
         obtainSingleFavoritaAction = StuffProvider.getObtainSingleFavoritaAction(getActivity());
         saveFavoritaAction = StuffProvider.getSaveFavoritaAction(getActivity());
         deleteFavoritaAction = StuffProvider.getDeleteFavoritaAction(getActivity());
