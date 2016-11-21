@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
-        <key>feature_login_enabled</key>
-        <value>false</value>
-    </entry>
-    <entry>
         <key>feature_login_suggestion_enabled</key>
         <value>false</value>
     </entry>

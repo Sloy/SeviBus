@@ -119,9 +119,6 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
     }
 
     private void setupLoginHeader() {
-        if (!remoteConfiguration.isLoginEnabled()) {
-            return;
-        }
         userInfoHeaderPresenter = StuffProvider.getUserInfoHeaderPresenter(this, getGoogleApiClient());
         View navHeader = LayoutInflater.from(this).inflate(R.layout.drawer_header_profile, navigationView, false);
         navigationView.addHeaderView(navHeader);
