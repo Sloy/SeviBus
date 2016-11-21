@@ -91,13 +91,17 @@ public class StuffProvider {
         return new TussamLlegadaDataSource();
     }
 
+    private static SevibusApi sevibusApi;
     public static SevibusApi getSevibusApi() {
-        return new RestAdapter.Builder()
-          .setEndpoint(API_ENDPOINT)
-          .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
-          .setErrorHandler(new ApiErrorHandler())
-          .build()
-          .create(SevibusApi.class);
+        if (sevibusApi == null) {
+            sevibusApi = new RestAdapter.Builder()
+              .setEndpoint(API_ENDPOINT)
+              .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
+              .setErrorHandler(new ApiErrorHandler())
+              .build()
+              .create(SevibusApi.class);
+        }
+        return sevibusApi;
     }
 
     public static CrashReportingTool getCrashReportingTool() {
