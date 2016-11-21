@@ -91,7 +91,7 @@ public class StuffProvider {
         return new TussamLlegadaDataSource();
     }
 
-    private static SevibusApi getSevibusApi() {
+    public static SevibusApi getSevibusApi() {
         return new RestAdapter.Builder()
           .setEndpoint(API_ENDPOINT)
           .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)

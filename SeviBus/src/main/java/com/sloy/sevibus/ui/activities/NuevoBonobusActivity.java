@@ -26,12 +26,8 @@ import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.model.tussam.Bonobus;
 import com.sloy.sevibus.resources.BonobusInfoReader;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.ui.widgets.BonobusView;
-
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 
 public class NuevoBonobusActivity extends BaseToolbarActivity {
 
@@ -50,10 +46,14 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
 
     private Bonobus mBonobusConfigurado;
 
+    private BonobusInfoReader bonobusInfoReader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_bonobus);
+
+        bonobusInfoReader = new BonobusInfoReader(StuffProvider.getSevibusApi());
 
         getSupportActionBar().setTitle("Nuevo Bonobús");
 
@@ -385,8 +385,8 @@ public class NuevoBonobusActivity extends BaseToolbarActivity {
         @Override
         protected Bonobus doInBackground(Void... params) {
             try {
-                return BonobusInfoReader.populateBonobusInfo(mBonobus);
-            } catch (IOException | ParserConfigurationException | XPathExpressionException | RuntimeException e) {
+                return bonobusInfoReader.populateBonobusInfo(mBonobus);
+            } catch (Exception e) {
                 mBonobus.setError(true);
                 Log.w("SeviBus", "Error leyendo el bonobús", e);
                 Debug.registerHandledException(e);
