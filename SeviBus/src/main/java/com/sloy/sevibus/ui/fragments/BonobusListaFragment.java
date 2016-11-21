@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -31,6 +32,7 @@ import com.sloy.sevibus.model.MiAnuncio;
 import com.sloy.sevibus.model.tussam.Bonobus;
 import com.sloy.sevibus.resources.BonobusInfoReader;
 import com.sloy.sevibus.resources.Debug;
+import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.ui.activities.NuevoBonobusActivity;
 import com.sloy.sevibus.ui.adapters.BonobusAdapter;
 import com.sloy.sevibus.ui.widgets.BonobusView;
@@ -47,9 +49,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
-
 public class BonobusListaFragment extends BaseDBFragment implements LoaderManager.LoaderCallbacks<Bonobus> {
 
     private static final String PREF_SHOW_BONOBUS_WARNING = "pref_bono_warning";
@@ -61,6 +60,7 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
     private BonobusView mBonoExpandidoActual;
 
     private FrameLayout mAnuncioContainer;
+    private BonobusInfoReader bonobusInfoReader;
 
     private class EliminarClickListener implements View.OnClickListener {
         Bonobus bonobusAsociado;
@@ -86,6 +86,12 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
     private EliminarClickListener mEliminarClickListener = new EliminarClickListener();
 
     private TarifasClickListener mTarifasClickListener = new TarifasClickListener();
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        bonobusInfoReader = new BonobusInfoReader(StuffProvider.getSevibusApi(getActivity()));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -266,7 +272,7 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
 
     @Override
     public Loader<Bonobus> onCreateLoader(int id, Bundle args) {
-        return new BonobusLoader(getActivity(), mListaBonobuses.get(id));
+        return new BonobusLoader(getActivity(), mListaBonobuses.get(id), bonobusInfoReader);
     }
 
     @Override
@@ -284,18 +290,19 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
 
     public static class BonobusLoader extends AsyncTaskLoader<Bonobus> {
 
-        private Bonobus mBonobus;
+        private final Bonobus mBonobus;
+        private final BonobusInfoReader bonobusInfoReader;
 
-        public BonobusLoader(Context context, Bonobus bonobus) {
+        public BonobusLoader(Context context, Bonobus bonobus, BonobusInfoReader bonobusInfoReader) {
             super(context);
-
             this.mBonobus = bonobus;
+            this.bonobusInfoReader = bonobusInfoReader;
         }
         @Override
         public Bonobus loadInBackground() {
             try {
-                return BonobusInfoReader.populateBonobusInfo(mBonobus);
-            } catch (ParserConfigurationException | XPathExpressionException | IOException | RuntimeException e) {
+                return bonobusInfoReader.populateBonobusInfo(mBonobus);
+            } catch (Exception e) {
                 Log.e("SeviBus bonobus", "Error", e);
                 mBonobus.setError(true);
                 return null;
