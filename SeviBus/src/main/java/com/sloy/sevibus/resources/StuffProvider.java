@@ -33,7 +33,7 @@ import com.sloy.sevibus.resources.datasource.favorita.FavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.FirebaseFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.llegada.ApiLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.llegada.LlegadaDataSource;
-import com.sloy.sevibus.resources.datasource.llegada.SevibusApi;
+import com.sloy.sevibus.resources.datasource.SevibusApi;
 import com.sloy.sevibus.resources.datasource.llegada.TussamLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.user.PreferencesUserDataSource;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;

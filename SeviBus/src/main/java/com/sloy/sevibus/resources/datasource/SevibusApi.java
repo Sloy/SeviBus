@@ -1,6 +1,7 @@
-package com.sloy.sevibus.resources.datasource.llegada;
+package com.sloy.sevibus.resources.datasource;
 
 import com.sloy.sevibus.model.ArrivalTime;
+import com.sloy.sevibus.resources.datasource.bonobus.BonobusApiModel;
 
 import java.util.List;
 
@@ -13,4 +14,7 @@ public interface SevibusApi {
 
     @GET("/llegada/{parada}/")
     Observable<List<ArrivalTime>> getArrivals(@Path("parada") Integer parada, @Query("lineas") List<String> lineas);
+
+    @GET("/legacy/card/{numero}/")
+    Observable<BonobusApiModel> getBonobus(@Path("numero") Long numero);
 }
