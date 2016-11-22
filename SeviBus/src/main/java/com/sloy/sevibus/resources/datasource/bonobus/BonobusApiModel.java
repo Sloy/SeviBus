@@ -3,13 +3,13 @@ package com.sloy.sevibus.resources.datasource.bonobus;
 
 public class BonobusApiModel {
 
-    private final Integer number;
+    private final Long number;
     private final String type;
     private final String lastOperationDate;
     private final String expirationDate;
     private final Double credit;
 
-    public BonobusApiModel(Integer number, String type, String lastOperationDate, String expirationDate, Double credit) {
+    public BonobusApiModel(Long number, String type, String lastOperationDate, String expirationDate, Double credit) {
         this.number = number;
         this.type = type;
         this.lastOperationDate = lastOperationDate;
@@ -17,7 +17,7 @@ public class BonobusApiModel {
         this.credit = credit;
     }
 
-    public Integer getNumber() {
+    public Long getNumber() {
         return number;
     }
 
