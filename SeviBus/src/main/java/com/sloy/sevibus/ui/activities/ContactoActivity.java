@@ -116,7 +116,7 @@ public class ContactoActivity extends BaseToolbarActivity {
         StringBuilder texto = new StringBuilder(mMensaje.getText().toString().trim());
         texto.append("\n\n=====================");
         texto.append("\n Versión: " + BuildConfig.VERSION_NAME);
-        texto.append("\n Base de datos: " + getSharedPreferences("datos", Context.MODE_MULTI_PROCESS).getInt("data_version", 0));
+        texto.append("\n Base de datos: " + getSharedPreferences("datos", Context.MODE_MULTI_PROCESS).getLong("data_version", 0));
         if (mDeviceInfo.isChecked()) {
             texto.append("\n\nInformación del dispositivo");
             texto.append("\n---------- ");

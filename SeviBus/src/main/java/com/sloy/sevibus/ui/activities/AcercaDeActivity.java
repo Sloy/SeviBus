@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.R;
+import com.sloy.sevibus.resources.sync.UpdateDatabaseAction;
+
 import de.cketti.library.changelog.ChangeLog;
 
 public class AcercaDeActivity extends BaseToolbarActivity {
@@ -42,7 +44,7 @@ public class AcercaDeActivity extends BaseToolbarActivity {
         mAutor.setOnClickListener(listener);
 
         mVersion.setText(getString(R.string.version_text, BuildConfig.VERSION_NAME));
-        mVersionDB.setText(getString(R.string.version_db_text, getSharedPreferences("datos", Context.MODE_MULTI_PROCESS).getInt("data_version", getResources().getInteger(R.integer.data_version_assets))));
+        mVersionDB.setText(getString(R.string.version_db_text, getSharedPreferences("datos", Context.MODE_MULTI_PROCESS).getLong("data_version", UpdateDatabaseAction.PRELOADED_DATABASE_VERSION)));
     }
 
     private void abrePerfil() {
