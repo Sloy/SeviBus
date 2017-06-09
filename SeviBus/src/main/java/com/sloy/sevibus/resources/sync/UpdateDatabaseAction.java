@@ -2,26 +2,22 @@ package com.sloy.sevibus.resources.sync;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
+import android.util.Log;
 import com.sloy.sevibus.BuildConfig;
-import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.sql.SQLException;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import rx.Observable;
-import rx.Subscriber;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class UpdateDatabaseAction {
 
-    public static final String URL_INFO = "https://dl.dropboxusercontent.com/u/1587994/SeviBus%20Data/info.json";
+    public static final String URL_INFO = "https://raw.githubusercontent.com/Sloy/sevibus-data/master/info.json";
+    public static final Long PRELOADED_DATABASE_VERSION = 201706090921L;
 
     private final Context context;
     private final DBHelper dbHelper;
@@ -46,6 +42,7 @@ public class UpdateDatabaseAction {
                 }
                 subscriber.onCompleted();
             } catch (Exception e) {
+                Log.e("UpdateDatabaseAction", "Failed trying to update database", e);
                 subscriber.onError(e);
             }
         });
@@ -76,12 +73,12 @@ public class UpdateDatabaseAction {
     }
 
     private boolean hasNewerData() throws JSONException {
-        int serverDataVersion = serverDataInfo.getInt("data_version");
+        long serverDataVersion = serverDataInfo.getLong("data_version");
         return serverDataVersion > getCurrentDataVersion();
     }
 
-    private int getCurrentDataVersion() {
-        return datosPreferences.getInt("data_version", context.getResources().getInteger(R.integer.data_version_assets));
+    private long getCurrentDataVersion() {
+        return datosPreferences.getLong("data_version", UpdateDatabaseAction.PRELOADED_DATABASE_VERSION);
     }
 
     private void storeUpdatedTimestamp() {
@@ -93,7 +90,7 @@ public class UpdateDatabaseAction {
     }
 
     private void storeNewDataVersion() throws JSONException {
-        datosPreferences.edit().putInt("data_version", serverDataInfo.getInt("data_version")).apply();
+        datosPreferences.edit().putLong("data_version", serverDataInfo.getLong("data_version")).apply();
     }
 
     private JSONObject getDataInfo() throws IOException, JSONException {
