@@ -55,11 +55,15 @@ public class AjustesFragment extends PreferenceFragment {
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(aVoid -> {},
             error -> {
-              Snackbar.make(getView(), "Algo fue mal :(", Snackbar.LENGTH_LONG).show();
+              if (isAdded() && getView() != null) {
+                Snackbar.make(getView(), "Algo fue mal :(", Snackbar.LENGTH_LONG).show();
+              }
             },
             ()->{
-              Snackbar.make(getView(), "Datos actualizados! :)", Snackbar.LENGTH_LONG).show();
-              actualizaInterfaz();
+              if (isAdded() && getView() != null) {
+                Snackbar.make(getView(), "Datos actualizados! :)", Snackbar.LENGTH_LONG).show();
+                actualizaInterfaz();
+              }
             }
           );
         return true;
