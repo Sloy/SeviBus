@@ -3,27 +3,21 @@ package com.sloy.sevibus.resources.sync;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-
 import com.sloy.sevibus.BuildConfig;
-import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.sql.SQLException;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import rx.Observable;
-import rx.Subscriber;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class UpdateDatabaseAction {
 
     public static final String URL_INFO = "https://raw.githubusercontent.com/Sloy/sevibus-data/master/info.json";
-    public static final Long PRELOADED_DATABASE_VERSION = 3L;
+    public static final Long PRELOADED_DATABASE_VERSION = 201706090921L;
 
     private final Context context;
     private final DBHelper dbHelper;
