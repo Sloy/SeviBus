@@ -29,7 +29,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.sloy.sevibus.R;
-import com.sloy.sevibus.bbdd.DBQueries;
+import com.sloy.sevibus.domain.model.LineaCollection;
+import com.sloy.sevibus.domain.model.ParadaCollection;
+import com.sloy.sevibus.model.ParadaCercana;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
@@ -38,6 +40,7 @@ import com.sloy.sevibus.resources.BusLocation;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.actions.ObtainCercanasAction;
 import com.sloy.sevibus.resources.actions.favorita.ObtainFavoritasAction;
 import com.sloy.sevibus.resources.exceptions.ServerErrorException;
 import com.sloy.sevibus.resources.maputils.BusesLayer;
@@ -48,7 +51,6 @@ import com.sloy.sevibus.resources.maputils.LayerManager;
 import com.sloy.sevibus.resources.maputils.LineaLayer;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +85,9 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
     private Handler mHandler;
     private Runnable mRunnableUpdateBuses;
 
+    private ParadaCollection paradaCollection;
+    private LineaCollection lineaCollection;
+    private ObtainCercanasAction obtainCercanasAction;
     private ObtainFavoritasAction obtainFavoritasAction;
     private LocationProvider locationProvider;
     private Subscription locationSubscription;
@@ -182,6 +187,9 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
             mCurrentConfig = new ConfigWraper();
         }
 
+        paradaCollection = StuffProvider.getParadaCollection(getActivity());
+        lineaCollection = StuffProvider.getLineaCollection(getActivity());
+        obtainCercanasAction = StuffProvider.getObtainCercanasAction(getActivity());
         obtainFavoritasAction = StuffProvider.getObtainFavoritasAction(getActivity());
         mHandler = new Handler();
 
@@ -295,41 +303,36 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
     private void mostrarAvisoBuses() {
         if (getSharedPreferences(getActivity()).getBoolean(PREF_SHOW_WARNING_BUSES, true)) {
             new AlertDialog.Builder(getActivity())
-                    .setTitle("Aviso")
-                    .setMessage(R.string.mapa_opciones_aviso_buses)
-                    .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            getSharedPreferences(getActivity()).edit().putBoolean(PREF_SHOW_WARNING_BUSES, false).commit();
-                        }
-                    })
-                    .show();
+              .setTitle("Aviso")
+              .setMessage(R.string.mapa_opciones_aviso_buses)
+              .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                      getSharedPreferences(getActivity()).edit().putBoolean(PREF_SHOW_WARNING_BUSES, false).commit();
+                  }
+              })
+              .show();
         }
     }
 
     private void addLinea(final int id) {
-        Linea l = DBQueries.getLineaById(getDBHelper(), id);
-        addLinea(l);
+        lineaCollection.getById(id)
+          .subscribe(this::addLinea);
     }
 
-    private void addLinea(Linea l) {
+    private void addLinea(final Linea l) {
+        paradaCollection.getByLinea(l.getId())
+          .toList()
+          .subscribe(paradas -> addLinea(l, paradas));
+    }
+
+    private void addLinea(final Linea l, final List<Parada> paradas) {
         final int id = l.getId();
         if (mCurrentConfig.lineasMostradas.contains(id)) {
             Toast.makeText(getActivity(), "La línea " + l.getNumero() + " ya estaba en el mapa, ¿la ves?", Toast.LENGTH_SHORT).show();
             return;
         }
         mCurrentConfig.lineasMostradas.add(id);
-        List<Parada> paradasDeLinea;
-        try {
-            paradasDeLinea = DBQueries.getParadasDeLinea(getDBHelper(), l.getId());
-
-
-        } catch (SQLException e) {
-            Debug.registerHandledException(e);
-            e.printStackTrace();
-            Toast.makeText(getActivity(), "Error. Lo sentimos mucho ='(", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         // Genera La vista para el menú lateral
         final View viewLinea = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_mapa_opciones_linea, mLineasContainer, false);
@@ -348,7 +351,7 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
 
         // Carga en el mapa
         Drawable iconoLinea = colorearSuperficial(getResources().getDrawable(R.drawable.marker_parada).mutate(), colorLinea);
-        LineaLayer layerLinea = new LineaLayer(iconoLinea, colorLinea, paradasDeLinea, getActivity(), getDBHelper());
+        LineaLayer layerLinea = new LineaLayer(iconoLinea, colorLinea, paradas, getActivity(), getDBHelper());
         mLayerManager.addLayer(layerLinea);
 
         mLineasLayers.put(id, layerLinea);
@@ -386,18 +389,18 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
             return;
         }
         if (mostrar) {
-            try {
-                if (mLastKnownLocation == null) {
-                    mCheckCercanas.setEnabled(false);
-                    return;
-                }
-                List<Parada> cercanas = DBQueries.getParadasCercanas(getDBHelper(), mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude(), false);
-                mCercanasLayer = new CercanasLayer(cercanas, getActivity(), getDBHelper());
-                mLayerManager.addLayer(mCercanasLayer);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                Debug.registerHandledException(e);
+            if (mLastKnownLocation == null) {
+                mCheckCercanas.setEnabled(false);
+                return;
             }
+            obtainCercanasAction.obtainCercanas(mLastKnownLocation)
+              .map(ParadaCercana::getParada)
+              .toList()
+              .subscribe(cercanas -> {
+                  mCercanasLayer = new CercanasLayer(cercanas, getActivity(), getDBHelper());
+                  mLayerManager.addLayer(mCercanasLayer);
+
+              });
         } else {
             if (mCercanasLayer != null) {
                 mLayerManager.removeLayer(mCercanasLayer);
