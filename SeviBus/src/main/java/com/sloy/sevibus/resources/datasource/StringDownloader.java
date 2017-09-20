@@ -1,5 +1,9 @@
 package com.sloy.sevibus.resources.datasource;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +18,14 @@ public class StringDownloader {
 
 
     public String download(String url) throws IOException {
-        return streamToString(downloadUrl(new URL(url)));
+        OkHttpClient client = new OkHttpClient();
+        Response response = client.newCall(new Request.Builder()
+          .get()
+          .url(url)
+          .build())
+          .execute();
+        return response.body().string();
+//        return streamToString(downloadUrl(new URL(url)));
     }
 
     private InputStream downloadUrl(final URL url) throws IOException {
