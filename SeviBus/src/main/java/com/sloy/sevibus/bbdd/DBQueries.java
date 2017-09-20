@@ -25,12 +25,6 @@ import java.util.List;
 public class DBQueries {
 
     /* -- Líneas -- */
-
-    @Deprecated
-    public static Linea getLineaById(DBHelper dbHelper, int id) {
-        return dbHelper.getDaoLinea().queryForId(id);
-    }
-
     @Deprecated
     public static List<Linea> getTodasLineas(DBHelper dbHelper) throws SQLException {
         QueryBuilder<Linea, Integer> queryBuilder = dbHelper.getDaoLinea().queryBuilder();
