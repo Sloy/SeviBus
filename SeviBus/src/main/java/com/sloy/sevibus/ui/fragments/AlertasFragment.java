@@ -2,7 +2,6 @@ package com.sloy.sevibus.ui.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,14 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.TweetHolder;
-import com.sloy.sevibus.resources.AlertasManager;
 import com.sloy.sevibus.ui.adapters.TwitterAdapter;
-import java.sql.SQLException;
-import java.util.List;
 
 public class AlertasFragment extends BaseDBFragment {
     private ListView mList;
@@ -36,7 +31,7 @@ public class AlertasFragment extends BaseDBFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_actualizar) {
-            actualizar(true);
+            actualizar();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -70,43 +65,10 @@ public class AlertasFragment extends BaseDBFragment {
     public void onStart() {
         super.onStart();
         setHasOptionsMenu(true);
-        actualizar(false);
+        actualizar();
     }
 
-    private void actualizar(boolean forceUpdate) {
-        new AsyncTask<Boolean, Void, List<TweetHolder>>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                mList.setVisibility(View.GONE);
-                mProgress.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected List<TweetHolder> doInBackground(Boolean... params) {
-                try {
-                    if (params[0]) {
-                        AlertasManager.invalidarTweets(getActivity());
-                    }
-                    return AlertasManager.getAllTweets(getActivity(), getDBHelper());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(List<TweetHolder> tweetHolders) {
-                super.onPostExecute(tweetHolders);
-                mProgress.setVisibility(View.GONE);
-                if (tweetHolders != null) {
-                    mAdapter.setTweets(tweetHolders);
-                    mList.setVisibility(View.VISIBLE);
-                } else {
-                    Toast.makeText(getActivity(), "Ha ocurrido un error", Toast.LENGTH_SHORT).show();
-                    mError.setVisibility(View.VISIBLE);
-                }
-            }
-        }.execute(forceUpdate);
+    private void actualizar() {
+        //TODO Deleted for now. Let's re-implement it, maybe
     }
 }

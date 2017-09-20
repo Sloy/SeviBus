@@ -11,7 +11,10 @@ import com.sloy.sevibus.model.tussam.Seccion;
 import com.sloy.sevibus.model.tussam.TipoLinea;
 import com.sloy.sevibus.ui.widgets.LineaBadge;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class LineasAdapter extends BaseAdapter {
     
@@ -89,10 +92,14 @@ public class LineasAdapter extends BaseAdapter {
     public boolean isEnabled(int position) {
         return getItemViewType(position) > 0;
     }
-    
-    public void setItems(List<Object> items) {
-        this.mItems = items;
-        notifyDataSetChanged();
+
+    public void setItems(Map<TipoLinea, Collection<Linea>> lineasOrganizadas) {
+        List<Object> listaConEncabezados = new ArrayList<>();
+        for (TipoLinea tipo : lineasOrganizadas.keySet()) {
+            listaConEncabezados.add(tipo);
+            listaConEncabezados.addAll(lineasOrganizadas.get(tipo));
+        }
+        mItems = listaConEncabezados;
     }
     
 }

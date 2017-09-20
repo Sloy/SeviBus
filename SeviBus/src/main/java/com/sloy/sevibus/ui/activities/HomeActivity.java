@@ -168,7 +168,7 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         drawerFragments.append(R.id.nav_mapa, MapContainerFragment.class.getName());
         drawerFragments.append(R.id.nav_lineas, ListaLineasFragment.class.getName());
         drawerFragments.append(R.id.nav_bonobus, BonobusListaFragment.class.getName());
-        drawerFragments.append(R.id.nav_alertas, AlertasFragment.class.getName());
+        //drawerFragments.append(R.id.nav_alertas, AlertasFragment.class.getName());
 
         prefIsFirstTimeMap = mPrefs.getBoolean(PREF_FIRST_TIME_MAP, true);
         lockMapOptions(true);

@@ -1,7 +1,6 @@
 package com.sloy.sevibus.ui.fragments;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.os.AsyncTask;
@@ -12,7 +11,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,13 +25,11 @@ import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.domain.model.LineaCollection;
 import com.sloy.sevibus.domain.model.ParadaCollection;
-import com.sloy.sevibus.model.LineaWarning;
 import com.sloy.sevibus.model.PaletaColores;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.Reciente;
-import com.sloy.sevibus.resources.AlertasManager;
 import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.StuffProvider;
@@ -44,11 +40,9 @@ import com.sloy.sevibus.resources.actions.favorita.SaveFavoritaAction;
 import com.sloy.sevibus.resources.actions.llegada.ObtainLlegadasAction;
 import com.sloy.sevibus.ui.ParadaInfoViewModel;
 import com.sloy.sevibus.ui.activities.BaseActivity;
-import com.sloy.sevibus.ui.activities.PreferenciasActivity;
 import com.sloy.sevibus.ui.widgets.LlegadasList;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -214,37 +208,6 @@ public class ParadaInfoFragment extends BaseDBFragment implements EditarFavorita
         ((BaseActivity) getActivity()).getSupportActionBar().setTitle(String.format(getString(R.string.parada_info_titulo), paradaInfo.getParada().getNumero()));
 
         updateLlegadas(paradaInfo);
-
-        cargaAlertas(paradaInfo.getLineas());
-    }
-
-    private void cargaAlertas(final List<Linea> lineas) {
-        if (getActivity().getSharedPreferences(PreferenciasActivity.PREFS_CONFIG_VALUES, Context.MODE_PRIVATE).getBoolean("pref_alertas", true)) {
-            new AsyncTask<Void, Void, SparseArray<List<LineaWarning>>>() {
-                @Override
-                protected SparseArray<List<LineaWarning>> doInBackground(Void... voids) {
-                    SparseArray<List<LineaWarning>> res = new SparseArray<>();
-                    for (Linea linea : lineas) {
-                        try {
-                            List<LineaWarning> warnings = AlertasManager.getWarnings(getActivity(), getDBHelper(), linea);
-                            if (warnings != null && !warnings.isEmpty()) {
-                                res.put(linea.getId(), warnings);
-                            }
-                        } catch (Exception e) {
-                            Debug.registerHandledException(e);
-                        }
-                    }
-                    return res;
-                }
-
-                @Override
-                protected void onPostExecute(SparseArray<List<LineaWarning>> res) {
-                    if (mViewLlegadas != null && res != null && res.size() > 0) {
-                        mViewLlegadas.setWarnings(res);
-                    }
-                }
-            }.execute();
-        }
     }
 
     private void updateFavoritaButton(Parada parada) {

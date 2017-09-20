@@ -1,7 +1,5 @@
 package com.sloy.sevibus.ui.fragments;
 
-import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -11,35 +9,26 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.R;
-import com.sloy.sevibus.bbdd.DBHelper;
-import com.sloy.sevibus.bbdd.DBQueries;
+import com.sloy.sevibus.domain.model.LineaCollection;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.TipoLinea;
+import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.ui.adapters.LineasAdapter;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.Collection;
+import java.util.Map;
 
 public class SeleccionaLineaDialogFragment extends DialogFragment {
 
-    private DBHelper dbHelper;
+    private LineaCollection lineaCollection;
 
-    protected DBHelper getDBHelper() {
-        if (dbHelper == null) {
-            dbHelper = OpenHelperManager.getHelper(getActivity(), DBHelper.class);
-        }
-        return dbHelper;
+    public SeleccionaLineaDialogFragment() {
     }
-    //
 
     private ListView mList;
     private LineasAdapter mAdapter;
     private View mProgressBar;
-    private TreeMap<TipoLinea, List<Linea>> mLineasOrganizadas;
     private LineaSelectedListener mListener;
 
     public void setListener(LineaSelectedListener listener) {
@@ -81,60 +70,13 @@ public class SeleccionaLineaDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         mAdapter = new LineasAdapter(getActivity());
-        AsyncTask<Void, Void, Boolean> descargaLineas = new AsyncTask<Void, Void, Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                Boolean res = false;
-                try {
-                    TreeMap<TipoLinea, List<Linea>> lineasOrganizadas = new TreeMap<TipoLinea, List<Linea>>();
-                    // Primero obtengo todas las líneas, y luego las ordeno en
-                    // un mapa según su tipo
-                    List<Linea> todasLineas = DBQueries.getTodasLineas(getDBHelper());
-                    for (Linea l : todasLineas) {
-                        TipoLinea tipo = l.getTipo();
-                        if (lineasOrganizadas.containsKey(tipo)) {
-                            lineasOrganizadas.get(tipo).add(l);
-                        } else {
-                            List<Linea> nuevaListaLineas = new ArrayList<Linea>();
-                            nuevaListaLineas.add(l);
-                            lineasOrganizadas.put(tipo, nuevaListaLineas);
-                        }
-                    }
-                    mLineasOrganizadas = lineasOrganizadas;
-                    res = true;
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return res;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                super.onPostExecute(result);
-                if (result) {
-                    onLineasCargadas();
-                }
-            }
-        };
-        descargaLineas.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        lineaCollection.getAll()
+          .toMultimap(Linea::getTipo)
+          .subscribe(this::onLineasCargadas);
     }
 
-    private void selectTodasLineas() {
-        // Creo una lista ordenada de objects conteniendo el tipo como cabecera
-        // acompañado por sus líneas
-        List<Object> listaConEncabezados = new ArrayList<Object>();
-        for (TipoLinea tipo : mLineasOrganizadas.keySet()) {
-            listaConEncabezados.add(tipo);
-            for (Linea linea : mLineasOrganizadas.get(tipo)) {
-                listaConEncabezados.add(linea);
-            }
-        }
-        mAdapter.setItems(listaConEncabezados);
-    }
-
-    private void onLineasCargadas() {
-        selectTodasLineas();
+    private void onLineasCargadas(Map<TipoLinea, Collection<Linea>> lineasOrganizadas) {
+        mAdapter.setItems(lineasOrganizadas);
 
         mList.setAdapter(mAdapter);
         mProgressBar.setVisibility(View.GONE);
@@ -142,8 +84,9 @@ public class SeleccionaLineaDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        activity.setTitle("Líneas");
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().setTitle("Líneas");
+        lineaCollection = StuffProvider.getLineaCollection(getActivity());
     }
 }
