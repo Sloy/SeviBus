@@ -2,7 +2,6 @@ package com.sloy.sevibus.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -17,8 +16,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
+import com.sloy.sevibus.domain.model.ParadaCollection;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.Reciente;
 import com.sloy.sevibus.resources.AnalyticsTracker;
@@ -26,6 +27,7 @@ import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.ui.ThemeSelector;
 import com.sloy.sevibus.ui.adapters.ParadasAdapter;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,8 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
     private String mCurrentQuery;
     private AnalyticsTracker analyticsTracker;
 
+    private ParadaCollection paradaCollection;
+
     public static Intent getIntent(Context context) {
         return new Intent(context, BusquedaActivity.class);
     }
@@ -51,6 +55,8 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_busqueda);
+
+        paradaCollection = StuffProvider.getParadaCollection(this);
 
         analyticsTracker = StuffProvider.getAnalyticsTracker();
         mListView = (ListView) findViewById(R.id.busqueda_lista);
@@ -85,7 +91,8 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
         return true;
     }
 
-    @Override public void finish() {
+    @Override
+    public void finish() {
         super.finish();
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
     }
@@ -94,7 +101,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
     public boolean onQueryTextSubmit(String query) {
         Log.d("Sevibus search", "Query submit: " + query);
         InputMethodManager imm = (InputMethodManager) getSystemService(
-                Context.INPUT_METHOD_SERVICE);
+          Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
 
         if (query.equalsIgnoreCase("virgi")) {
@@ -123,28 +130,15 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
 
     private void buscar(final String newText) {
         mCurrentQuery = newText;
-        new AsyncTask<Void, Void, List<Parada>>() {
-            @Override
-            protected List<Parada> doInBackground(Void... params) {
-                List<Parada> paradasByQuery = null;
-                try {
-                    paradasByQuery = DBQueries.getParadasByQuery(getDBHelper(), newText, RESULTS_LIMIT);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    Debug.registerHandledException(e);
-                }
-                return paradasByQuery;
-            }
-
-            @Override
-            protected void onPostExecute(List<Parada> paradas) {
-                if (paradas != null && !paradas.isEmpty()) {
-                    mostrarResultados(paradas);
-                } else {
-                    mostrarVacio(newText);
-                }
-            }
-        }.execute();
+        paradaCollection.getByQuery(newText)
+          .toList()
+          .subscribe(paradas -> {
+              if (paradas != null && !paradas.isEmpty()) {
+                  mostrarResultados(paradas);
+              } else {
+                  mostrarVacio(newText);
+              }
+          });
     }
 
     private void mostrarResultados(List<Parada> paradas) {

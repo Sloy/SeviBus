@@ -83,18 +83,6 @@ public class DBQueries {
 
     }
 
-    @Deprecated
-    public static List<Parada> getParadasByQuery(DBHelper dbHelper, String query, long limit) throws SQLException {
-        SelectArg arg1 = new SelectArg("%" + query + "%");
-        SelectArg arg2 = new SelectArg("%" + query + "%");
-        QueryBuilder<Parada, Integer> qb = dbHelper.getDaoParada().queryBuilder();
-        qb.limit(limit);
-        Where<Parada, Integer> where = qb.where().like("numero", arg1).or().like("descripcion", arg2);
-        Log.d("Sevibus DB", where.getStatement());
-
-        return where.query();
-    }
-
     public static List<Reciente> getParadasRecientes(DBHelper dbHelper) throws SQLException {
         return dbHelper.getDaoReciente().queryBuilder().orderBy("id", false).query();
     }
