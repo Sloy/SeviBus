@@ -63,4 +63,19 @@ public class Parada implements Comparable<Parada> {
     public void setNumeroLineas(List<String> numeroLineas) {
         this.numeroLineas = numeroLineas;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Parada parada = (Parada) o;
+
+        return numero.equals(parada.numero);
+    }
+
+    @Override
+    public int hashCode() {
+        return numero.hashCode();
+    }
 }

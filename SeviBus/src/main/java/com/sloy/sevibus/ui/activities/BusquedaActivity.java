@@ -3,6 +3,7 @@ package com.sloy.sevibus.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,17 +21,21 @@ import android.widget.Toast;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
 import com.sloy.sevibus.domain.model.ParadaCollection;
+import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.Reciente;
 import com.sloy.sevibus.resources.AnalyticsTracker;
 import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.actions.ObtainParadasWithLineasAction;
 import com.sloy.sevibus.ui.ThemeSelector;
 import com.sloy.sevibus.ui.adapters.ParadasAdapter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
 
 public class BusquedaActivity extends BaseToolbarActivity implements SearchView.OnQueryTextListener {
 
@@ -46,6 +51,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
     private AnalyticsTracker analyticsTracker;
 
     private ParadaCollection paradaCollection;
+    private ObtainParadasWithLineasAction obtainParadasWithLineasAction;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BusquedaActivity.class);
@@ -57,6 +63,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
         setContentView(R.layout.activity_busqueda);
 
         paradaCollection = StuffProvider.getParadaCollection(this);
+        obtainParadasWithLineasAction = StuffProvider.getObtainParadasWithLineasAction(this);
 
         analyticsTracker = StuffProvider.getAnalyticsTracker();
         mListView = (ListView) findViewById(R.id.busqueda_lista);
@@ -67,7 +74,7 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 analyticsTracker.searchPerformed(mCurrentQuery);
-                startActivity(ParadaInfoActivity.getIntent(BusquedaActivity.this, mAdapter.getItem(position).getNumero()));
+                startActivity(ParadaInfoActivity.getIntent(BusquedaActivity.this, mAdapter.getItem(position).first.getNumero()));
             }
         });
 
@@ -132,16 +139,18 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
         mCurrentQuery = newText;
         paradaCollection.getByQuery(newText)
           .toList()
-          .subscribe(paradas -> {
-              if (paradas != null && !paradas.isEmpty()) {
-                  mostrarResultados(paradas);
+          .flatMap(paradas ->  obtainParadasWithLineasAction.obtain(paradas))
+          .toList()
+          .subscribe(paradasWithLineas -> {
+              if (!paradasWithLineas.isEmpty()) {
+                  mostrarResultados(paradasWithLineas);
               } else {
                   mostrarVacio(newText);
               }
           });
     }
 
-    private void mostrarResultados(List<Parada> paradas) {
+    private void mostrarResultados(List<Pair<Parada, List<Linea>>> paradas) {
         setParadas(paradas);
         mIndicadorRecientes.setVisibility(View.GONE);
         mListView.setVisibility(View.VISIBLE);
@@ -166,15 +175,12 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
                 mostrarVacio(null);
                 return;
             }
-            List<Parada> paradas = new ArrayList<Parada>();
-            for (Reciente r : recientes) {
-                if (r.getParadaAsociada() != null) {
-                    paradas.add(r.getParadaAsociada());
-                } else {
-                    //TODO delete reciente
-                }
-            }
-            setParadas(paradas);
+            Observable.from(recientes)
+              .map(Reciente::getParadaAsociada)
+              .toList()
+              .flatMap(obtainParadasWithLineasAction::obtain)
+              .toList()
+              .subscribe(this::setParadas);
         } catch (SQLException e) {
             mostrarVacio(null);
             Debug.registerHandledException(e);
@@ -182,9 +188,9 @@ public class BusquedaActivity extends BaseToolbarActivity implements SearchView.
         }
     }
 
-    private void setParadas(List<Parada> paradas) {
+    private void setParadas(List<Pair<Parada, List<Linea>>> paradas) {
         if (mAdapter == null) {
-            mAdapter = new ParadasAdapter(this, paradas, getDBHelper());
+            mAdapter = new ParadasAdapter(paradas);
             mListView.setAdapter(mAdapter);
         } else {
             mAdapter.changeParadas(paradas);

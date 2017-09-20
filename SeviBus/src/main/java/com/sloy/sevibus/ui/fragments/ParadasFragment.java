@@ -1,6 +1,7 @@
 package com.sloy.sevibus.ui.fragments;
 
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,24 +11,29 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.sloy.sevibus.R;
+import com.sloy.sevibus.domain.model.LineaCollection;
+import com.sloy.sevibus.domain.model.ParadaCollection;
 import com.sloy.sevibus.model.tussam.Parada;
+import com.sloy.sevibus.resources.StuffProvider;
+import com.sloy.sevibus.resources.actions.ObtainParadasWithLineasAction;
 import com.sloy.sevibus.ui.activities.ParadaInfoActivity;
 import com.sloy.sevibus.ui.adapters.ParadasAdapter;
 
-import java.util.List;
-
 public class ParadasFragment extends BaseDBFragment {
 
+    private static final String EXTRA_SECCION = "seccion_id";
+
     private ListView mList;
-    private ParadasAdapter mAdapter;
-    private List<Parada> mParadas;
 
-    //TODO no es aconsejable usar un constructor con parámetros, mejor usar un método estático que reciba Bundle y eliminar ambos constructores
-    public ParadasFragment(List<Parada> paradas) {
-        mParadas = paradas;
-    }
+    private ParadaCollection paradaCollection;
+    private ObtainParadasWithLineasAction obtainParadasWithLineasAction;
 
-    public ParadasFragment() {
+    public static ParadasFragment newInstance(Integer seccionId) {
+        ParadasFragment paradasFragment = new ParadasFragment();
+        Bundle args = new Bundle();
+        args.putInt(EXTRA_SECCION, seccionId);
+        paradasFragment.setArguments(args);
+        return paradasFragment;
     }
 
     @Override
@@ -57,15 +63,28 @@ public class ParadasFragment extends BaseDBFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
-        mAdapter = new ParadasAdapter(getActivity(), mParadas, getDBHelper());
-        mAdapter.setTrayecto(true);
-        if (mAdapter.isTrayecto()) {
-            View header = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_parada_inicio_trayecto, mList, false);
-            View footer = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_parada_fin_trayecto, mList, false);
-            mList.addHeaderView(header, null, false);
-            mList.addFooterView(footer, null, false);
-        }
-        mList.setAdapter(mAdapter);
+        paradaCollection = StuffProvider.getParadaCollection(getActivity());
+        obtainParadasWithLineasAction = StuffProvider.getObtainParadasWithLineasAction(getActivity());
+
+        int seccionId = getArguments().getInt(EXTRA_SECCION);
+
+        paradaCollection.getBySeccion(seccionId)
+          .toList()
+          .flatMap(paradas ->  obtainParadasWithLineasAction.obtain(paradas))
+          .toList()
+          .subscribe(paradasAndLineas -> {
+              ParadasAdapter adapter = new ParadasAdapter(paradasAndLineas);
+              adapter.setTrayecto(true);
+              if (adapter.isTrayecto()) {
+                  View header = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_parada_inicio_trayecto, mList, false);
+                  View footer = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_parada_fin_trayecto, mList, false);
+                  mList.addHeaderView(header, null, false);
+                  mList.addFooterView(footer, null, false);
+              }
+              mList.setAdapter(adapter);
+          });
+
+
     }
 
     @Override

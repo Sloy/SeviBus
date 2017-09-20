@@ -21,6 +21,7 @@ import com.sloy.sevibus.domain.model.LineaCollection;
 import com.sloy.sevibus.domain.model.ParadaCollection;
 import com.sloy.sevibus.resources.actions.ObtainCercanasAction;
 import com.sloy.sevibus.resources.actions.ObtainLineasCercanasAction;
+import com.sloy.sevibus.resources.actions.ObtainParadasWithLineasAction;
 import com.sloy.sevibus.resources.actions.favorita.DeleteFavoritaAction;
 import com.sloy.sevibus.resources.actions.favorita.ObtainFavoritasAction;
 import com.sloy.sevibus.resources.actions.favorita.ObtainSingleFavoritaAction;
@@ -31,7 +32,7 @@ import com.sloy.sevibus.resources.actions.user.LogInAction;
 import com.sloy.sevibus.resources.actions.user.LogOutAction;
 import com.sloy.sevibus.resources.actions.user.ObtainUserAction;
 import com.sloy.sevibus.resources.datasource.ApiErrorHandler;
-import com.sloy.sevibus.resources.datasource.LineaDataSource;
+import com.sloy.sevibus.resources.datasource.SevibusApi;
 import com.sloy.sevibus.resources.datasource.StringDownloader;
 import com.sloy.sevibus.resources.datasource.favorita.AuthAwareFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.DBFavoritaDataSource;
@@ -39,7 +40,6 @@ import com.sloy.sevibus.resources.datasource.favorita.FavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.favorita.FirebaseFavoritaDataSource;
 import com.sloy.sevibus.resources.datasource.llegada.ApiLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.llegada.LlegadaDataSource;
-import com.sloy.sevibus.resources.datasource.SevibusApi;
 import com.sloy.sevibus.resources.datasource.llegada.TussamLlegadaDataSource;
 import com.sloy.sevibus.resources.datasource.user.PreferencesUserDataSource;
 import com.sloy.sevibus.resources.datasource.user.UserDataSource;
@@ -171,8 +171,12 @@ public class StuffProvider {
         return new ObtainCercanasAction(getParadaCollection(context));
     }
 
+    public static ObtainParadasWithLineasAction getObtainParadasWithLineasAction(Context context) {
+        return new ObtainParadasWithLineasAction(getLineaCollection(context));
+    }
+
     public static ObtainLineasCercanasAction getObtainLineasCercanasAction(Context context) {
-        return new ObtainLineasCercanasAction(new LineaDataSource(getDbHelper(context)), getObtainCercanasAction(context));
+        return new ObtainLineasCercanasAction(getLineaCollection(context), getObtainCercanasAction(context));
     }
 
     public static ObtainUserAction getObtainUserAction(Context context) {

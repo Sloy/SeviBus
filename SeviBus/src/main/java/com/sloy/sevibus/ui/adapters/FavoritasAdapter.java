@@ -3,6 +3,7 @@ package com.sloy.sevibus.ui.adapters;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.support.v4.util.Pair;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,8 +18,10 @@ import android.widget.TextView;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.model.tussam.Favorita;
+import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +31,7 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
     private final OnFavoritasReorderedListener onFavoritasReorderedListener;
     private final OnStartDragListener mDragStartListener;
 
-    private List<Favorita> favoritas = Collections.emptyList();
+    private List<Pair<Favorita, List<Linea>>> favoritas = Collections.emptyList();
 
     public FavoritasAdapter(OnFavoritaClickListener onFavoritaClickListener, OnFavoritasReorderedListener onFavoritasReorderedListener, OnStartDragListener mDragStartListener) {
         this.onFavoritaClickListener = onFavoritaClickListener;
@@ -36,7 +39,7 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
         this.mDragStartListener = mDragStartListener;
     }
 
-    public void setFavoritas(List<Favorita> favoritas) {
+    public void setFavoritas(List<Pair<Favorita, List<Linea>>> favoritas) {
         this.favoritas = favoritas;
         this.notifyDataSetChanged();
     }
@@ -49,7 +52,8 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
 
     @Override
     public void onBindViewHolder(FavoritaViewHolder holder, int position) {
-        holder.bind(favoritas.get(position));
+        Pair<Favorita, List<Linea>> favoritaWithLineas = favoritas.get(position);
+        holder.bind(favoritaWithLineas.first, favoritaWithLineas.second);
     }
 
     @Override
@@ -69,7 +73,11 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
             }
         }
         notifyItemMoved(fromPosition, toPosition);
-        onFavoritasReorderedListener.onFavoritasReordered(favoritas);
+        List<Favorita> favoritasOnly = new ArrayList<>(favoritas.size());
+        for (Pair<Favorita, List<Linea>> favorita : favoritas) {
+            favoritasOnly.add(favorita.first);
+        }
+        onFavoritasReorderedListener.onFavoritasReordered(favoritasOnly);
         return true;
     }
 
@@ -77,7 +85,7 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
 
         private final TextView numeroBadge;
         private final TextView nombre;
-        private final TextView lineas;
+        private final TextView lineasText;
         private final ImageView handleView;
         private final OnFavoritaClickListener onFavoritaClickListener;
         private final OnStartDragListener mDragStartListener;
@@ -93,7 +101,7 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
             this.mDragStartListener = mDragStartListener;
             numeroBadge = (TextView) itemView.findViewById(R.id.favorita_numero);
             nombre = (TextView) itemView.findViewById(R.id.favorita_nombre);
-            lineas = (TextView) itemView.findViewById(R.id.favorita_lineas);
+            lineasText = (TextView) itemView.findViewById(R.id.favorita_lineas);
             handleView = (ImageView) itemView.findViewById(R.id.handle);
             selectedCardElevation = itemView.getResources().getDimension(R.dimen.favorita_selected_elevation);
             numeroOneDigitSize = itemView.getResources().getDimension(R.dimen.favorita_numero_1_digit);
@@ -102,7 +110,7 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
             numeroFourDigitSize = itemView.getResources().getDimension(R.dimen.favorita_numero_4_digits);
         }
 
-        public void bind(Favorita favorita) {
+        public void bind(Favorita favorita, List<Linea> lineas) {
             Parada parada = favorita.getParadaAsociada();
 
             boolean hasNombrePropio = favorita.getNombrePropio() != null && !TextUtils.isEmpty(favorita.getNombrePropio());
@@ -115,14 +123,14 @@ public class FavoritasAdapter extends RecyclerView.Adapter<FavoritasAdapter.Favo
             ((GradientDrawable) background).setColor(favorita.getColor());
 
             StringBuilder sbLineas = new StringBuilder();
-            if (!parada.getNumeroLineas().isEmpty()) {
-                for (String linea : parada.getNumeroLineas()) {
-                    sbLineas.append(linea);
+            if (!lineas.isEmpty()) {
+                for (Linea linea : lineas) {
+                    sbLineas.append(linea.getNumero());
                     sbLineas.append("  ");
                 }
                 sbLineas.setLength(sbLineas.length() - 2);
             }
-            lineas.setText(sbLineas.toString());
+            lineasText.setText(sbLineas.toString());
 
             itemView.setOnClickListener(v -> onFavoritaClickListener.onFavoritaClick(favorita));
             handleView.setOnTouchListener((v, event) -> {

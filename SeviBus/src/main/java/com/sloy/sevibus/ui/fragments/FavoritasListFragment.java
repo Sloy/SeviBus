@@ -3,6 +3,7 @@ package com.sloy.sevibus.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
+import com.sloy.sevibus.domain.model.LineaCollection;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.resources.Debug;
@@ -25,6 +27,7 @@ import com.sloy.sevibus.ui.adapters.FavoritasAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -35,6 +38,7 @@ public class FavoritasListFragment extends BaseDBFragment {
     private FavoritasAdapter favoritasAdapter;
     private ItemTouchHelper itemTouchHelper;
     private ObtainFavoritasAction obtainFavoritasAction;
+    private LineaCollection lineaCollection;
     private ReorderFavoritasAction reorderFavoritasAction;
 
     @Override
@@ -65,6 +69,7 @@ public class FavoritasListFragment extends BaseDBFragment {
         super.onActivityCreated(savedInstanceState);
         obtainFavoritasAction = StuffProvider.getObtainFavoritasAction(getActivity());
         reorderFavoritasAction = StuffProvider.getReorderFavoritasAction(getActivity());
+        lineaCollection = StuffProvider.getLineaCollection(getActivity());
     }
 
     @Override
@@ -94,19 +99,16 @@ public class FavoritasListFragment extends BaseDBFragment {
             list.setVisibility(View.VISIBLE);
         }
         try {
-            for (Favorita favorita : favoritas) {
-                List<Linea> lineas = DBQueries.getLineasDeParada(getDBHelper(), favorita.getParadaAsociada().getNumero());
-                List<String> numeroLineas = new ArrayList<>(lineas.size());
-                for (Linea linea : lineas) {
-                    numeroLineas.add(linea.getNumero());
-                }
-                favorita.getParadaAsociada().setNumeroLineas(numeroLineas);
-            }
+            Observable.from(favoritas)
+              .flatMap(favorita -> lineaCollection.getByParada(favorita.getParadaAsociada().getNumero())
+                .toList()
+                .map(lineas -> Pair.create(favorita, lineas)))
+              .toList()
+              .subscribe(pairs -> favoritasAdapter.setFavoritas(pairs));
         } catch (Exception e) {
             Debug.registerHandledException(e);
             Snackbar.make(getView(), "Ocurrió un error. ¡Estamos en ello!", Snackbar.LENGTH_LONG).show();
         }
-        favoritasAdapter.setFavoritas(favoritas);
     }
 
 

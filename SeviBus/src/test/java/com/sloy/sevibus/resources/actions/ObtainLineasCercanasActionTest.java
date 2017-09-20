@@ -2,11 +2,11 @@ package com.sloy.sevibus.resources.actions;
 
 import android.location.Location;
 
+import com.sloy.sevibus.domain.model.LineaCollection;
 import com.sloy.sevibus.model.ParadaCercana;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.TipoLinea;
-import com.sloy.sevibus.resources.datasource.LineaDataSource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,6 @@ import java.util.List;
 
 import rx.Observable;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -38,19 +37,19 @@ public class ObtainLineasCercanasActionTest {
     ObtainCercanasAction obtainCercanasAction;
 
     @Mock
-    LineaDataSource lineaDataSource;
+    LineaCollection lineaCollection;
     private ObtainLineasCercanasAction action;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        action = new ObtainLineasCercanasAction(lineaDataSource, obtainCercanasAction);
+        action = new ObtainLineasCercanasAction(lineaCollection, obtainCercanasAction);
     }
 
     @Test
     public void returns_distinct_stops_have_distinct_lines() throws Exception {
-        when(lineaDataSource.getFromParada(P1_NUMBER)).thenReturn(lineas(LINEA_A));
-        when(lineaDataSource.getFromParada(P2_NUMBER)).thenReturn(lineas(LINEA_B));
+        when(lineaCollection.getByParada(P1_NUMBER)).thenReturn(lineas(LINEA_A));
+        when(lineaCollection.getByParada(P2_NUMBER)).thenReturn(lineas(LINEA_B));
         when(obtainCercanasAction.obtainCercanas(any(Location.class))).thenReturn(Observable.just(PARADA_1, PARADA_2));
 
         List<Linea> results = action.obtainLineas(SOME_LOCATION).toList().toBlocking().single();
@@ -60,8 +59,8 @@ public class ObtainLineasCercanasActionTest {
 
     @Test
     public void returns_distinct_when_stops_have_common_lines() throws Exception {
-        when(lineaDataSource.getFromParada(P1_NUMBER)).thenReturn(lineas(LINEA_A, LINEA_B));
-        when(lineaDataSource.getFromParada(P2_NUMBER)).thenReturn(lineas(LINEA_B));
+        when(lineaCollection.getByParada(P1_NUMBER)).thenReturn(lineas(LINEA_A, LINEA_B));
+        when(lineaCollection.getByParada(P2_NUMBER)).thenReturn(lineas(LINEA_B));
         when(obtainCercanasAction.obtainCercanas(any(Location.class))).thenReturn(Observable.just(PARADA_1, PARADA_2));
 
         List<Linea> results = action.obtainLineas(SOME_LOCATION).toList().toBlocking().single();
@@ -71,8 +70,8 @@ public class ObtainLineasCercanasActionTest {
 
     @Test
     public void returns_ordered_when_stops_have_unordered_lines() throws Exception {
-        when(lineaDataSource.getFromParada(P1_NUMBER)).thenReturn(lineas(LINEA_B));
-        when(lineaDataSource.getFromParada(P2_NUMBER)).thenReturn(lineas(LINEA_A));
+        when(lineaCollection.getByParada(P1_NUMBER)).thenReturn(lineas(LINEA_B));
+        when(lineaCollection.getByParada(P2_NUMBER)).thenReturn(lineas(LINEA_A));
         when(obtainCercanasAction.obtainCercanas(any(Location.class))).thenReturn(Observable.just(PARADA_1, PARADA_2));
 
         List<Linea> results = action.obtainLineas(SOME_LOCATION).toList().toBlocking().single();
@@ -80,8 +79,8 @@ public class ObtainLineasCercanasActionTest {
         assertThat(results).containsSequence(LINEA_A, LINEA_B);
     }
 
-    private Observable<List<Linea>> lineas(Linea... lineaA) {
-        return Observable.just(asList(lineaA));
+    private Observable<Linea> lineas(Linea... lineaA) {
+        return Observable.from(lineaA);
     }
 
     private static Linea linea(int id, String label) {

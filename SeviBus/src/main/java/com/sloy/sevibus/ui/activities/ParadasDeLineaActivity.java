@@ -100,7 +100,7 @@ public class ParadasDeLineaActivity extends BaseToolbarActivity {
         public ParadasFragment getItem(int position) {
             ParadasFragment fragment = mFragments[position];
             if (fragment == null) {
-                fragment = new ParadasFragment(mSecciones.get(position).paradas);
+                fragment = ParadasFragment.newInstance(mSecciones.get(position).seccion.getId());
                 mFragments[position] = fragment;
             }
             return fragment;
