@@ -7,20 +7,25 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.View;
+
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.bbdd.DBQueries;
+import com.sloy.sevibus.domain.model.LineaCollection;
+import com.sloy.sevibus.domain.model.ParadaCollection;
 import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.Seccion;
+import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.ui.fragments.ParadasFragment;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
 
 public class ParadasDeLineaActivity extends BaseToolbarActivity {
 
@@ -30,55 +35,37 @@ public class ParadasDeLineaActivity extends BaseToolbarActivity {
         return i;
     }
 
-    private ViewPager mViewPager;
-    private TabLayout tabLayout;
-
-    private ActionBar mActionBar;
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    private Linea mLinea;
+    private ParadaCollection paradaCollection;
+    private LineaCollection lineaCollection;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paradas_de_linea);
 
-        mActionBar = getSupportActionBar();
+        paradaCollection = StuffProvider.getParadaCollection(this);
+        lineaCollection = StuffProvider.getLineaCollection(this);
 
-        int lineaID = 0;
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            lineaID = extras.getInt("linea_id");
-        }
+        int lineaID = getIntent().getIntExtra("linea_id", 0);
 
-        if (lineaID < 1) {
-            Log.e("SeviBus", "No se recibió línea");
-            finish();
-        }
-
-        List<SeccionParadasPair> secciones = new ArrayList<SeccionParadasPair>();
-        try {
-            mLinea = DBQueries.getLineaById(getDBHelper(), lineaID);
-            for (Seccion c : mLinea.getSecciones()) {
-                List<Parada> paradasDeSeccion = DBQueries.getParadasDeSeccion(getDBHelper(), c.getId());
-                secciones.add(new SeccionParadasPair(c, paradasDeSeccion));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        mActionBar.setTitle(String.format("Línea %s", mLinea.getNumero()));
-
-        setupFragments(secciones);
+        lineaCollection.getById(lineaID)
+          .doOnSuccess(linea -> getSupportActionBar().setTitle(String.format("Línea %s", linea.getNumero())))
+          .map(Linea::getSecciones)
+          .flatMapObservable(Observable::from)
+          .flatMap(seccion -> paradaCollection.getBySeccion(seccion.getId())
+            .toList()
+            .map(paradas -> new SeccionParadasPair(seccion, paradas)))
+          .toList()
+          .subscribe(this::setupFragments);
     }
 
 
     private void setupFragments(List<SeccionParadasPair> secciones) {
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), secciones);
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), secciones);
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(mViewPager);
 
         if (mSectionsPagerAdapter.getCount() > 1) {
@@ -128,15 +115,6 @@ public class ParadasDeLineaActivity extends BaseToolbarActivity {
         public CharSequence getPageTitle(int position) {
             return "A " + mSecciones.get(position).seccion.getNombreSeccion();
         }
-    }
-
-    private DBHelper dbHelper;
-
-    protected DBHelper getDBHelper() {
-        if (dbHelper == null) {
-            dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
-        }
-        return dbHelper;
     }
 
 }

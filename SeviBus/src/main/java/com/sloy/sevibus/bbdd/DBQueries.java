@@ -1,6 +1,7 @@
 package com.sloy.sevibus.bbdd;
 
 import android.util.Log;
+
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -14,6 +15,7 @@ import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.ParadaSeccion;
 import com.sloy.sevibus.model.tussam.Reciente;
 import com.sloy.sevibus.model.tussam.Seccion;
+
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,19 +61,6 @@ public class DBQueries {
 
     /* -- Paradas -- */
 
-    @Deprecated
-    public static List<Parada> getParadasDeSeccion(DBHelper dbHelper, int seccion_id) throws SQLException {
-        QueryBuilder<ParadaSeccion, Integer> paradaSeccionQb = dbHelper.getDaoParadaSeccion().queryBuilder();
-        SelectArg seccionSelectArg = new SelectArg();
-        seccionSelectArg.setValue(seccion_id);
-        paradaSeccionQb.where().eq("seccion_id", seccionSelectArg);
-
-        QueryBuilder<Parada, Integer> paradaQb = dbHelper.getDaoParada().queryBuilder();
-        paradaQb.join(paradaSeccionQb);
-
-        return paradaQb.query();
-    }
-
     @Deprecated //There's an action for that
     public static List<Parada> getParadasCercanas(DBHelper dbHelper, double latitud, double longitud, boolean orderByDistance) throws SQLException {
 
@@ -111,8 +100,8 @@ public class DBQueries {
     }
 
     public static void setParadaReciente(DBHelper dbHelper, Reciente reciente) throws SQLException {
-        RuntimeExceptionDao<Reciente,Integer> daoReciente = dbHelper.getDaoReciente();
-        DeleteBuilder<Reciente,Integer> delBuilder = daoReciente.deleteBuilder();
+        RuntimeExceptionDao<Reciente, Integer> daoReciente = dbHelper.getDaoReciente();
+        DeleteBuilder<Reciente, Integer> delBuilder = daoReciente.deleteBuilder();
         delBuilder.where().eq("paradaAsociada_id", reciente.getParadaAsociada().getNumero());
         delBuilder.delete();
 

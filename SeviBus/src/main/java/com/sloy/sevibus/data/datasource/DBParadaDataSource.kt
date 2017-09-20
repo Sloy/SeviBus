@@ -26,7 +26,17 @@ class DBParadaDataSource(private val dbHelper: DBHelper) {
         return paradaQb.query()
     }
 
-    fun getBySeccion(seccionId: Int) = DBQueries.getParadasDeSeccion(dbHelper, seccionId)
+    fun getBySeccion(seccionId: Int): MutableList<Parada> {
+        val paradaSeccionQb = dbHelper.daoParadaSeccion.queryBuilder()
+        val seccionSelectArg = SelectArg()
+        seccionSelectArg.setValue(seccionId)
+        paradaSeccionQb.where().eq("seccion_id", seccionSelectArg)
+
+        val paradaQb = dbHelper.daoParada.queryBuilder()
+        paradaQb.join(paradaSeccionQb)
+
+        return paradaQb.query()
+    }
 
     fun getByQuery(query: String) = DBQueries.getParadasByQuery(dbHelper, query, 50L)
 }
