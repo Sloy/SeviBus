@@ -3,11 +3,16 @@ package com.sloy.sevibus.resources.maputils;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.support.v4.util.Pair;
 import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.sloy.sevibus.model.tussam.Linea;
+import com.sloy.sevibus.model.tussam.Parada;
+
+import java.util.List;
 
 public abstract class Layer implements GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener{
 

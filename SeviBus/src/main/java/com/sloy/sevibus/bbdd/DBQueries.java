@@ -2,40 +2,14 @@ package com.sloy.sevibus.bbdd;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.DeleteBuilder;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.SelectArg;
 import com.sloy.sevibus.model.tussam.Bonobus;
-import com.sloy.sevibus.model.tussam.Linea;
-import com.sloy.sevibus.model.tussam.ParadaSeccion;
 import com.sloy.sevibus.model.tussam.Reciente;
-import com.sloy.sevibus.model.tussam.Seccion;
 
 import java.sql.SQLException;
 import java.util.List;
 
 @Deprecated
 public class DBQueries {
-
-    /* -- Líneas -- */
-    @Deprecated
-    public static List<Linea> getLineasDeParada(DBHelper dbHelper, int parada_id) throws SQLException {
-        // Selecciono las relaciones con esta parada
-        QueryBuilder<ParadaSeccion, Integer> paradaseccionQb = dbHelper.getDaoParadaSeccion().queryBuilder();
-        SelectArg paradaSelectArg = new SelectArg();
-        paradaSelectArg.setValue(parada_id);
-        paradaseccionQb.where().eq("parada_id", paradaSelectArg);
-
-        // Selecciono las secciones que contienen esta relación
-        QueryBuilder<Seccion, Integer> seccionQb = dbHelper.getDaoSeccion().queryBuilder();
-        seccionQb.join(paradaseccionQb);
-
-        // Selecciono las líneas que contienen dichas secciones
-        QueryBuilder<Linea, Integer> lineaQb = dbHelper.getDaoLinea().queryBuilder();
-        lineaQb.join(seccionQb);
-        lineaQb.orderBy("numero", true);
-        lineaQb.distinct();
-        return lineaQb.query();
-    }
 
     /* -- Paradas -- */
     public static List<Reciente> getParadasRecientes(DBHelper dbHelper) throws SQLException {

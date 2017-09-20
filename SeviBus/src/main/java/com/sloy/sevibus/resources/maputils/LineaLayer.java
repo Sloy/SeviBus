@@ -2,11 +2,14 @@ package com.sloy.sevibus.resources.maputils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.util.Pair;
+
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Polyline;
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBHelper;
+import com.sloy.sevibus.model.tussam.Linea;
 import com.sloy.sevibus.model.tussam.Parada;
 import java.util.List;
 
@@ -17,8 +20,8 @@ public class LineaLayer extends ParadasLayer implements IPolyLineLayer {
     private float mPolylineWidth;
     private BitmapDescriptor mIcon;
 
-    public LineaLayer(Drawable iconLinea, int colorLinea, List<Parada> paradasDeLinea, Context context, DBHelper dbHelper) {
-        super(paradasDeLinea, context, dbHelper);
+    public LineaLayer(Drawable iconLinea, int colorLinea, List<Pair<Parada, List<Linea>>> paradasDeLinea, Context context, DBHelper dbHelper) {
+        super(paradasDeLinea, context);
         mColor = colorLinea;
         mIcon = BitmapDescriptorFactory.fromBitmap(Layer.getDrawableBitmap(iconLinea));
         mPolylineWidth = context.getResources().getDimensionPixelSize(R.dimen.polyline_width);

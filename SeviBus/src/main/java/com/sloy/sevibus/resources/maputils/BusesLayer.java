@@ -1,12 +1,15 @@
 package com.sloy.sevibus.resources.maputils;
 
 import android.graphics.Bitmap;
+import android.support.v4.util.Pair;
 import android.view.View;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.sloy.sevibus.model.tussam.Linea;
+import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.BusLocation;
 
 import java.util.ArrayList;
@@ -27,7 +30,7 @@ public class BusesLayer extends Layer {
     }
 
     @Override
-    public Object getItemFromMarker(Marker marker) {
+    public BusLocation getItemFromMarker(Marker marker) {
         if (mMarkers != null && !mMarkers.isEmpty()) {
             int i = mMarkers.indexOf(marker);
             if (i > 0) {

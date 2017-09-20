@@ -16,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -41,6 +42,7 @@ import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.resources.actions.ObtainCercanasAction;
+import com.sloy.sevibus.resources.actions.ObtainParadasWithLineasAction;
 import com.sloy.sevibus.resources.actions.favorita.ObtainFavoritasAction;
 import com.sloy.sevibus.resources.exceptions.ServerErrorException;
 import com.sloy.sevibus.resources.maputils.BusesLayer;
@@ -89,6 +91,7 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
     private LineaCollection lineaCollection;
     private ObtainCercanasAction obtainCercanasAction;
     private ObtainFavoritasAction obtainFavoritasAction;
+    private ObtainParadasWithLineasAction obtainParadasWithLineasAction;
     private LocationProvider locationProvider;
     private Subscription locationSubscription;
     private AnalyticsTracker analyticsTracker;
@@ -191,6 +194,7 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
         lineaCollection = StuffProvider.getLineaCollection(getActivity());
         obtainCercanasAction = StuffProvider.getObtainCercanasAction(getActivity());
         obtainFavoritasAction = StuffProvider.getObtainFavoritasAction(getActivity());
+        obtainParadasWithLineasAction = StuffProvider.getObtainParadasWithLineasAction(getActivity());
         mHandler = new Handler();
 
         mRunnableUpdateBuses = new Runnable() {
@@ -323,10 +327,12 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
     private void addLinea(final Linea l) {
         paradaCollection.getByLinea(l.getId())
           .toList()
+          .flatMap(paradas -> obtainParadasWithLineasAction.obtain(paradas))
+          .toList()
           .subscribe(paradas -> addLinea(l, paradas));
     }
 
-    private void addLinea(final Linea l, final List<Parada> paradas) {
+    private void addLinea(final Linea l, final List<Pair<Parada, List<Linea>>> paradas) {
         final int id = l.getId();
         if (mCurrentConfig.lineasMostradas.contains(id)) {
             Toast.makeText(getActivity(), "La línea " + l.getNumero() + " ya estaba en el mapa, ¿la ves?", Toast.LENGTH_SHORT).show();
@@ -396,8 +402,10 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
             obtainCercanasAction.obtainCercanas(mLastKnownLocation)
               .map(ParadaCercana::getParada)
               .toList()
-              .subscribe(cercanas -> {
-                  mCercanasLayer = new CercanasLayer(cercanas, getActivity(), getDBHelper());
+              .flatMap(obtainParadasWithLineasAction::obtain)
+              .toList()
+              .subscribe(pairs -> {
+                  mCercanasLayer = new CercanasLayer(pairs, getActivity());
                   mLayerManager.addLayer(mCercanasLayer);
 
               });
@@ -420,11 +428,13 @@ public class MapaControllerFragment extends BaseDBFragment implements LoaderMana
               .flatMap(Observable::from)
               .map(Favorita::getParadaAsociada)
               .toList()
-              .subscribe(paradas -> {
+              .flatMap(obtainParadasWithLineasAction::obtain)
+              .toList()
+              .subscribe(pairs -> {
                   if (mFavoritasLayer != null) {
                       mLayerManager.removeLayer(mFavoritasLayer);
                   }
-                  mFavoritasLayer = new FavoritasLayer(paradas, getActivity(), getDBHelper());
+                  mFavoritasLayer = new FavoritasLayer(pairs, getActivity());
                   mLayerManager.addLayer(mFavoritasLayer);
               }, error -> {
                   Debug.registerHandledException(error);
