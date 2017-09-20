@@ -1,5 +1,6 @@
 package com.sloy.sevibus.data.repository
 
+import android.util.Log
 import com.sloy.sevibus.data.datasource.DBParadaDataSource
 import com.sloy.sevibus.domain.model.ParadaCollection
 import com.sloy.sevibus.model.tussam.Parada
@@ -24,4 +25,7 @@ class ParadaRepository(private val dbDataSource: DBParadaDataSource) : ParadaCol
         return Observable.from(dbDataSource.getByQuery(query))
     }
 
+    override fun getByLocation(minLatitud: Double, maxLatitud: Double, minLongitud: Double, maxLongitud: Double): Observable<Parada> {
+        return Observable.from(dbDataSource.getByLocation(minLatitud, maxLatitud, minLongitud, maxLongitud))
+    }
 }

@@ -3,7 +3,6 @@ package com.sloy.sevibus.data.datasource
 import android.util.Log
 import com.j256.ormlite.stmt.SelectArg
 import com.sloy.sevibus.bbdd.DBHelper
-import com.sloy.sevibus.bbdd.DBQueries
 import com.sloy.sevibus.model.tussam.Parada
 
 class DBParadaDataSource(private val dbHelper: DBHelper) {
@@ -47,6 +46,13 @@ class DBParadaDataSource(private val dbHelper: DBHelper) {
         val where = qb.where().like("numero", arg1).or().like("descripcion", arg2)
         Log.d("Sevibus DB", where.statement)
 
+        return where.query()
+    }
+
+    fun getByLocation(minLatitud: Double, maxLatitud: Double, minLongitud: Double, maxLongitud: Double): List<Parada> {
+        val qb = dbHelper.daoParada.queryBuilder()
+        val where = qb.where().lt("latitud", maxLatitud).and().gt("latitud", minLatitud).and().lt("longitud", maxLongitud).and().gt("longitud", minLongitud)
+        Log.d("Sevibus", "Query cercanas -> " + where.statement)
         return where.query()
     }
 }

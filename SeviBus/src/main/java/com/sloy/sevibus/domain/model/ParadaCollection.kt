@@ -14,4 +14,6 @@ interface ParadaCollection {
 
     fun getByQuery(query: String): Observable<Parada>
 
+    fun getByLocation(minLatitud: Double, maxLatitud: Double, minLongitud: Double, maxLongitud: Double): Observable<Parada>
+
 }

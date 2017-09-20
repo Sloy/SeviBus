@@ -60,29 +60,6 @@ public class DBQueries {
     }
 
     /* -- Paradas -- */
-
-    @Deprecated //There's an action for that
-    public static List<Parada> getParadasCercanas(DBHelper dbHelper, double latitud, double longitud, boolean orderByDistance) throws SQLException {
-
-        double margen = 0.005;
-
-        double maxLatitud = latitud + margen;
-        double minLatitud = latitud - margen;
-        double maxLongitud = longitud + margen;
-        double minLongitud = longitud - margen;
-
-        QueryBuilder<Parada, Integer> qb = dbHelper.getDaoParada().queryBuilder();
-        Where<Parada, Integer> where = qb.where().lt("latitud", maxLatitud).and().gt("latitud", minLatitud).and().lt("longitud", maxLongitud).and().gt("longitud", minLongitud);
-        Log.d("Sevibus", "Query cercanas -> " + where.getStatement());
-        List<Parada> res = where.query();
-
-        if (orderByDistance) {
-            Collections.sort(res, new ParadaDistanciaComparator(latitud, longitud));
-        }
-        return res;
-
-    }
-
     public static List<Reciente> getParadasRecientes(DBHelper dbHelper) throws SQLException {
         return dbHelper.getDaoReciente().queryBuilder().orderBy("id", false).query();
     }
@@ -176,29 +153,4 @@ public class DBQueries {
     public static void deleteBonobus(DBHelper dbHelper, Bonobus bonobus) {
         dbHelper.getDaoBonobus().delete(bonobus);
     }
-
-    private static class ParadaDistanciaComparator implements Comparator<Parada> {
-
-        private int mLatitud;
-        private int mLongitud;
-
-        private ParadaDistanciaComparator(double latitud, double longitud) {
-            mLatitud = (int) (latitud * 1E6);
-            mLongitud = (int) (longitud * 1E6);
-        }
-
-        @Override
-        public int compare(Parada p1, Parada p2) {
-            int distanciaP1 = distancia(p1);
-            int distanciaP2 = distancia(p2);
-            return distanciaP1 - distanciaP2;
-        }
-
-        private int distancia(Parada parada) {
-            int distanciaX = Math.abs(mLatitud - (int) (parada.getLatitud() * 1E6));
-            int distanciaY = Math.abs(mLongitud - (int) (parada.getLongitud() * 1E6));
-            return distanciaX + distanciaY;
-        }
-    }
-
 }

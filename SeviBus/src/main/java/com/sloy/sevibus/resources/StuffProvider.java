@@ -168,7 +168,7 @@ public class StuffProvider {
     }
 
     public static ObtainCercanasAction getObtainCercanasAction(Context context) {
-        return new ObtainCercanasAction(getDbHelper(context));
+        return new ObtainCercanasAction(getParadaCollection(context));
     }
 
     public static ObtainLineasCercanasAction getObtainLineasCercanasAction(Context context) {
