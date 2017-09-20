@@ -60,11 +60,6 @@ public class DBQueries {
     /* -- Paradas -- */
 
     @Deprecated
-    public static Parada getParadaById(DBHelper dbHelper, int paradaId) {
-        return dbHelper.getDaoParada().queryForId(paradaId);
-    }
-
-    @Deprecated
     public static List<Parada> getParadasDeLinea(DBHelper dbHelper, int linea_id) throws SQLException {
         QueryBuilder<Seccion, Integer> seccionQb = dbHelper.getDaoSeccion().queryBuilder();
         SelectArg lineaSelectArg = new SelectArg();

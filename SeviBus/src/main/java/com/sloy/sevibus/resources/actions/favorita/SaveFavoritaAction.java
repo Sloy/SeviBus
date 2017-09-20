@@ -1,9 +1,7 @@
 package com.sloy.sevibus.resources.actions.favorita;
 
-import com.sloy.sevibus.bbdd.DBHelper;
-import com.sloy.sevibus.bbdd.DBQueries;
+import com.sloy.sevibus.domain.model.ParadaCollection;
 import com.sloy.sevibus.model.tussam.Favorita;
-import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.datasource.favorita.FavoritaDataSource;
 
 import rx.Observable;
@@ -12,14 +10,14 @@ import static rx.observables.MathObservable.max;
 
 public class SaveFavoritaAction {
 
+    private final ParadaCollection paradaCollection;
     private final FavoritaDataSource favoritaLocalDataSource;
     private final FavoritaDataSource favoritaRemoteDataSource;
-    private final DBHelper dbHelper; //TODO use parada datasource!!!
 
-    public SaveFavoritaAction(FavoritaDataSource favoritaLocalDataSource, FavoritaDataSource favoritaRemoteDataSource, DBHelper dbHelper) {
+    public SaveFavoritaAction(ParadaCollection paradaCollection, FavoritaDataSource favoritaLocalDataSource, FavoritaDataSource favoritaRemoteDataSource) {
+        this.paradaCollection = paradaCollection;
         this.favoritaLocalDataSource = favoritaLocalDataSource;
         this.favoritaRemoteDataSource = favoritaRemoteDataSource;
-        this.dbHelper = dbHelper;
     }
 
     public Observable<Void> saveFavorita(int idParada, String nombrePropio, int color) {
@@ -38,7 +36,7 @@ public class SaveFavoritaAction {
             .switchIfEmpty(Observable.just(0)));
 
         Observable<Favorita> newFavoritaObservable = Observable.just(idParada)
-          .map(this::getParadaById)
+          .flatMap(id -> paradaCollection.getById(id).toObservable())
           .map(parada -> {
               Favorita f = new Favorita();
               f.setParadaAsociada(parada);
@@ -51,10 +49,6 @@ public class SaveFavoritaAction {
             newFavorita.setOrden(maxOrder + 1);
             return newFavorita;
         });
-    }
-
-    protected Parada getParadaById(Integer id) {
-        return DBQueries.getParadaById(dbHelper, id);
     }
 
 }

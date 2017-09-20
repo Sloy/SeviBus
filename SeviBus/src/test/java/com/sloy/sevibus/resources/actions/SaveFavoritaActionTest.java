@@ -1,5 +1,6 @@
 package com.sloy.sevibus.resources.actions;
 
+import com.sloy.sevibus.domain.model.ParadaCollection;
 import com.sloy.sevibus.model.tussam.Favorita;
 import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.resources.actions.favorita.SaveFavoritaAction;
@@ -13,10 +14,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import rx.Observable;
+import rx.Single;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,23 +33,25 @@ public class SaveFavoritaActionTest {
     FavoritaDataSource favoritaLocalDataSource;
     @Mock
     FavoritaDataSource favoritaRemoteDataSource;
+    @Mock
+    ParadaCollection paradaCollection;
 
     @Captor
     ArgumentCaptor<Favorita> favoritaCaptor;
 
-    private TestableSaveFavoritaAction saveFavoritaAction;
+    private SaveFavoritaAction saveFavoritaAction;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        saveFavoritaAction = new TestableSaveFavoritaAction(favoritaLocalDataSource, favoritaRemoteDataSource);
+        saveFavoritaAction = new SaveFavoritaAction(paradaCollection, favoritaLocalDataSource, favoritaRemoteDataSource);
     }
 
     @Test
     public void saves_favorita_with_order_1_when_there_arent_favoritas() throws Exception {
         givenThereAreNoFavoritas();
         givenFavoritaDoesntExist();
-        saveFavoritaAction.setStubParada(new Parada(PARADA_ID, "", 0.0, 0.0));
+        givenAParada();
 
         saveFavoritaAction.saveFavorita(PARADA_ID, STUB_NAME, STUB_COLOR)
           .subscribe();
@@ -57,11 +62,16 @@ public class SaveFavoritaActionTest {
 
     }
 
+    private void givenAParada() {
+        Parada parada = new Parada(PARADA_ID, "", 0.0, 0.0);
+        when(paradaCollection.getById(anyInt())).thenReturn(Single.just(parada));
+    }
+
     @Test
     public void saves_favorita_with_order_4_when_last_order_is_3_and_there_are_2_favoritas() throws Exception {
         givenFavoritaDoesntExist();
         givenThereAreFavoritas(favoritaWithOrder(1), favoritaWithOrder(3));
-        saveFavoritaAction.setStubParada(new Parada(PARADA_ID, "", 0.0, 0.0));
+        givenAParada();
 
         saveFavoritaAction.saveFavorita(PARADA_ID, STUB_NAME, STUB_COLOR)
           .subscribe();
@@ -89,23 +99,4 @@ public class SaveFavoritaActionTest {
         return fav3;
     }
 
-    private static class TestableSaveFavoritaAction extends SaveFavoritaAction {
-
-        private Parada stubParada;
-
-        public TestableSaveFavoritaAction(FavoritaDataSource favoritaLocalDataSource, FavoritaDataSource favoritaRemoteDataSource) {
-            super(favoritaLocalDataSource, favoritaRemoteDataSource, null);
-        }
-
-        public void setStubParada(Parada stubParada) {
-            this.stubParada = stubParada;
-        }
-
-
-        @Override
-        protected Parada getParadaById(Integer id) {
-            return stubParada;
-        }
-
-    }
 }
