@@ -13,6 +13,12 @@ import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.BuildConfig;
 import com.sloy.sevibus.bbdd.DBHelper;
+import com.sloy.sevibus.data.datasource.DBLineaDataSource;
+import com.sloy.sevibus.data.datasource.DBParadaDataSource;
+import com.sloy.sevibus.data.repository.LineaRepository;
+import com.sloy.sevibus.data.repository.ParadaRepository;
+import com.sloy.sevibus.domain.model.LineaCollection;
+import com.sloy.sevibus.domain.model.ParadaCollection;
 import com.sloy.sevibus.resources.actions.ObtainCercanasAction;
 import com.sloy.sevibus.resources.actions.ObtainLineasCercanasAction;
 import com.sloy.sevibus.resources.actions.favorita.DeleteFavoritaAction;
@@ -195,5 +201,13 @@ public class StuffProvider {
 
     public static UserInfoHeaderPresenter getUserInfoHeaderPresenter(Context context, GoogleApiClient googleApiClient) {
         return new UserInfoHeaderPresenter(getObtainUserAction(context), getLogoutAction(context), getAnalyticsTracker(), getCrashReportingTool(), googleApiClient);
+    }
+
+    public static ParadaCollection getParadaCollection(Context context) {
+        return new ParadaRepository(new DBParadaDataSource(getDbHelper(context)));
+    }
+
+    public static LineaCollection getLineaCollection(Context context) {
+        return new LineaRepository(new DBLineaDataSource(getDbHelper(context)));
     }
 }

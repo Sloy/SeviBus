@@ -15,9 +15,10 @@ buildscript {
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://raw.github.com/ichigotake/ColorPicker/migrate-to-gradle/repository' }
-
+    mavenCentral()
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 apply plugin: 'com.fernandocejas.frodo'
@@ -132,6 +133,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'org.mockito:mockito-core:1.10.19'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
 play {

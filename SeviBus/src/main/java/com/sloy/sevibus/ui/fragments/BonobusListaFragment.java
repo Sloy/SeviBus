@@ -6,11 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -23,30 +21,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.sloy.sevibus.R;
 import com.sloy.sevibus.bbdd.DBQueries;
-import com.sloy.sevibus.model.MiAnuncio;
 import com.sloy.sevibus.model.tussam.Bonobus;
 import com.sloy.sevibus.resources.BonobusInfoReader;
-import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.StuffProvider;
 import com.sloy.sevibus.ui.activities.NuevoBonobusActivity;
 import com.sloy.sevibus.ui.adapters.BonobusAdapter;
 import com.sloy.sevibus.ui.widgets.BonobusView;
-import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 public class BonobusListaFragment extends BaseDBFragment implements LoaderManager.LoaderCallbacks<Bonobus> {
@@ -148,53 +133,6 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
         super.onStart();
         setHasOptionsMenu(true);
         cargarBonobuses();
-        cargaAnuncio();
-    }
-
-    private void cargaAnuncio() {
-        new AsyncTask<Void, Void, MiAnuncio>() {
-
-            @Override
-            protected MiAnuncio doInBackground(Void... params) {
-                try {
-                    URL url = new URL(String.format(URL_ANUNCIO_PROPIO, "bonolist"));
-
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setReadTimeout(10*1000 /* milliseconds */);
-                    conn.setConnectTimeout(10*1000 /* milliseconds */);
-                    conn.setRequestMethod("GET");
-                    conn.setDoOutput(true);
-                    conn.setUseCaches(false);
-                    // Starts the query
-                    conn.connect();
-                    int responseCode = conn.getResponseCode();
-                    if (responseCode != 200) {
-                        return null;
-                    }
-
-                    InputStream inputStream = conn.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                    StringBuilder stringBuilder = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        stringBuilder.append(line + "\n");
-                    }
-                    inputStream.close();
-
-                    JSONObject json = new JSONObject(stringBuilder.toString());
-                    return new MiAnuncio(json.getString("enlace"), json.getString("imagen"));
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                    Debug.registerHandledException(e);
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(MiAnuncio miAnuncio) {
-                cargaAnuncio(miAnuncio);
-            }
-        }.execute();
     }
 
     @Override
@@ -244,29 +182,6 @@ public class BonobusListaFragment extends BaseDBFragment implements LoaderManage
             } else {
                 loaderManager.restartLoader(i, new Bundle(), this);
             }
-        }
-    }
-
-
-    public void cargaAnuncio(final MiAnuncio miAnuncio) {
-        Log.d("SeviBus", "cargaAnuncio()");
-        final FragmentActivity activity = getActivity();
-        if (mAnuncioContainer == null || activity == null)
-            return;
-
-        if (miAnuncio != null) {
-            ImageView anuncioImagen = (ImageView) mAnuncioContainer.findViewById(R.id.anuncio_imagen);
-            anuncioImagen.setVisibility(View.VISIBLE);
-            Picasso.with(activity).load(miAnuncio.getImagenUrl()).into(anuncioImagen);
-            anuncioImagen.setClickable(true);
-            anuncioImagen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent clickIntent = new Intent(Intent.ACTION_VIEW);
-                    clickIntent.setData(Uri.parse(miAnuncio.getEnlace()));
-                    startActivity(clickIntent);
-                }
-            });
         }
     }
 

@@ -1,7 +1,6 @@
 package com.sloy.sevibus.bbdd;
 
 import android.util.Log;
-
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -15,23 +14,22 @@ import com.sloy.sevibus.model.tussam.Parada;
 import com.sloy.sevibus.model.tussam.ParadaSeccion;
 import com.sloy.sevibus.model.tussam.Reciente;
 import com.sloy.sevibus.model.tussam.Seccion;
-
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+@Deprecated
 public class DBQueries {
 
     /* -- Líneas -- */
 
+    @Deprecated
     public static Linea getLineaById(DBHelper dbHelper, int id) {
         return dbHelper.getDaoLinea().queryForId(id);
     }
 
+    @Deprecated
     public static List<Linea> getTodasLineas(DBHelper dbHelper) throws SQLException {
         QueryBuilder<Linea, Integer> queryBuilder = dbHelper.getDaoLinea().queryBuilder();
         queryBuilder.orderBy("numero", true);
@@ -39,6 +37,7 @@ public class DBQueries {
         return queryBuilder.query();
     }
 
+    @Deprecated
     public static List<Linea> getLineasDeParada(DBHelper dbHelper, int parada_id) throws SQLException {
         // Selecciono las relaciones con esta parada
         QueryBuilder<ParadaSeccion, Integer> paradaseccionQb = dbHelper.getDaoParadaSeccion().queryBuilder();
@@ -58,24 +57,14 @@ public class DBQueries {
         return lineaQb.query();
     }
 
-    public static List<Linea> getLineasCercanas(DBHelper dbHelper, double latitud, double longitud) throws SQLException {
-        List<Parada> paradasCercanas = getParadasCercanas(dbHelper, latitud, longitud, false);
-        Set<Linea> lineas = new HashSet<Linea>();
-        for (int i = 0; i < 5 && i < paradasCercanas.size(); i++) {
-            List<Linea> l = getLineasDeParada(dbHelper, paradasCercanas.get(i).getNumero());
-            lineas.addAll(l);
-        }
-        List<Linea> res = new ArrayList<Linea>(lineas);
-        Collections.sort(res);
-        return res;
-    }
-
     /* -- Paradas -- */
 
+    @Deprecated
     public static Parada getParadaById(DBHelper dbHelper, int paradaId) {
         return dbHelper.getDaoParada().queryForId(paradaId);
     }
 
+    @Deprecated
     public static List<Parada> getParadasDeLinea(DBHelper dbHelper, int linea_id) throws SQLException {
         QueryBuilder<Seccion, Integer> seccionQb = dbHelper.getDaoSeccion().queryBuilder();
         SelectArg lineaSelectArg = new SelectArg();
@@ -91,6 +80,7 @@ public class DBQueries {
         return paradaQb.query();
     }
 
+    @Deprecated
     public static List<Parada> getParadasDeSeccion(DBHelper dbHelper, int seccion_id) throws SQLException {
         QueryBuilder<ParadaSeccion, Integer> paradaSeccionQb = dbHelper.getDaoParadaSeccion().queryBuilder();
         SelectArg seccionSelectArg = new SelectArg();
@@ -103,6 +93,7 @@ public class DBQueries {
         return paradaQb.query();
     }
 
+    @Deprecated //There's an action for that
     public static List<Parada> getParadasCercanas(DBHelper dbHelper, double latitud, double longitud, boolean orderByDistance) throws SQLException {
 
         double margen = 0.005;
@@ -124,6 +115,7 @@ public class DBQueries {
 
     }
 
+    @Deprecated
     public static List<Parada> getParadasByQuery(DBHelper dbHelper, String query, long limit) throws SQLException {
         SelectArg arg1 = new SelectArg("%" + query + "%");
         SelectArg arg2 = new SelectArg("%" + query + "%");
