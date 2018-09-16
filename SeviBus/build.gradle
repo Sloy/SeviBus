@@ -5,10 +5,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'me.tatarka:gradle-retrolambda:3.2.3'
-        classpath 'io.fabric.tools:gradle:1.+'
-        classpath "com.fernandocejas.frodo:frodo-plugin:0.8.1"
-        classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
+        classpath 'io.fabric.tools:gradle:1.25.4'
+        classpath 'com.github.triplet.gradle:play-publisher:1.2.2'
     }
 }
 
@@ -18,9 +16,7 @@ repositories {
 
 }
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
-apply plugin: 'com.fernandocejas.frodo'
 apply plugin: 'com.github.triplet.play'
 
 
@@ -37,10 +33,9 @@ android {
         }
     }
     compileSdkVersion 23
-    buildToolsVersion '23.0.3'
     defaultConfig {
         applicationId 'com.sloy.sevibus'
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 22
         versionCode myVersionCode
         versionName myVersionName
@@ -63,9 +58,15 @@ android {
             signingConfig = signingConfigs.release
         }
     }
+
+    flavorDimensions "city"
     productFlavors {
-        sevilla {}
-        barna {}
+        sevilla {
+            dimension "city"
+        }
+        barna {
+            dimension "city"
+        }
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -79,59 +80,61 @@ android {
 
 dependencies {
     def supportVersion = "23.1.1"
-    compile "com.android.support:appcompat-v7:$supportVersion"
-    compile "com.android.support:design:$supportVersion"
-    compile "com.android.support:recyclerview-v7:$supportVersion"
-    compile "com.android.support:cardview-v7:$supportVersion"
-    compile "com.android.support:percent:$supportVersion"
+    implementation "com.android.support:appcompat-v7:$supportVersion"
+    implementation "com.android.support:design:$supportVersion"
+    implementation "com.android.support:recyclerview-v7:$supportVersion"
+    implementation "com.android.support:cardview-v7:$supportVersion"
+    implementation "com.android.support:percent:$supportVersion"
 
     def playServicesVersion = "9.0.0"
-    compile "com.google.android.gms:play-services-location:$playServicesVersion"
-    compile "com.google.android.gms:play-services-maps:$playServicesVersion"
-    compile "com.google.android.gms:play-services-gcm:$playServicesVersion"
-    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
+    implementation "com.google.android.gms:play-services-location:$playServicesVersion"
+    implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+    implementation "com.google.android.gms:play-services-gcm:$playServicesVersion"
+    implementation "com.google.android.gms:play-services-auth:$playServicesVersion"
 
     def firebaseVersion = "9.0.0"
-    compile "com.google.firebase:firebase-auth:$firebaseVersion"
-    compile "com.google.firebase:firebase-database:$firebaseVersion"
-    compile "com.google.firebase:firebase-analytics:$firebaseVersion"
-    compile "com.google.firebase:firebase-config:$firebaseVersion"
+    implementation "com.google.firebase:firebase-auth:$firebaseVersion"
+    implementation "com.google.firebase:firebase-database:$firebaseVersion"
+    implementation "com.google.firebase:firebase-analytics:$firebaseVersion"
+    implementation "com.google.firebase:firebase-config:$firebaseVersion"
 
-    compile 'com.sloydev:gallego:1.0.0'
-    compile 'io.reactivex:rxjava:1.0.16'
-    compile 'io.reactivex:rxjava-math:1.0.0'
-    compile 'io.reactivex:rxandroid:1.0.1'
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    implementation 'com.sloydev:gallego:1.0.0'
+    implementation 'io.reactivex:rxjava:1.0.16'
+    implementation 'io.reactivex:rxjava-math:1.0.0'
+    implementation 'io.reactivex:rxandroid:1.0.1'
+    implementation 'com.squareup.okhttp:okhttp:2.5.0'
+    implementation 'com.squareup.retrofit:retrofit:1.9.0'
 
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.j256.ormlite:ormlite-android:4.42'
-    compile 'com.j256.ormlite:ormlite-core:4.42'
-    compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.7'
-    compile('com.fourmob.colorpicker:colorpicker:1.0.0') {
+    implementation 'com.jakewharton:butterknife:7.0.1'
+    annotationProcessor 'com.jakewharton:butterknife:7.0.1'
+
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.j256.ormlite:ormlite-android:4.42'
+    implementation 'com.j256.ormlite:ormlite-core:4.42'
+    implementation 'net.sourceforge.htmlcleaner:htmlcleaner:2.7'
+    implementation('com.fourmob.colorpicker:colorpicker:1.0.0') {
         exclude module: 'support-v4';
     }
-    compile 'de.cketti.library.changelog:ckchangelog:1.2.0'
-    compile 'com.google.guava:guava:18.0'
-    compile 'com.facebook.stetho:stetho:1.2.0'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+    implementation 'de.cketti.library.changelog:ckchangelog:1.2.0'
+    implementation 'com.google.guava:guava:18.0'
+    implementation 'com.facebook.stetho:stetho:1.2.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }
-    compile('com.crashlytics.sdk.android:answers:1.3.3@aar') {
+    implementation('com.crashlytics.sdk.android:answers:1.3.3@aar') {
         transitive = true;
     }
-    compile 'com.android.support:multidex:1.0.1'
+    implementation 'com.android.support:multidex:1.0.1'
 
-    compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
-    compile 'de.cketti.mailto:email-intent-builder:1.0.0'
-    compile 'com.artjimlop:chernobyl:1.1.0'
+    implementation 'de.hdodenhof:circleimageview:2.0.0'
+    implementation 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
+    implementation 'de.cketti.mailto:email-intent-builder:1.0.0'
+    implementation 'com.artjimlop:chernobyl:1.1.0'
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.assertj:assertj-core:1.7.0'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.assertj:assertj-core:1.7.0'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
 }
 
 play {

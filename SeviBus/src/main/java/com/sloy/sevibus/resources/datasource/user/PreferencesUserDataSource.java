@@ -2,7 +2,6 @@ package com.sloy.sevibus.resources.datasource.user;
 
 import android.content.SharedPreferences;
 
-import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.google.gson.Gson;
 import com.sloy.sevibus.ui.SevibusUser;
 
