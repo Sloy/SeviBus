@@ -15,8 +15,6 @@
         android:paddingTop="16dp"
         >
 
-        <include layout="@layout/fragment_main_login_suggestion"/>
-
         <include
             android:id="@+id/fragment_main_favoritas"
             layout="@layout/fragment_main_favoritas"
