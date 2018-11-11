@@ -51,7 +51,6 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
     private UserInfoHeaderPresenter userInfoHeaderPresenter;
     private UserInfoHeaderViewContainer userInfoHeaderViewContainer;
 
-    private RemoteConfiguration remoteConfiguration;
     private SharedPreferences mPrefs;
     private String mCurrentTitle;
     private int mCurrentDrawerId;
@@ -75,7 +74,6 @@ public class HomeActivity extends LocationProviderActivity implements IMainContr
         setContentView(R.layout.activity_home);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        remoteConfiguration = StuffProvider.getRemoteConfiguration();
 
         if (getDBHelper().getDaoParada().countOf() > 0) {
             arrancaNormal(savedInstanceState);
