@@ -97,6 +97,7 @@ dependencies {
     implementation "com.google.firebase:firebase-database:16.0.5"
     implementation "com.google.firebase:firebase-config:16.1.0"
 
+    implementation 'com.karumi:dexter:5.0.0'
     implementation 'com.sloydev:gallego:1.0.0'
     implementation 'io.reactivex:rxjava:1.0.16'
     implementation 'io.reactivex:rxjava-math:1.0.0'
