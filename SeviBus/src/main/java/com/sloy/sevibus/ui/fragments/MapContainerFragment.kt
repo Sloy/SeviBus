@@ -1,9 +1,12 @@
 package com.sloy.sevibus.ui.fragments
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -75,15 +78,14 @@ class MapContainerFragment : BaseDBFragment() {
         }
     }
 
-    @SuppressLint("MissingPermission")
     private fun setUpMapIfNeeded() {
-        if (mMap == null) {
+        val hasPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        if (hasPermission && mMap == null) {
             mMapFragment?.getMapAsync { googleMap ->
                 googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
                 googleMap.isMyLocationEnabled = true
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(LatLng(37.3808828009948, -5.986958742141724), 13f)))
                 mMap = googleMap
-
             }
         }
     }
