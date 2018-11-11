@@ -17,7 +17,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.sloy.sevibus.bbdd.DBHelper;
 import com.sloy.sevibus.ui.ThemeSelector;
 
-public class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private static final int RESOLUTION_REQUEST_CODE = 600613;
 
