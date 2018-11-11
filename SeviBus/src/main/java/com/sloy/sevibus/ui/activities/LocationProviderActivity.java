@@ -8,7 +8,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.sloy.sevibus.resources.LocationProvider;
 
-public class LocationProviderActivity extends BaseToolbarActivity {
+public abstract class LocationProviderActivity extends BaseToolbarActivity {
 
 
     private LocationProvider locationProvider;

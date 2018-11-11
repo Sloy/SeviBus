@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -20,6 +21,9 @@ import com.sloy.sevibus.resources.Debug;
 import com.sloy.sevibus.resources.LocationProvider;
 import com.sloy.sevibus.ui.activities.HomeActivity;
 import com.sloy.sevibus.ui.activities.LocationProviderActivity;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import rx.Subscription;
 
@@ -50,7 +54,16 @@ public class MapContainerFragment extends BaseDBFragment {
     private void setUpMapIfNeeded() {
         // confirm that we have not already instantiated the map.
         if (mMap == null) {
-            mMap = mMapFragment.getMap();
+            CountDownLatch latch = new CountDownLatch(1);
+            mMapFragment.getMapAsync(googleMap -> {
+                mMap = googleMap;
+                latch.countDown();
+            });
+            try {
+                latch.await(5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 // The Map is verified. It is now safe to manipulate the map.

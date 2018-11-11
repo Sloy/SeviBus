@@ -34,11 +34,11 @@ android {
             storeFile file("../debug.keystore")
         }
     }
-    compileSdkVersion 23
+    compileSdkVersion 27
     defaultConfig {
         applicationId 'com.sloy.sevibus'
         minSdkVersion 21
-        targetSdkVersion 22
+        targetSdkVersion 27
         versionCode myVersionCode
         versionName myVersionName
         archivesBaseName = "SeviBus-" + versionName
@@ -81,24 +81,21 @@ android {
 }
 
 dependencies {
-    def supportVersion = "23.1.1"
+    def supportVersion = '27.1.1'
     implementation "com.android.support:appcompat-v7:$supportVersion"
     implementation "com.android.support:design:$supportVersion"
     implementation "com.android.support:recyclerview-v7:$supportVersion"
     implementation "com.android.support:cardview-v7:$supportVersion"
     implementation "com.android.support:percent:$supportVersion"
 
-    def playServicesVersion = "9.0.0"
-    implementation "com.google.android.gms:play-services-location:$playServicesVersion"
-    implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
-    implementation "com.google.android.gms:play-services-gcm:$playServicesVersion"
-    implementation "com.google.android.gms:play-services-auth:$playServicesVersion"
-
-    def firebaseVersion = "9.0.0"
-    implementation "com.google.firebase:firebase-auth:$firebaseVersion"
-    implementation "com.google.firebase:firebase-database:$firebaseVersion"
-    implementation "com.google.firebase:firebase-analytics:$firebaseVersion"
-    implementation "com.google.firebase:firebase-config:$firebaseVersion"
+    implementation "com.google.android.gms:play-services-location:16.0.0"
+    implementation "com.google.android.gms:play-services-maps:16.0.0"
+    implementation "com.google.android.gms:play-services-auth:16.0.1"
+    implementation "com.google.android.gms:play-services-gcm:16.0.0"
+    implementation "com.google.firebase:firebase-core:16.0.5"
+    implementation "com.google.firebase:firebase-auth:16.0.5"
+    implementation "com.google.firebase:firebase-database:16.0.5"
+    implementation "com.google.firebase:firebase-config:16.1.0"
 
     implementation 'com.sloydev:gallego:1.0.0'
     implementation 'io.reactivex:rxjava:1.0.16'
