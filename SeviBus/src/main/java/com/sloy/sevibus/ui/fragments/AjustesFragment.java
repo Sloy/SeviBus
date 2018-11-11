@@ -100,6 +100,16 @@ public class AjustesFragment extends PreferenceFragment {
       }
     });
 
+    Preference privacy = findPreference("pref_privacy");
+    assert privacy != null;
+    privacy.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+      @Override public boolean onPreferenceClick(Preference preference) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Sloy/SeviBus/blob/master/privacy_policy.md"));
+        startActivity(intent);
+        return true;
+      }
+    });
+
     // De-bug
     CheckBoxPreference ubicacionFalsa = (CheckBoxPreference) findPreference("pref_ubicacion_falsa");
     if (ubicacionFalsa != null) {

@@ -26,6 +26,10 @@
             android:key="pref_acerca"
             android:title="Acerca de"
             />
+        <Preference
+            android:key="pref_privacy"
+            android:title="Política de privacidad"
+            />
 
     </PreferenceCategory>
 </PreferenceScreen>
