@@ -4,21 +4,6 @@
           package="com.sloy.sevibus"
           android:installLocation="auto">
 
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-
-    <permission
-        android:name="${applicationId}.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
-
     <uses-permission android:name="${applicationId}.permission.MAPS_RECEIVE" />
 
     <application
@@ -29,10 +14,6 @@
         tools:replace="android:supportsRtl, android:allowBackup"
         android:supportsRtl="false"
         android:allowBackup="true">
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyA-6PAosMG_IQWHsRMpbxNtX4X7UalGVsQ" />
-        <meta-data android:name="com.crashlytics.ApiKey" android:value="619aa8ceeeae55fe071504dca6d386a9d346b6a4"/>
 
         <activity android:name=".ui.activities.HomeActivity"
             android:launchMode="singleTask">
@@ -42,78 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.LineasActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.HomeActivity"/>
-        </activity>
-        <activity android:name=".ui.activities.ParadaInfoActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sloy.sevibus.ui.activities.HomeActivity"/>
-        </activity>
-        <activity android:name=".ui.activities.MapaActivity" >
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.sloy.sevibus.ui.activities.HomeActivity"/>
-        </activity>
-        <activity
-            android:name=".ui.activities.ParadasDeLineaActivity"
-            android:label="@string/title_activity_paradas_de_linea" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sloy.sevibus.ui.activities.HomeActivity"/>
-        </activity>
-
-        <activity android:name=".ui.activities.BusquedaActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sloy.sevibus.ui.activities.HomeActivity"/>
-        </activity>
-
-        <activity android:name=".ui.activities.AcercaDeActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sloy.sevibus.ui.activities.HomeActivity"/>
-        </activity>
-
-        <activity android:name=".ui.activities.PreferenciasActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sloy.sevibus.ui.activities.HomeActivity"/>
-        </activity>
-
-        <activity android:name=".ui.activities.ContactoActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sloy.sevibus.ui.activities.PreferenciasActivity"/>
-        </activity>
-
-        <activity android:name=".ui.activities.NuevoBonobusActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sloy.sevibus.ui.activities.HomeActivity"/>
-        </activity>
-
-        <activity android:name=".ui.activities.LoginActivity" />
-
-        <activity android:name=".ui.activities.LandingActivity" />
-
-        <receiver android:name=".resources.SecretCodeReceiver">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SECRET_CODE" />
-                <data android:scheme="android_secret_code" android:host="33284" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name=".resources.sync.UpdateDatabaseService"
-            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY"/>
-            </intent-filter>
-        </service>
 
     </application>
 

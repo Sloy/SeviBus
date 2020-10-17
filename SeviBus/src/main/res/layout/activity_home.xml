@@ -1,45 +1,84 @@
-<android.support.v4.widget.DrawerLayout
-    android:id="@+id/drawer_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    >
-    <!-- The main content view -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-
-        <include layout="@layout/toolbar_actionbar"/>
-
-        <FrameLayout
-            android:id="@+id/main_container"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+    >
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:padding="32dp"
+      >
 
-    </LinearLayout>
-
-    <!-- The navigation drawer -->
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/white"
-        app:menu="@menu/main_drawer"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="32dp"
+        android:text="¡Hasta siempre!"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        />
 
-    <!-- The right navigation drawer -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sevibus ha dejado de funcionar. Por motivos técnicos, la aplicación ya no puede ofrecer los tiempos de llegada correctamente."
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        />
 
-    <fragment
-        android:id="@+id/right_drawer"
-        android:name="com.sloy.sevibus.ui.fragments.MapaControllerFragment"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        tools:layout="@layout/fragment_map_options"/>
-</android.support.v4.widget.DrawerLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Por desgracia, ya no dispongo del tiempo necesario para arreglar y mantener la aplicación, así que ha llegado la hora de decir adiós."
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="El 25 de septiembre la aplicación cumplió 10 años publicada en Google Play. A todos los usuarios y usuarias que la habéis estado usando, y a los muchos que aún seguíais usándola, ¡gracias!"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Cuidaos mucho,"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        />
+    <TextView
+        android:id="@+id/goodbye_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:background="?selectableItemBackground"
+        android:drawableRight="@drawable/ic_twitter"
+        android:drawablePadding="4dp"
+        android:drawableTint="#54000000"
+        android:text="– Rafa Vázquez"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        />
+
+    <Button
+        android:id="@+id/uninstall"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="Desinstalar Sevibus"
+        />
+
+    <Button
+        android:id="@+id/thanks"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="Dar las gracias"
+        />
+  </LinearLayout>
+</ScrollView>

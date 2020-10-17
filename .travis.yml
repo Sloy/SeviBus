@@ -22,18 +22,16 @@ android:
   components:
     - platform-tools
     - tools
-    - build-tools-27.0.3
-    - android-27
+    - build-tools-29.0.0
+    - android-29
     - extra-google-m2repository
     - extra-android-m2repository
 
   licenses:
     - 'android-sdk-license-.+'
 
-notifications:
-  slack: sevibus:4beIQklwr0L7yEvXDBGymaDx
-
 before_install:
+- yes | sdkmanager "platforms;android-30"
 - openssl aes-256-cbc -K $encrypted_f41832db9087_key -iv $encrypted_f41832db9087_iv
   -in secrets.tar.enc -out secrets.tar -d
 - tar xvf secrets.tar SeviBus/

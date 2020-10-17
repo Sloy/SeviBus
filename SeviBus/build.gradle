@@ -1,184 +1,120 @@
 buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://maven.fabric.io/public' }
-    }
+  repositories {
+    jcenter()
+  }
 
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.25.4'
-        classpath 'com.github.triplet.gradle:play-publisher:1.2.2'
-    }
+  dependencies {
+    classpath 'com.github.triplet.gradle:play-publisher:1.2.2'
+  }
 }
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
-    maven { url 'https://raw.github.com/ichigotake/ColorPicker/migrate-to-gradle/repository' }
-    mavenCentral()
-
+  maven { url 'https://maven.fabric.io/public' }
+  maven { url 'https://raw.github.com/ichigotake/ColorPicker/migrate-to-gradle/repository' }
+  mavenCentral()
 }
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'io.fabric'
 apply plugin: 'com.github.triplet.play'
-
 
 def myVersionCode = 95
 def myVersionName = "3.8.0"
 
 android {
-    signingConfigs {
-        release {
-            storeFile file("../sevibus.keystore")
-        }
-        debug {
-            storeFile file("../debug.keystore")
-        }
+  signingConfigs {
+    release {
+      storeFile file("../sevibus.keystore")
     }
-    compileSdkVersion 27
-    defaultConfig {
-        applicationId 'com.sloy.sevibus'
-        minSdkVersion 21
-        targetSdkVersion 27
-        versionCode myVersionCode
-        versionName myVersionName
-        multiDexEnabled true
+    debug {
+      storeFile file("../debug.keystore")
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+  }
+  compileSdkVersion 29
+  defaultConfig {
+    applicationId 'com.sloy.sevibus'
+    minSdkVersion 21
+    targetSdkVersion 29
+    versionCode myVersionCode
+    versionName myVersionName
+    multiDexEnabled true
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  buildTypes {
+    debug {
+      applicationIdSuffix ".debug"
+      versionNameSuffix ".debug"
     }
 
-    buildTypes {
-        debug {
-            applicationIdSuffix ".debug"
-            versionNameSuffix ".debug"
-        }
+    release {
+      minifyEnabled false
+      signingConfig = signingConfigs.release
+    }
+  }
 
-        release {
-            minifyEnabled false
-            signingConfig = signingConfigs.release
-        }
+  flavorDimensions "city"
+  productFlavors {
+    sevilla {
+      dimension "city"
     }
-
-    flavorDimensions "city"
-    productFlavors {
-        sevilla {
-            dimension "city"
-        }
-        barna {
-            dimension "city"
-        }
+    barna {
+      dimension "city"
     }
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/LICENSE-FIREBASE.txt'
-        exclude 'META-INF/NOTICE'
-    }
-    lintOptions {
-        abortOnError false
-    }
+  }
+  packagingOptions {
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE-FIREBASE.txt'
+    exclude 'META-INF/NOTICE'
+  }
+  lintOptions {
+    abortOnError false
+  }
 }
 
 dependencies {
-    def supportVersion = '27.1.1'
-    implementation "com.android.support:appcompat-v7:$supportVersion"
-    implementation "com.android.support:design:$supportVersion"
-    implementation "com.android.support:recyclerview-v7:$supportVersion"
-    implementation "com.android.support:cardview-v7:$supportVersion"
-    implementation "com.android.support:percent:$supportVersion"
-
-    implementation "com.google.android.gms:play-services-location:16.0.0"
-    implementation "com.google.android.gms:play-services-maps:16.0.0"
-    implementation "com.google.android.gms:play-services-auth:16.0.1"
-    implementation "com.google.android.gms:play-services-gcm:16.0.0"
-    implementation "com.google.firebase:firebase-core:16.0.5"
-    implementation "com.google.firebase:firebase-auth:16.0.5"
-    implementation "com.google.firebase:firebase-database:16.0.5"
-    implementation "com.google.firebase:firebase-config:16.1.0"
-
-    implementation 'com.karumi:dexter:5.0.0'
-    implementation 'com.sloydev:gallego:1.0.0'
-    implementation 'io.reactivex:rxjava:1.0.16'
-    implementation 'io.reactivex:rxjava-math:1.0.0'
-    implementation 'io.reactivex:rxandroid:1.0.1'
-    implementation 'com.squareup.okhttp:okhttp:2.5.0'
-    implementation 'com.squareup.retrofit:retrofit:1.9.0'
-
-    implementation 'com.jakewharton:butterknife:7.0.1'
-    annotationProcessor 'com.jakewharton:butterknife:7.0.1'
-
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'com.j256.ormlite:ormlite-android:4.42'
-    implementation 'com.j256.ormlite:ormlite-core:4.42'
-    implementation 'net.sourceforge.htmlcleaner:htmlcleaner:2.7'
-    implementation('com.fourmob.colorpicker:colorpicker:1.0.0') {
-        exclude module: 'support-v4';
-    }
-    implementation 'de.cketti.library.changelog:ckchangelog:1.2.0'
-    implementation 'com.google.guava:guava:18.0'
-    implementation 'com.facebook.stetho:stetho:1.2.0'
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
-        transitive = true;
-    }
-    implementation('com.crashlytics.sdk.android:answers:1.3.3@aar') {
-        transitive = true;
-    }
-    implementation 'com.android.support:multidex:1.0.1'
-
-    implementation 'de.hdodenhof:circleimageview:2.0.0'
-    implementation 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
-    implementation 'de.cketti.mailto:email-intent-builder:1.0.0'
-    implementation 'com.artjimlop:chernobyl:1.1.0'
-
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.assertj:assertj-core:1.7.0'
-    testImplementation 'org.mockito:mockito-core:1.10.19'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+  def supportVersion = '27.1.1'
+  implementation "com.android.support:appcompat-v7:$supportVersion"
+  implementation "com.android.support:design:$supportVersion"
 }
 
 play {
-    jsonFile = file('gplay-secret.json')
-    track = 'alpha'
-//    userFraction = 0.005
+  jsonFile = file('gplay-secret.json')
+  track = 'alpha'
+  //    userFraction = 0.005
 }
-
 
 def (releaseKeystorePassword, releaseKeyAlias, releaseKeyPassword) = signingConfigFromFile()
 if (releaseKeystorePassword != null && releaseKeyAlias != null && releaseKeyPassword != null) {
-    android.signingConfigs.release.storePassword = releaseKeystorePassword
-    android.signingConfigs.release.keyAlias = releaseKeyAlias
-    android.signingConfigs.release.keyPassword = releaseKeyPassword
+  android.signingConfigs.release.storePassword = releaseKeystorePassword
+  android.signingConfigs.release.keyAlias = releaseKeyAlias
+  android.signingConfigs.release.keyPassword = releaseKeyPassword
 } else {
-    println "No se han encontrado las credenciales necesarias para poder firmar el apk"
-    android.buildTypes.release.signingConfig = null
+  println "No se han encontrado las credenciales necesarias para poder firmar el apk"
+  android.buildTypes.release.signingConfig = null
 }
 
 def signingConfigFromFile() {
-    println '-> signingConfigFromFile'
-    def Properties props = new Properties()
-    def propFile = file('signing.properties')
+  println '-> signingConfigFromFile'
+  def Properties props = new Properties()
+  def propFile = file('signing.properties')
 
-    if (propFile.canRead()) {
-        props.load(new FileInputStream(propFile))
+  if (propFile.canRead()) {
+    props.load(new FileInputStream(propFile))
 
-        if (props != null &&
-                props.containsKey('STORE_PASSWORD') &&
-                props.containsKey('KEY_ALIAS') &&
-                props.containsKey('KEY_PASSWORD')) {
+    if (props != null && props.containsKey('STORE_PASSWORD') && props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
 
-            def keystorePassword = props['STORE_PASSWORD']
-            def keyAlias = props['KEY_ALIAS']
-            def keyPassword = props['KEY_PASSWORD']
+      def keystorePassword = props['STORE_PASSWORD']
+      def keyAlias = props['KEY_ALIAS']
+      def keyPassword = props['KEY_PASSWORD']
 
-            return [keystorePassword, keyAlias, keyPassword]
-        } else {
-            println 'signing.properties found but some entries are missing'
-        }
+      return [keystorePassword, keyAlias, keyPassword]
     } else {
-        println 'signing.properties not found'
+      println 'signing.properties found but some entries are missing'
     }
-    return [null, null, null]
+  } else {
+    println 'signing.properties not found'
+  }
+  return [null, null, null]
 }
-
-apply plugin: 'com.google.gms.google-services'
