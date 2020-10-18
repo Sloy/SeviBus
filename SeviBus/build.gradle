@@ -16,8 +16,8 @@ repositories {
 apply plugin: 'com.android.application'
 apply plugin: 'com.github.triplet.play'
 
-def myVersionCode = 95
-def myVersionName = "3.8.0"
+def myVersionCode = 96
+def myVersionName = "4.0.0"
 
 android {
   signingConfigs {
